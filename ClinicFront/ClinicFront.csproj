@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ClincApi\ClincApi.csproj" />
     <ProjectReference Include="..\ClinicModels\ClinicModels.csproj" />
   </ItemGroup>
 

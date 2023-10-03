@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClincApi.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ClinicModels;
+using Microsoft.AspNetCore.Authorization;
+using ClinicModels.DTOs.MainDTO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +14,193 @@ namespace ClincApi.Controllers
     [ApiController]
     public class AppUserController : ControllerBase
     {
-        // GET: api/<AppUserController>
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signmanger;
+        public AppUserController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        {
+            this._userManager = userManager;
+            this._signmanger = signInManager;
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult> GetAllUsers()
         {
-            return new string[] { "value1", "value2" };
+            List<AppUser> users = await _userManager.Users.ToListAsync();
+            if (users.Count != 0) return Ok(users);
+            else return NotFound();
+        }
+        [HttpGet("/api/getalldoctors")]
+        public async Task<ActionResult> GetAllDoctors()
+        {
+            List<AppUser> users = (List<AppUser>) await _userManager.GetUsersInRoleAsync("Doctor");
+            if (users.Count != 0) return Ok(users);
+            else return NotFound();
+        }
+        [HttpGet("/api/getalladmins")]
+        public async Task<ActionResult> GetAllAdmins()
+        {
+            List<AppUser> users = (List<AppUser>)await _userManager.GetUsersInRoleAsync("Admin");
+            if (users.Count != 0) return Ok(users);
+            else return NotFound();
         }
 
-        // GET api/<AppUserController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("/api/userlogin")]    
+        public async Task<AppUser> GetUserbyIdAsync(string id)
         {
-            return "value";
-        }
+            return await _userManager.FindByIdAsync(id);
 
-        // POST api/<AppUserController>
+            //var user = this._clinicDBContext.Users.SingleOrDefault(u => u.Id == id);
+        }
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> AdminRegistration(AdminRegiterationDTO adminRegiterationDTO)
         {
+            if (ModelState.IsValid)
+            {
+                AppUser user = new()
+                {
+                    FirstName = adminRegiterationDTO.FirstName,
+                    LastName = adminRegiterationDTO.LastName,
+                    UserName = adminRegiterationDTO.UserName,
+                    Email = adminRegiterationDTO.Email,
+                    PhoneNumber = adminRegiterationDTO.PhoneNumber,
+                    Address = adminRegiterationDTO.Address,
+                    Age = adminRegiterationDTO.Age,
+                };
+                IdentityResult addUserResult = await _userManager.CreateAsync(user, adminRegiterationDTO.Password);
+
+
+                adminRegiterationDTO.Id = user.Id;
+                if (addUserResult.Succeeded)
+                {
+                    try
+                    {
+                        IdentityResult addRoleToUserResult = await _userManager.AddToRoleAsync(user, "Admin");
+                    }
+                    catch { }
+                    return Ok(adminRegiterationDTO);
+                }
+                else return BadRequest();
+            }
+            return BadRequest("model state invalid");
         }
 
-        // PUT api/<AppUserController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPost("/api/doctorregister")]
+        public async Task<ActionResult> DoctorRegisterationByAmdin(DoctorRegisterationByAmdinDTO doctorRegisterationByAmdinDTO)
         {
+            if (ModelState.IsValid)
+            {
+                AppUser user = new()
+                {   StartSubscriptionDate = doctorRegisterationByAmdinDTO.StartSubscriptionDate,
+                    EndSubscriptionDate = doctorRegisterationByAmdinDTO.EndSubscriptionDate,
+                    UserName = doctorRegisterationByAmdinDTO.UserName,                                 
+                };
+                IdentityResult addUserResult = await _userManager.CreateAsync(user, doctorRegisterationByAmdinDTO.Password);
+                doctorRegisterationByAmdinDTO.Id = user.Id;
+                if (addUserResult.Succeeded )
+                {
+                    try
+                    {
+                        IdentityResult addRoleToUserResult = await _userManager.AddToRoleAsync(user, "Doctor");
+                    }
+                    catch { }
+                    return Ok(doctorRegisterationByAmdinDTO);
+                }
+                else return BadRequest();
+            }
+            return BadRequest("model state invalid");
+        }
+        [HttpPut("/api/editdoctorprofile")]
+        public async Task<ActionResult> EditDoctorProflie(DoctorUpdatingProfileDTO doctorUpdatingProfileDTO)
+        {
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    AppUser? doctorToUpdateProfile = await GetUserbyIdAsync(doctorUpdatingProfileDTO.Id);
+                    if (doctorToUpdateProfile != null)
+                    {
+
+                        doctorToUpdateProfile.FirstName = doctorUpdatingProfileDTO.FirstName;
+                        doctorToUpdateProfile.LastName = doctorUpdatingProfileDTO.LastName;
+                        doctorToUpdateProfile.Email = doctorUpdatingProfileDTO.Email;
+                        doctorToUpdateProfile.PhoneNumber = doctorUpdatingProfileDTO.PhoneNumber;
+                        doctorToUpdateProfile.Address = doctorUpdatingProfileDTO.Address;
+                        doctorToUpdateProfile.Age = doctorUpdatingProfileDTO.Age;
+                        doctorToUpdateProfile.LocationLat = doctorUpdatingProfileDTO.LocationLat;
+                        doctorToUpdateProfile.LocationLong = doctorUpdatingProfileDTO.LocationLong;
+                        doctorToUpdateProfile.WhatsUpNumber = doctorUpdatingProfileDTO.WhatsUpNumber;
+
+                        IdentityResult updateDoctorProfileResult = await _userManager.UpdateAsync(doctorToUpdateProfile);
+                        return updateDoctorProfileResult.Succeeded ? Ok(doctorToUpdateProfile) : BadRequest("faild to save changes");
+
+                    }
+                    else return NotFound("user is null");
+
+                }
+                return BadRequest("model state invalid");
+
+            }
+            catch(Exception ex) {
+                return BadRequest(ex.Message);
+            }
+           
+           
+        }
+        [HttpPut("/api/editadminprofile")]
+        public async Task<ActionResult> EditAdminProfile(AdminRegiterationDTO adminRegiterationDTO)
+        {
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    AppUser? adminToUpdateProfile = await GetUserbyIdAsync(adminRegiterationDTO.Id);
+                    if (adminToUpdateProfile != null)
+                    {
+
+                        adminToUpdateProfile.FirstName = adminToUpdateProfile.FirstName;
+                        adminToUpdateProfile.LastName = adminToUpdateProfile.LastName;
+                        adminToUpdateProfile.Email = adminToUpdateProfile.Email;
+                        adminToUpdateProfile.PhoneNumber = adminToUpdateProfile.PhoneNumber;
+                        adminToUpdateProfile.Address = adminToUpdateProfile.Address;
+                        adminToUpdateProfile.Age = adminToUpdateProfile.Age;
+                        adminToUpdateProfile.UserName = adminToUpdateProfile.UserName;
+
+                        IdentityResult updateAdminProfileResult = await _userManager.UpdateAsync(adminToUpdateProfile);
+                        return updateAdminProfileResult.Succeeded ? Ok(adminToUpdateProfile) : BadRequest("faild to save changes");
+
+                    }
+                    else return NotFound("user is null");
+
+                }
+                return BadRequest("model state invalid");
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
         }
 
-        // DELETE api/<AppUserController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        //[HttpPost("/api/login")]
+        //public async Task<IActionResult> Login(LoginDTO loginDTO)
+        //{
+        //    //var ReturnUrl = Url.Content("True");
+        //    if (ModelState.IsValid)
+        //    {
+        //        var result = await _signmanger.PasswordSignInAsync(loginDTO.UserName, loginDTO.Password, false, lockoutOnFailure: false);
+        //        if (result.Succeeded)
+        //        {
+        //            return Ok(true);
+        //        }
+        //        return NotFound(false);
+        //    }
+        //    return BadRequest(false);
+        //}
+
+
     }
 }

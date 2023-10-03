@@ -1,6 +1,7 @@
 ﻿@page "/fetchdata"
 @using ClinicFront.Data
 @inject WeatherForecastService ForecastService
+@attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Weather forecast</PageTitle>
 

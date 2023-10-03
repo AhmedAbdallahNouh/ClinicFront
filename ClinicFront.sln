@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicFront", "ClinicFront\ClinicFront.csproj", "{2ADB85E3-7721-46BC-AC3E-7E336CF5E14C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClinicFront", "ClinicFront\ClinicFront.csproj", "{2ADB85E3-7721-46BC-AC3E-7E336CF5E14C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClinicModels", "ClinicModels\ClinicModels.csproj", "{A86A8F20-F636-42AC-AD72-D41C712F1C25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClinicModels", "ClinicModels\ClinicModels.csproj", "{A86A8F20-F636-42AC-AD72-D41C712F1C25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClincApi", "ClincApi\ClincApi.csproj", "{B1D09115-C4DD-47B4-84A3-17A10431E6E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClincApi", "ClincApi\ClincApi.csproj", "{B1D09115-C4DD-47B4-84A3-17A10431E6E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

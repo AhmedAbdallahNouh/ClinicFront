@@ -1,4 +1,5 @@
 using ClincApi.Models;
+using ClincApi.Repositeries;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using static System.Net.Mime.MediaTypeNames;
@@ -14,6 +15,8 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddDbContext<ClinicDBContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("default")));
+
+
 //Identity
 builder.Services.AddIdentity<AppUser, IdentityRole>(options => //Identity
 {
@@ -40,6 +43,11 @@ builder.Services.AddCors(options =>
         //builder.AllowCredentials();
     });
 });
+
+//Inject Services   
+builder.Services.AddScoped<IDoctorServiceRepo , DoctorServiceRepo>();
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
