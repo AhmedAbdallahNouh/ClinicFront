@@ -1,11 +1,9 @@
 using ClincApi.Models;
 using ClinicFront.Data;
 using ClinicFront.Services;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using ClinicFront.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -15,8 +13,16 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 
 //connect Api
+var apiUri = new Uri("https://localhost:7173");
+
 builder.Services.AddHttpClient<IUserService, UserService>(
-    client => client.BaseAddress = new Uri("https://localhost:7173"));
+    client => client.BaseAddress = apiUri);
+
+builder.Services.AddHttpClient<IAdminService, AdminService>(
+    client => client.BaseAddress = apiUri);
+builder.Services.AddHttpClient<IDoctorService, ClinicFront.Services.DoctorService>(
+    client => client.BaseAddress = apiUri);
+
 
 builder.Services.AddDbContext<ClinicDBContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("default")));
 

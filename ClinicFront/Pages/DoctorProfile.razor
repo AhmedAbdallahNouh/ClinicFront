@@ -1,0 +1,29 @@
+﻿@page "/doctorprofile/{id}"
+@* @attribute [Authorize(Roles = "Doctor")] *@
+@inject ClinicFront.Services.IDoctorService _doctorService
+<h3>DoctorProfile</h3>
+
+
+
+<div class="card" style="width: 18rem;">
+    <img src="..." class="card-img-top" alt="...">
+    <div class="card-body">
+        <h5 class="card-title">Card title</h5>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <a href="#" class="btn btn-primary">Go somewhere</a>
+    </div>
+</div>
+
+@code {
+
+
+    [Parameter]
+    public string Id { get; set; }
+    public DoctorDTO DoctorDTO { get; set; } = new DoctorDTO();
+
+    protected override void OnInitialized()
+    {
+       var response = _doctorService.GetDoctorById(Id);
+        base.OnInitialized();
+    }
+}

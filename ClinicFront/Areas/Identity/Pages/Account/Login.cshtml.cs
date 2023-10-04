@@ -35,7 +35,7 @@ namespace ClinicFront.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
-            ReturnUrl = Url.Content("~/");
+            ReturnUrl = Url.Content("~/mainpageadmin");
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, false, lockoutOnFailure: false);
@@ -45,25 +45,37 @@ namespace ClinicFront.Areas.Identity.Pages.Account
                     var user = await _userManager.FindByNameAsync(Input.UserName);
 
                     // Check if the user exists and has roles
-                    if (user != null)
+                    if (user != null )
                     {
+                        var claimsIdentity = new ClaimsIdentity();
                         // Retrieve the user's roles
                         var userRoles = await _userManager.GetRolesAsync(user);
 
                         // Create claims for email and roles
-                        var emailClaim = new Claim(ClaimTypes.Email, user.Email);
                         var rolesClaim = new Claim(ClaimTypes.Role, string.Join(",", userRoles));
-
-                        // Create a new ClaimsIdentity with the claims
-                        var claimsIdentity = new ClaimsIdentity(new[]
+                        if (user.Email != null)
                         {
-                        new Claim(ClaimTypes.Name, user.UserName),  // You can add the username as well
-                        emailClaim,
-                        rolesClaim
-                         }, IdentityConstants.ApplicationScheme);
-
+                            var emailClaim = new Claim(ClaimTypes.Email, user.Email);
+                            // Create a new ClaimsIdentity with the claims
+                            claimsIdentity = new ClaimsIdentity(new[]
+                            {
+                            new Claim(ClaimTypes.Name, user.UserName),  // You can add the username as well
+                            emailClaim,
+                            rolesClaim
+                            }, IdentityConstants.ApplicationScheme);
+                        }
+                        else
+                        {
+                            // Create a new ClaimsIdentity with the claims
+                            claimsIdentity = new ClaimsIdentity(new[]
+                            {
+                            new Claim(ClaimTypes.Name, user.UserName),  // You can add the username as well
+                            rolesClaim
+                            }, IdentityConstants.ApplicationScheme);
+                        }
+                       
                         // Sign in the user with the custom claims
-                        await HttpContext.SignInAsync(
+                            await HttpContext.SignInAsync(
                             IdentityConstants.ApplicationScheme,
                             new ClaimsPrincipal(claimsIdentity),
                             new AuthenticationProperties { IsPersistent = false }

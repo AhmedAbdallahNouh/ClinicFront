@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using ClinicModels;
 using Microsoft.AspNetCore.Authorization;
 using ClinicModels.DTOs.MainDTO;
+using ClinicModels.DTOs.DoctorDTO;
+using ClinicModels.DTOs.DoctorServiceDTO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -44,13 +46,56 @@ namespace ClincApi.Controllers
             else return NotFound();
         }
 
-        [HttpGet("/api/userlogin")]    
+        [HttpGet("/api/getuserbyid")]    
         public async Task<AppUser> GetUserbyIdAsync(string id)
         {
-            return await _userManager.FindByIdAsync(id);
+            var user = await _userManager.FindByIdAsync(id);
+            return user;
 
             //var user = this._clinicDBContext.Users.SingleOrDefault(u => u.Id == id);
         }
+        [HttpGet("/api/getdoctorbyid")]
+        public async Task<IActionResult> GetDoctorbyIdAsync(string id)
+        {
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                  var doctor = await _userManager.Users
+                 .Include(d => d.Services)
+                 .Include(d => d.Category)
+                 .SingleOrDefaultAsync(u => u.Id == id);
+                     
+               if (doctor != null)
+               {
+                     DoctorDTO doctorDTO = new DoctorDTO(id , doctor.FirstName, doctor.LastName,doctor.Age,doctor.PhoneNumber,doctor.Address
+                       ,doctor.LocationLat,doctor.LocationLong,doctor.FaceBook,doctor.Instgram,doctor.WhatsUpNumber);
+               
+                     CategoryDTO categoryDTO = new CategoryDTO()
+                     {
+                         Id = (int)doctor.CategoryId,
+                         Name = doctor.Category.Name,
+               
+                     };
+                   doctorDTO.categoryDTO = categoryDTO;
+               
+                   foreach(var doctorService in doctor.Services)
+                   {
+                         DoctorServiceDTO doctorServiceDTO = new DoctorServiceDTO()
+                         {
+                             Id = doctorService.Id,
+                             Title = doctorService.Title,
+                             Discription = doctorService.Discription,
+                             Image = doctorService.Image,
+                         };
+                         doctorDTO.doctorServiceDTOs.Add(doctorServiceDTO);
+               
+                   }
+                     return Ok(doctorDTO);
+               }
+               return NotFound("not found");
+            }                    
+            return BadRequest("id is null or empty");
+        }
+
         [HttpPost]
         public async Task<ActionResult> AdminRegistration(AdminRegiterationDTO adminRegiterationDTO)
         {

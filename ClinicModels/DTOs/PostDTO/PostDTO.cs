@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClinicModels.DTOs.DoctorServiceDTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,5 +14,6 @@ namespace ClinicModels
         public string? Image { get; set; }
         public string? Video { get; set; }
         public string AppUserId { get; set; }
+        public DoctorServiceDTO MyProperty { get; set; }
     }
 }

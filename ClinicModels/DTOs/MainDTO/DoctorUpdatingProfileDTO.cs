@@ -11,10 +11,10 @@ namespace ClinicModels.DTOs.MainDTO
     {
 
         //[MaxLength(20)]
-        public int LocationLat { get; set; }
+        public int? LocationLat { get; set; }
 
         //[MaxLength(20)]
-        public int LocationLong { get; set; }
+        public int? LocationLong { get; set; }
 
         [MaxLength(100)]
         public string? FaceBook { get; set; }
@@ -23,6 +23,6 @@ namespace ClinicModels.DTOs.MainDTO
         public string? Instgram { get; set; }
 
         //[MaxLength(50)]
-        public int WhatsUpNumber { get; set; }
+        public int? WhatsUpNumber { get; set; }
     }
 }

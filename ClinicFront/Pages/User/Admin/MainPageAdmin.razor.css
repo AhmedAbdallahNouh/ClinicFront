@@ -36,7 +36,7 @@ h6{
     overflow: hidden;
     width: 90%;
 }
-/*@media (max-width: 1835px) {
+@media (max-width: 1835px) {
     .containerswiper {
         width: 80%
     }
@@ -44,4 +44,4 @@ h6{
     .containerswiper {
         width: 60%
     }
-}*/
+}

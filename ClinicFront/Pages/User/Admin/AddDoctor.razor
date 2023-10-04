@@ -1,0 +1,112 @@
+﻿@page "/addNewDoctor"
+@inject IAdminService _adminService
+@layout MainLayoutAdmin
+<h3>AddDoctor</h3>
+
+<div class="container-signup">
+    <EditForm Model="@doctorRegisterationByAmdinDTO" class="form-signup">
+        <DataAnnotationsValidator />
+        <h1 class="h3 mb-0 fw-bold text-center color-text">
+            SignUp
+        </h1>
+
+        <label class="fw-bold">User Name</label>
+        <div class="mb-2 input-container">
+            <InputText id="fname"
+            @bind-Value="@doctorRegisterationByAmdinDTO.UserName"
+                       style="padding-left:3rem;"
+                       class="form-control input_i"
+                       placeholder="Enter your first Name" />
+            <i class="fas fa-user icon"></i>
+        </div>
+        <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.UserName)" style="text-align:center" />
+       
+        <label for="inputPassword" class="fw-bold"> Password </label>
+        <div class="mb-3 input-container">
+            <InputText type="password" id="inputPassword"
+            @bind-Value="@doctorRegisterationByAmdinDTO.Password"
+                       style="padding-left:3rem;"
+                       class="form-control input_i"
+                       placeholder="Enter your password" />
+            <i class="fas fa-lock icon"></i>
+            @*<span class="span-eye">
+            <i class="fas fa-eye"></i>
+            </span>*@
+        </div>
+        <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.Password)" style="text-align:center" />
+
+        <label for="inputPassword" class="fw-bold"> Confirm Password </label>
+        <div class="mb-4 input-container">
+            <InputText type="password" id="ConPassword"
+            @bind-Value="@doctorRegisterationByAmdinDTO.ConfirmPassword"
+                       style="padding-left:3rem;"
+                       class="form-control input_i"
+                       placeholder="Enter your Confirm password" />
+            <i class="fas fa-lock icon"></i>
+            @* <span class="span-eye-confirm">
+            <i class="fas fa-eye"></i>
+            </span>*@
+        </div>
+        <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.ConfirmPassword)" style="text-align:center" />
+
+
+        <label for="start-sub" class="fw-bold">Subscription Start Date </label>
+        <div class="mb-4 input-container">
+            <InputDate  id="start-sub"
+            @bind-Value="@doctorRegisterationByAmdinDTO.StartSubscriptionDate"
+                       style="padding-left:3rem;"
+                       class="form-control input_i"
+                       placeholder="Enter your password" />
+            <i class="fas fa-lock icon"></i>
+            @* <span class="span-eye-confirm">
+            <i class="fas fa-eye"></i>
+            </span>*@
+        </div>
+        <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.StartSubscriptionDate)" style="text-align:center" />
+            
+        <label for="end-sub" class="fw-bold">Subscription End Date </label>
+        <div class="mb-4 input-container">
+            <InputDate id="end-sub"
+            @bind-Value="@doctorRegisterationByAmdinDTO.EndSubscriptionDate"
+                       style="padding-left:3rem;"
+                       class="form-control input_i"
+                       placeholder="Enter your password" />
+            <i class="fas fa-lock icon"></i>
+            @* <span class="span-eye-confirm">
+            <i class="fas fa-eye"></i>
+            </span>*@
+        </div>
+        <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.EndSubscriptionDate)" style="text-align:center" />
+
+        
+
+        <button type="submit"
+                class="mb-2 btn btn-lg btn-block fw-bold button"
+        @onclick="RegisterNewDoctor">
+            Finish
+        </button>
+    </EditForm>
+</div>
+
+@code {
+    // [Inject]
+    // public IJSRuntime navjs { get; set; }
+    // [Inject]
+    // public IUserservice userservice { get; set; }
+    [Inject]
+    public NavigationManager navigat { get; set; }
+
+    public DoctorRegisterationByAmdinDTO doctorRegisterationByAmdinDTO { get; set; } = new DoctorRegisterationByAmdinDTO();
+
+    public int MyProperty { get; set; }
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        //await navjs.InvokeVoidAsync("hidenave");
+    }
+    public async void RegisterNewDoctor()
+    {
+        var response = _adminService.AddDoctor(doctorRegisterationByAmdinDTO);
+        navigat.NavigateTo("/mainpageadmin");
+    }
+}

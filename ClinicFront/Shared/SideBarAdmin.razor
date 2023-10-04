@@ -30,20 +30,41 @@
 
             <div class="nav-item" style="width:10rem;margin:auto;">
                 <a class="nav-link btn button div_of_add_new_user side-home"
-                   href="/register">
+                href="/addNewDoctor">
                     <p>إضافة طبيب جديد</p>
                     <i class="bi bi-plus-circle-fill"></i>
                 </a>
             </div>
             <div class="nav-item" style="width:10rem;margin:auto;">
                 <a class="nav-link btn button div_of_add_new_user side-home"
-                   href="/register">
+                href="/addNewAdmin">
                     <p>إضافة أدمن جديد</p>
                     <i class="bi bi-plus-circle-fill"></i>
                 </a>
             </div>
-        </div>
+           <AuthorizeView>
+               <Authorized>
+                <div class="nav-item" style="width:10rem;margin:auto;">
+                    <a class="nav-link btn button div_of_add_new_user side-home"
+                       href="Identity/Account/logout">
+                        <p>خروج</p>
+                        <i class="bi bi-plus-circle-fill"></i>
+                    </a>
+                </div>
+               </Authorized>
+           <NotAuthorized>
+                <div class="nav-item" style="width:10rem;margin:auto;">
+                    <a class="nav-link btn button div_of_add_new_user side-home"
+                       href="Identity/Account/login">
+                        <p>دخول</p>
+                        <i class="bi bi-plus-circle-fill"></i>
+                    </a>
+                </div>
+           </NotAuthorized>
+           </AuthorizeView>
+
     </div>
+ </div>
 
 @if (OpenSide)
 {

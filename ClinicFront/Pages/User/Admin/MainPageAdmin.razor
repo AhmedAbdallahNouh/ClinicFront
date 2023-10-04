@@ -1,6 +1,6 @@
 ﻿@page "/mainpageadmin"
 @layout MainLayoutAdmin
-
+@attribute [Authorize(Roles = "Admin")]
 <div class="main_container">
     <div class="containerswiper">
         <h1>جميع الأقسام</h1>
@@ -63,10 +63,24 @@
             </div>
         }
     </div>
-           
-           
-
+                    
 </div>
+
+
+<AuthorizeView>
+    <Authorized>
+        <h3>Hello @context.User.Identity.Name</h3>
+        <h3>Authentication Type : @context.User.Identity.AuthenticationType</h3>
+        <h3>Is Authenticated : @context.User.Identity.IsAuthenticated</h3>
+        @foreach (var claim in @context.User.Claims)
+        {
+            <h3>@claim.ValueType : @claim.Value </h3>
+
+        }
+
+    </Authorized>
+</AuthorizeView>
+
 
 @code {
     [Inject]
@@ -77,9 +91,11 @@
     }
     protected override async void OnAfterRender(bool firstRender)
     {
-        
+        if(firstRender){
             await InitializeSwiper();
             StateHasChanged();
+        }
+          
     }
 
 }
