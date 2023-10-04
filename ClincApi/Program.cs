@@ -44,8 +44,10 @@ builder.Services.AddCors(options =>
     });
 });
 
-//Inject Services   
+//Inject Repo   
 builder.Services.AddScoped<IDoctorServiceRepo , DoctorServiceRepo>();
+builder.Services.AddScoped<ICategoryRepo , CategoryRepo>();
+builder.Services.AddScoped<IPostsRepo , PostsRepo>();
 
 
 var app = builder.Build();

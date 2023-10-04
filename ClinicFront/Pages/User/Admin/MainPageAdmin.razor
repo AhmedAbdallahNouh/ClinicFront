@@ -1,0 +1,85 @@
+﻿@page "/mainpageadmin"
+@layout MainLayoutAdmin
+
+<div class="main_container">
+    <div class="containerswiper">
+        <h1>جميع الأقسام</h1>
+        <div class="swiper margin">
+            <div class="image-box-container swiper-container2">
+                <div class="swiper-wrapper">
+                    @for (var i = 0; i < 5; i++)
+                    {
+                        <div class="swiper-slide">
+                            <div class="card" style="width: 18rem;">
+                                <img src="/assets/Images/clinic.jpeg" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h6>قسم عيون</h6>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+                <div id="P" class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <input type="hidden" id="w" value="some_value" />
+            </div>
+        </div>
+    </div>
+
+    <div class="main_container">
+        <h1>جميع الأطباء</h1>
+        <div class="swiper margin">
+            <div class="image-box-container swiper-container2">
+                <div class="swiper-wrapper">
+                    @for (var i = 0; i < 5; i++)
+                    {
+                        <div class="swiper-slide">
+                            <div class="card" style="width: 18rem;">
+                                <img src="/assets/Images/clinic.jpeg" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h6>احمد جمال</h6>
+                                    <h6>قسم عيون</h6>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div id="P" class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <input type="hidden" id="w" value="some_value" />
+            </div>
+        </div>
+    </div>
+   
+
+    <h1>جميع الأدمن</h1>
+    <div class="container_admin row">
+        @for(var i =0; i< 5; i++)
+        {
+            <div class="col-lg-4 col-md-6">
+                <img class="img_of_admin" src="/assets/Images/Untitled.jpeg" />
+                    <h6 style="text-align:center;">احمد</h6>
+            </div>
+        }
+    </div>
+           
+           
+
+</div>
+
+@code {
+    [Inject]
+    public IJSRuntime jSRuntime { get; set; }
+    private async Task InitializeSwiper()
+    {
+        await jSRuntime.InvokeVoidAsync("initializeSwiper");
+    }
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        
+            await InitializeSwiper();
+            StateHasChanged();
+    }
+
+}

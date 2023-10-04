@@ -1,0 +1,47 @@
+﻿.main_container {
+    width: 90rem;
+    height: 100%;
+}
+.container_admin {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 62%;
+    margin: auto;
+}
+.img_of_admin {
+    width: 9rem;
+    height: 8rem;
+    border-radius: 50%;
+}
+h1{
+    margin-bottom:2rem;
+    direction:rtl;
+}
+h6{
+    text-align:center;
+}
+.margin{
+    margin-bottom:3rem;
+}
+.swiper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.swiper-wrapper {
+    gap: 15px;
+}
+.image-box-container {
+    overflow: hidden;
+    width: 90%;
+}
+/*@media (max-width: 1835px) {
+    .containerswiper {
+        width: 80%
+    }
+}@media (max-width: 1790px) {
+    .containerswiper {
+        width: 60%
+    }
+}*/

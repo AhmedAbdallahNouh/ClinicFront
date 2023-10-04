@@ -11,4 +11,8 @@
     <ProjectReference Include="..\ClinicModels\ClinicModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\User\Doctor\" />
+  </ItemGroup>
+
 </Project>

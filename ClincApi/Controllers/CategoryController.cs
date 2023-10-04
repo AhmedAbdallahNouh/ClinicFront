@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClincApi.Models;
+using ClincApi.Repositeries;
+using ClinicModels;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,36 +11,113 @@ namespace ClincApi.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        // GET: api/<CategoryController>
+        private readonly ICategoryRepo _categoryRepo;
+        public CategoryController(ICategoryRepo categoryRepo)
+        {
+            _categoryRepo = categoryRepo;
+        }
+
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public ActionResult GetAllCategories()
         {
-            return new string[] { "value1", "value2" };
+            List<Category> categories = _categoryRepo.GetAllCategories();
+            if (categories == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                List<CategoryDTO> categoryDTOs = new List<CategoryDTO>();
+                foreach (Category category in categories)
+                {
+                    CategoryDTO categoryDTO = new CategoryDTO()
+                    {
+                        Id = category.Id,
+                        Name = category.Name
+                    };
+                    categoryDTOs.Add(categoryDTO);
+                }
+                return Ok(categoryDTOs);
+            }
         }
 
-        // GET api/<CategoryController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{id:int}")]
+        public ActionResult GetCategoryById(int id)
         {
-            return "value";
+            Category category = _categoryRepo.GetCategoryById(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+            CategoryDTO categoryDTO = new CategoryDTO()
+            {
+                Id = category.Id,
+                Name = category.Name
+            };
+            return Ok(categoryDTO);
         }
 
-        // POST api/<CategoryController>
+        [HttpPut]
+        public ActionResult UpdateCategory(CategoryDTO categoryDTO, int id)
+        {
+            if (id != categoryDTO.Id)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                Category category = new Category()
+                {
+                    Id = categoryDTO.Id,
+                    Name = categoryDTO.Name
+                };
+                _categoryRepo.UpdateCategory(category);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult AddCategory(CategoryDTO categoryDTO)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
+            try
+            {
+                Category category = new Category()
+                {
+                    Id = categoryDTO.Id,
+                    Name = categoryDTO.Name
+                };
+                _categoryRepo.addCategory(category);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
-        // PUT api/<CategoryController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpDelete]
+        public ActionResult DeleteCategory(int id)
         {
-        }
-
-        // DELETE api/<CategoryController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            if (_categoryRepo.GetCategoryById(id) == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                _categoryRepo.deleteCategory(id);
+                return NoContent();
+            }
         }
     }
 }

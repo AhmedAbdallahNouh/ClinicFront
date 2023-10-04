@@ -1,0 +1,56 @@
+﻿@page "/alldoctors"
+@layout MainLayoutAdmin
+<div class="main_container">
+<h1>كل الأطباء</h1>
+
+    <div class="row" style="justify-content:space-evenly;width:100%;">
+        @for(var i = 0; i < 6; i++)
+        {
+            <div class="cardd rounded-3 col-lg-5 col-md-12 col-sm-12">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none">
+                            <div class="d-flex flex-column mt-4">
+                                <button class="btn Details btn-sm" type="button">
+                                    <h5>تجديد الأشتراك</h5>
+                                </button>
+                                <button class="btn Cart btn-sm mt-2" type="button">
+                                    <h5>حذف</h5>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-6 col-xl-6 flex_column">
+                            <div class="flex">
+                                <h4><b>:الأسم الأول</b></h4>
+                                <h5><b>احمد جمال</b></h5>
+                            </div>
+                            <div class="flex">
+                                <h4><b>:الأسم الأخير</b></h4>
+                                <h5><b>احمد جمال</b></h5>
+                            </div>
+                            <div class="flex">
+                                <h4><b>:التخصص</b></h4>
+                                <h5><b>احمد جمال</b></h5>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-lg-3 col-xl-3 mb-1 mb-lg-0 border-start">
+                            <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                                <img src="/assets/Images/clinic.jpeg" class="w-100" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+
+
+
+@code {
+
+}

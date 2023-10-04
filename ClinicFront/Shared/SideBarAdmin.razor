@@ -1,0 +1,107 @@
+﻿
+    <div class="@ClassOpenSide"
+         id="side">
+        <div style="height:50%;display:flex;flex-direction:column;">
+            <div class="flex" style="width:12rem;position: relative;right: 14%;">
+                <div style="width:12rem;margin:auto">
+                    <a class="nav-link active flex" style="width:100%" aria-current="page" href="/">
+                        <lord-icon src="https://cdn.lordicon.com/slduhdil.json"
+                                   class="lord_icon"
+                                   trigger="hover"
+                                   scale="40"
+                                   colors="primary:#ffffff"
+                                   state="hover-2">
+                            <h5 class="color_white">الصفحة الرئيسية</h5>
+                        </lord-icon>
+                    </a>
+                </div>
+            </div>
+            <hr />
+            <div class="nav-item" style="width:fit-content;margin:auto;">
+                <a class="nav-link btn button side-home"
+                   href="/">جميع الأدمن</a>
+            </div>
+            <div class="nav-item" style="width:fit-content;margin:auto;">
+                <a class="nav-link btn button side-home"
+                   href="/login">جميع الأطباء </a>
+            </div>
+
+            <hr />
+
+            <div class="nav-item" style="width:10rem;margin:auto;">
+                <a class="nav-link btn button div_of_add_new_user side-home"
+                   href="/register">
+                    <p>إضافة طبيب جديد</p>
+                    <i class="bi bi-plus-circle-fill"></i>
+                </a>
+            </div>
+            <div class="nav-item" style="width:10rem;margin:auto;">
+                <a class="nav-link btn button div_of_add_new_user side-home"
+                   href="/register">
+                    <p>إضافة أدمن جديد</p>
+                    <i class="bi bi-plus-circle-fill"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+@if (OpenSide)
+{
+    <!-- open side -->
+    <button @onclick="() => openside(false)"
+            id="openside"
+            class="disblay_none openandcloseside openside">
+        <i class="bi bi-chevron-double-left"></i>
+    </button>
+}@if (!OpenSide)
+{
+    <!-- close side -->
+    <button @onclick="() => openside(true)"
+            id="closeside"
+            class="disblay_none openandcloseside closeside">
+        <i class="bi bi-chevron-double-right"></i>
+    </button>
+}
+
+
+@code {
+    public bool OpenSide { get; set; } = true;
+    public string ClassOpenSide { get; set; } = "show-side";
+    public IJSRuntime MyProperty { get; set; }
+
+
+    public void openside(bool openside)
+    {
+        this.OpenSide = openside;
+        if (!openside)
+        {
+            ClassOpenSide = "show_slide_at_smallmedia";
+        }
+        else
+        {
+            ClassOpenSide = "show-side";
+        }
+        MyProperty.InvokeVoidAsync("console.log", OpenSide);
+    }
+
+
+
+
+
+
+
+
+
+    //[Inject]
+    //public IJSRuntime Js { get; set; }
+    //public string jwt { get; set; }
+    //protected override async void OnAfterRender(bool firstRender)
+    //{
+    //    jwt = await localStorage.GetItemAsStringAsync("token");
+    //    base.OnAfterRender(firstRender);
+    //}
+    //public async void OpenSide()
+    //{
+    //    await Js.InvokeVoidAsync("sidebar");
+    //}
+}

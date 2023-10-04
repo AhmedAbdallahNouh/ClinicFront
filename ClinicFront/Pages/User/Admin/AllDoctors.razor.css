@@ -1,0 +1,38 @@
+﻿.main_container {
+    width: 80%;
+    height: 100%;
+}
+.cardd {
+    box-shadow: 2px 2px #50402c;
+    margin-bottom:2rem;
+}
+
+.Details {
+    background-color: #50402c;
+    color: white;
+}
+
+.Cart {
+    background-color: #f7e3ac;
+}
+
+* {
+    box-sizing: border-box;
+}
+.flex{
+    display:flex;
+    direction:rtl
+}
+h1{
+    text-align:center;
+    margin-bottom:4rem;
+}
+h4 {
+    margin-left: 1rem;
+    direction: ltr;
+}
+.flex_column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}

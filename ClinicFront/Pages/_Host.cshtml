@@ -10,6 +10,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="~/" />
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swiper@10.0.4/swiper-bundle.min.css" />
     <link href="css/site.css" rel="stylesheet" />
     <link href="ClinicFront.styles.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="favicon.png"/>
@@ -30,5 +33,44 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+    <script src="https://cdn.lordicon.com/bhenfmcm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script type="module"
+            src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule
+            src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <script src="https://unpkg.com/swiper@10.0.4/swiper-bundle.min.js"></script>
+    <script>
+        window.initializeSwiper = function () {
+            const swiper2 = new Swiper('.swiper-container2', {
+                // Swiper configuration for the second container
+                slidesPerView: 1,
+                spaceBetween: 10,
+                direction: 'horizontal',
+                navigation: {
+                    nextEl: '.swiper-button-prev',
+                    prevEl: '.swiper-button-next',
+                },
+                breakpoints: {
+                    // Responsive breakpoints for the second container
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20
+                    },
+                    768: {
+                        slidesPerView: 3,
+                        spaceBetween: 30
+                    },
+                    1024: {
+                        slidesPerView: 4,
+                        spaceBetween: 40
+                    },
+                }
+            });
+        }
+    </script>
 </body>
 </html>
+
