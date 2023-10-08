@@ -35,7 +35,7 @@ namespace ClincApi.Controllers
                     {
                         Id = post.Id,
                         Text = post.Text,
-                        Image = post.Image,
+                        //Image = post.Image,
                         Video = post.Video,
                         AppUserId = post.AppUserId
                     };
@@ -57,7 +57,7 @@ namespace ClincApi.Controllers
             {
                 Id = post.Id,
                 Text = post.Text,
-                Image = post.Image,
+                //Image = post.Image,
                 Video = post.Video,
                 AppUserId = post.AppUserId
             };
@@ -78,7 +78,7 @@ namespace ClincApi.Controllers
                 {
                     Id = postDTO.Id,
                     Text = postDTO.Text,
-                    Image = postDTO.Image,
+                    //Image = postDTO.Image,
                     Video = postDTO.Video,
                     AppUserId = postDTO.AppUserId
                 };
@@ -105,7 +105,7 @@ namespace ClincApi.Controllers
                 {
                     Id = postDTO.Id,
                     Text = postDTO.Text,
-                    Image= postDTO.Image,
+                    //Image= postDTO.Image,
                     Video= postDTO.Video,
                     AppUserId = postDTO.AppUserId
                 };

@@ -1,6 +1,8 @@
-﻿using ClinicModels.DTOs.MainDTO;
+﻿using ClinicModels.DTOs.DoctorDTO;
+using ClinicModels.DTOs.MainDTO;
 using System.Text;
 using System.Text.Json;
+using static System.Net.WebRequestMethods;
 
 namespace ClinicFront.Services
 {
@@ -13,17 +15,23 @@ namespace ClinicFront.Services
             this._http = http;
         }
 
-        //public async Task<List<UserDtos>> getallusers()
-        //{
-        //    return await JsonSerializer.DeserializeAsync<List<UserDtos>>
-        //        (await http.GetStreamAsync("/api/User"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-        //}
+        public async Task<List<AdminRegiterationDTO>> getallAdmins()
+        {
+            return await JsonSerializer.DeserializeAsync<List<AdminRegiterationDTO>>
+                (await _http.GetStreamAsync("/api/User"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
 
-        //public async Task<UserDtos> getbyid(string id)
-        //{
-        //    return await JsonSerializer.DeserializeAsync<UserDtos>
-        //        (await http.GetStreamAsync("/api/User" + id), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-        //}
+        public async Task<List<DoctorDTO>> getallDoctors()
+        {
+            return await JsonSerializer.DeserializeAsync<List<DoctorDTO>>
+                (await _http.GetStreamAsync("/api/getalldoctors"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<DoctorDTO> getDoctorbyid(string id)
+        {
+            return await JsonSerializer.DeserializeAsync<DoctorDTO>
+                (await _http.GetStreamAsync("/api/getdoctorbyid" + id), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
 
         public async Task<HttpResponseMessage> AddDoctor(DoctorRegisterationByAmdinDTO doctorRegisterationByAmdin)
         {
@@ -32,20 +40,31 @@ namespace ClinicFront.Services
             return response;
         }
 
+        public async void UpdateDoctor_AsDelete(string id)
+        {
+            var serialize_id = new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json");
+            await _http.PutAsync("/api/deletedoctor", serialize_id);
+        }
+        public async void UpdateDoctor(DoctorDTO doctorDTO)
+        {
+            var serialize_doctordto = new StringContent(JsonSerializer.Serialize(doctorDTO), Encoding.UTF8, "application/json");
+            await _http.PutAsync("/api/EndSubscriptionDate", serialize_doctordto);
+        }
+
         public async Task<HttpResponseMessage> AddAdmin(AdminRegiterationDTO adminRegiterationDTO)
         {
             var newAdminToAdd = new StringContent(JsonSerializer.Serialize(adminRegiterationDTO), Encoding.UTF8, "application/json");
             var response = await _http.PostAsync("/api/AppUser", newAdminToAdd);
             return response;
         }
-        public async Task<HttpResponseMessage> GetUserBuId(string id)
-        {
-            var userId = new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json");
-            var response = await _http.PostAsync("/api/getuserbyid", userId);
-            var stream = await response.Content.ReadAsStreamAsync();
-            var t = await JsonSerializer.DeserializeAsync<bool>(stream, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-            return response;
-        }
+        //public async Task<HttpResponseMessage> GetUserBuId(string id)
+        //{
+        //    var userId = new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json");
+        //    var response = await _http.PostAsync("/api/getuserbyid", userId);
+        //    var stream = await response.Content.ReadAsStreamAsync();
+        //    var t = await JsonSerializer.DeserializeAsync<bool>(stream, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        //    return response;
+        //}
 
         //public async Task<bool> Login(LoginDTO loginDTO)
         //{
@@ -61,5 +80,9 @@ namespace ClinicFront.Services
         //    var newuser = new StringContent(JsonSerializer.Serialize(user), Encoding.UTF8, "application/json");
         //    await http.PutAsync("/api/User" + user.Id, newuser);
         //}
+        public async Task DeleteUser(string id)
+        {
+            await _http.DeleteAsync("/api/Delete" + id);
+        }
     }
 }

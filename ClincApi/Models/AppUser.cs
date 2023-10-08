@@ -17,6 +17,7 @@ namespace ClincApi.Models
 
         [MaxLength(100)]
         public string? Address { get; set; }
+        public string? Discription { get; set; }
 
         [MaxLength(20)]
         public int? LocationLat { get; set; }
@@ -31,14 +32,16 @@ namespace ClincApi.Models
         public string? Instgram { get; set; }
 
         [MaxLength(50)]
-        public int? WhatsUpNumber { get; set; }
+        public string? WhatsUpNumber { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime? StartSubscriptionDate { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime? EndSubscriptionDate { get; set; }
-
+        public string? Image { get; set; }
+        public string? CoverImage { get; set; }
+        public int Delete_Doctor { get; set; }
         //relation between category and appUser
         [ForeignKey("Category")]
         public int? CategoryId { get; set; }

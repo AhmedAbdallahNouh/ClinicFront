@@ -2,118 +2,103 @@
     font-family: 'rubik-regular';
     src: url('fonts/rubik-regular.ttf') format('truetype');
 }
+
 @font-face {
     font-family: 'jomhuria-regular';
     src: url('fonts/jomhuria-regular.ttf') format('truetype');
 }
-.modal-content{
-    height:21rem;
-}
-.search{
-    width:50%;
-    margin:auto;
-    margin-bottom:4rem;
-    direction:rtl;
-}
+
 .main_container {
     width: 80%;
     height: 100%;
 }
+
 .cardd {
     box-shadow: rgb(15 23 112) 8px 8px;
     margin-bottom: 2rem;
-    width:48%;
+    width: 51%;
 }
+
 .cardd:hover {
     box-shadow: 2px 1px 0px 2px rgb(15 23 112);
     transform: translate3d(5px, 5px, 30em);
 }
+.after-card-body{
+    width:140%;
+}
 .Cart_button {
-    background-color: #03206C;
+    background-color: #060697;
     color: white;
+    width: 12rem;
     height: 2.5rem;
-    margin-bottom: 1rem;
-    padding-top: 0.5rem;
+    padding:.5rem;
+    margin-bottom: 1rem
 }
 
 .Cart_button_delete {
-    background-color: rgba(240, 68, 68, 1);
+    background-color: #d10404;
     color: white;
     height: 2.5rem;
-    width: 4rem;
-    padding-top: 0.5rem;
+    padding: .5rem;
+    width: 12rem;
 }
 
 * {
     box-sizing: border-box;
 }
-.flex{
-    display:flex;
-    direction:rtl
+
+.flex {
+    display: flex;
+    direction: rtl
 }
+
 img {
     height: 11rem;
     border-radius: 1rem;
 }
-a{
-    text-decoration:none;
-    color:black
+
+a {
+    text-decoration: none;
+    color: black
 }
+
 h1 {
     text-align: center;
     margin-bottom: 4rem;
     font-family: jomhuria-regular;
     font-size: 5rem;
 }
+
 h4 {
     margin-left: 1rem;
     direction: ltr;
     font-family: rubik-regular;
-    font-size:20px;
+    font-size: 20px;
 }
+
 .flex_column {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
 }
+
 .flex_row {
     display: flex;
     justify-content: space-evenly;
 }
-.div_img {
-    width: 111%;
-}
-.direction_rtl{
-    direction:rtl;
-}
-input[type = "date"] {
-    width: 19rem;
-    border-radius: 5px;
-    outline: none;
-    margin-bottom: 1rem;
+
+@media (max-width: 1735px) {
+    .cardd {
+        width: 80%;
+    }
 }
 
-@media (max-width: 1420px) {
-    .main_container {
-        width: 71%;
-        padding-left: 1rem;
-    }
+@media (max-width: 1237px) {
     .cardd {
-        width: 100%
-    }
-}@media (max-width: 1237px) {
-    .main_container {
         width: 100%;
     }
-}@media (max-width: 990px) {
-    .div_img {
-        width: 100%;
-    }
-}@media (max-width: 1040px) {
-    .main_container {
-        width: 100%;
-    }
-    .cardd {
+}@media (max-width: 992px) {
+    .after-card-body {
         width: 100%;
     }
 }

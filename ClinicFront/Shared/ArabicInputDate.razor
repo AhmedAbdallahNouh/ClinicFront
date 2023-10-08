@@ -1,0 +1,27 @@
+﻿@using System
+@inherits InputDate<DateTime?>
+
+<input type="date" @attributes="AdditionalAttributes" class="form-control" value="@BindConverter.FormatValue(CurrentValue)" @oninput="HandleInput" />
+
+@code {
+    private string CurrentValueAsString
+    {
+        get => CurrentValue?.ToString("yyyy-MM-dd") ?? string.Empty;
+        set
+        {
+            if (DateTime.TryParse(value, out var parsedValue))
+            {
+                CurrentValue = parsedValue;
+            }
+            else
+            {
+                CurrentValue = null;
+            }
+        }
+    }
+
+    private void HandleInput(ChangeEventArgs e)
+    {
+        CurrentValueAsString = e.Value.ToString();
+    }
+}

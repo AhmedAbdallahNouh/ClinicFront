@@ -4,7 +4,7 @@
         <div style="height:50%;display:flex;flex-direction:column;">
             <div class="flex" style="width:12rem;position: relative;right: 14%;">
                 <div style="width:12rem;margin:auto">
-                    <a class="nav-link active flex" style="width:100%" aria-current="page" href="/">
+                <a class="nav-link active flex" style="width:100%" aria-current="page" href="/mainpageadmin">
                         <lord-icon src="https://cdn.lordicon.com/slduhdil.json"
                                    class="lord_icon"
                                    trigger="hover"
@@ -17,54 +17,59 @@
                 </div>
             </div>
             <hr />
-            <div class="nav-item" style="width:fit-content;margin:auto;">
-                <a class="nav-link btn button side-home"
-                   href="/">جميع الأدمن</a>
+        <div class="nav-item link">
+            <a class="nav-link btn button div_of_add_new_user side-home"
+                   href="/alladmin">
+                    <i class="bi bi-person-square"></i>
+                    <p>جميع الأدمن</p>
+               </a>
             </div>
-            <div class="nav-item" style="width:fit-content;margin:auto;">
-                <a class="nav-link btn button side-home"
-                   href="/login">جميع الأطباء </a>
+        <div class="nav-item link">
+            <a class="nav-link btn button div_of_add_new_user side-home"
+               href="/alldoctors">
+                    <i class="bi bi-person-square"></i>
+                    <p>جميع الأطباء</p>
+               </a>
             </div>
 
             <hr />
 
-            <div class="nav-item" style="width:10rem;margin:auto;">
+        <div class="nav-item link">
                 <a class="nav-link btn button div_of_add_new_user side-home"
-                href="/addNewDoctor">
+                   href="/register">
                     <p>إضافة طبيب جديد</p>
                     <i class="bi bi-plus-circle-fill"></i>
                 </a>
             </div>
-            <div class="nav-item" style="width:10rem;margin:auto;">
+        <div class="nav-item link" >
                 <a class="nav-link btn button div_of_add_new_user side-home"
-                href="/addNewAdmin">
+                   href="/register">
                     <p>إضافة أدمن جديد</p>
                     <i class="bi bi-plus-circle-fill"></i>
                 </a>
             </div>
-           <AuthorizeView>
-               <Authorized>
-                <div class="nav-item" style="width:10rem;margin:auto;">
+        </div>
+        <AuthorizeView>
+            <Authorized>
+                <div class="nav-item link" style="width:10rem;margin:auto;">
                     <a class="nav-link btn button div_of_add_new_user side-home"
                        href="Identity/Account/logout">
                         <p>خروج</p>
                         <i class="bi bi-plus-circle-fill"></i>
                     </a>
                 </div>
-               </Authorized>
-           <NotAuthorized>
-                <div class="nav-item" style="width:10rem;margin:auto;">
+            </Authorized>
+            <NotAuthorized>
+                <div class="nav-item link" style="width:10rem;margin:auto;">
                     <a class="nav-link btn button div_of_add_new_user side-home"
                        href="Identity/Account/login">
                         <p>دخول</p>
                         <i class="bi bi-plus-circle-fill"></i>
                     </a>
                 </div>
-           </NotAuthorized>
-           </AuthorizeView>
-
+            </NotAuthorized>
+        </AuthorizeView>
     </div>
- </div>
 
 @if (OpenSide)
 {

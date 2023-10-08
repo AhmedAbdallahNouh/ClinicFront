@@ -20,7 +20,11 @@ builder.Services.AddHttpClient<IUserService, UserService>(
 
 builder.Services.AddHttpClient<IAdminService, AdminService>(
     client => client.BaseAddress = apiUri);
+
 builder.Services.AddHttpClient<IDoctorService, ClinicFront.Services.DoctorService>(
+    client => client.BaseAddress = apiUri);
+
+builder.Services.AddHttpClient<ICategoryService, CategoryService>(
     client => client.BaseAddress = apiUri);
 
 

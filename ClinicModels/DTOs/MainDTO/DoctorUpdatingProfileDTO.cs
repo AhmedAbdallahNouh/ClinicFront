@@ -23,6 +23,7 @@ namespace ClinicModels.DTOs.MainDTO
         public string? Instgram { get; set; }
 
         //[MaxLength(50)]
-        public int? WhatsUpNumber { get; set; }
+        public string? WhatsUpNumber { get; set; }
+        public string? Discription { get; set; }
     }
 }

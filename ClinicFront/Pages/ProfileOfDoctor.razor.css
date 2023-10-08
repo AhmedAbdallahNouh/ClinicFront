@@ -1,20 +1,84 @@
-﻿
+﻿body{
+    direction:rtl
+}
+.coverphoto_button {
+    position: absolute;
+    bottom: -13%;
+    right: -26%;
+    width: 10rem !important;
+    height: 2.5rem;
+    padding: .2rem 0rem;
+}
+.img {
+    width: 100%;
+    height: 100%;
+}
+.containerofcntent {
+    width: 90%;
+    margin: auto;
+    background-image: url('assets/images/halfdoctorbluer.jpeg');
+    background-size: cover;
+    margin: auto;
+    margin-top: -1.5rem;
+}
+.containerofimage {
+    width: 90%;
+    height:20rem;
+    margin: auto;
+    position:relative;
+}
+.profileimage {
+    position: relative;
+    bottom: 12%;
+    right: 79%;
+    background-color: white;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition:all .5s ease;
+}
+.profileimage i {
+    font-size: 8.4rem;
+    transition: all .5s ease;
+}
+.subcontainerofcntent {
+    background-color: rgba(1, 14, 126, 0.2);
+    padding-top: 5rem;
+    width: 100%;
+    margin: auto;
+}
+.flexrow{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:5rem;
+}
+.flexcolumn{
+    width:50%;
+}
+h2{
+    text-align:center;
+    margin-bottom:3rem;
+    margin-top:-1.5rem;
+}
+h3 {
+    font-size: 1.5rem;
+    margin-right: 5%;
+    margin-bottom: 2rem;
+}
+
 .container-signup {
     padding-top: 40px;
     padding-bottom: 40px;
-    border: red solid;
-    width: 80%;
 }
 
-form {
-    /*width: 100%;*/
-    /*max-width: 380px;*/
-    /*margin: auto;*/
-    padding: 10px !important;
-    width: 74% !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    border: black solid !important;
+.form-signup {
+    max-width: 380px;
+    padding: 10px;
+    width: 85%;
+    margin: auto;
 }
 
 .container-img {
@@ -26,33 +90,21 @@ form {
 }
 
 .profilechange {
-    border: 1px solid white;
-    width: 25px;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 0.2px 1px, rgba(0, 0, 0, 0.16) 0px 0.2px 1px;
-    background-color: white;
-    color: #2b124c;
+    background-color: transparent;
+    border: none;
+    color: white;
     position: absolute;
-    bottom: 5px;
-    left: 57%;
+    bottom: .5rem;
+    right: .5rem;
 }
 
-label {
-
+.label {
     text-align: center;
     margin: auto;
-    width: 37%;
-    line-height: 100%;
+    width: 100%;
+    margin-bottom: 1rem;
 }
-.sub-label {
-    margin-left: 2rem;
-    width: 41%;
-}
- 
-select{
-padding-left:3rem;
-}
+
 .container-img input[type="file"] {
     display: none;
 }
@@ -68,9 +120,8 @@ padding-left:3rem;
 }
 
 .color-text {
-    margin-bottom: 2rem !important;
-    width: 80%;
     color: #2b124c;
+    margin-bottom: 3rem !important;
 }
 
 .check {
@@ -99,15 +150,15 @@ padding-left:3rem;
     font-size: 12px;
 }
 
-    .form-signup .form-control:focus {
-        z-index: 2;
-    }
+.form-signup .form-control:focus {
+    z-index: 2;
+}
 
 .input-container {
     display: -ms-flexbox;
     display: flex;
-    width: 60%;
-    margin: 2rem 0 2rem 0;
+    width: 80%;
+    margin: auto;
     position: relative;
 }
 
@@ -169,12 +220,13 @@ padding-left:3rem;
 
 .icon {
     color: #a7a7a7;
+    direction: rtl;
+    right: 1rem;
     min-width: 15px;
     position: absolute;
     z-index: 3;
     font-size: 16px;
-    top: 10px;
-    left: 15px;
+    top: 11px;
 }
 
 .Addressicon {
@@ -193,9 +245,23 @@ padding-left:3rem;
 }
 
 .input_i:focus + i {
-    color: #522b5b;
+    color: #03206C;
 }
-
+.input_i:not(:empty) + label{
+    display:none;
+}
+.input_i:focus + label {
+    position: absolute;
+    font-size: 11px;
+    margin-left: 3rem;
+    top: -1rem;
+    right: 2rem;
+    background-color: #051642;
+    color: white;
+    border-radius: 10px;
+    padding: 4px 6px;
+    transition: all .5s ease;
+}
 .color-button,
 .color-button:hover {
     background-color: #f7e3ac;
@@ -204,8 +270,10 @@ padding-left:3rem;
 }
 
 .button {
-    margin: auto 48%;
-    background-color: #2b124c;
+    width:40%;
+    margin: auto 30%;
+    margin-bottom:3.5rem !important;
+    background-color: #03206C;
     color: white
 }
 
@@ -257,28 +325,45 @@ padding-left:3rem;
     box-shadow: 0px 0px 2px 2px rgba(31, 149, 161, 0.2);
 }
 
-
-.form-second-col{
-    margin-top:4rem;
+.p {
+    position: absolute;
+    font-size: medium;
+    right: 3rem;
+    top: 0.5rem;
+    transition: all .5s ease;
 }
-.sub-input-container {
-    margin-left: auto;
-    margin-right: auto;
+.p_focus {
+    position: absolute;
+    font-size: 11px;
+    margin-left: 3rem;
+    top: -1rem;
+    right: 2rem;
+    background-color: #051642;
+    color: white;
+    border-radius: 10px;
+    padding: 4px 6px;
+    transition: all .5s ease;
 }
-h3{
-    text-align:center;
+@media (max-width: 790px) {
+    .profileimage {
+        position: relative;
+        bottom: 12%;
+        right: 69%;
+        width: 6rem;
+        height: 6rem;
+    }
+    .profileimage i{
+        font-size:6.4rem;
+    }
 }
-/*row {
-    width: 74%;
-    margin-left: auto;
-    margin-right: auto;
-    border: black solid;
+@media (max-width: 560px) {
+    .p{
+        font-size:11px;
+    }
+    .input_i:focus + label {
+        font-size: 7px;
+    }
+    .p_focus {
+        font-size: 7px;
+    }
 }
-*/
-
-
-/*container {
-    border: red solid;
-    width: 80%;
-}
-*/

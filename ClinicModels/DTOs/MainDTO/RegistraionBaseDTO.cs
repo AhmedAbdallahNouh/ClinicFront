@@ -23,7 +23,7 @@ namespace ClinicModels.DTOs.MainDTO
 
         [EmailAddress]
         public string Email { get; set; }
-
+        public string? Image { get; set; }
         //[RegularExpression("^01[0125][0-9]{8}$")]
         public string PhoneNumber { get; set; }
         public string Address { get; set; }

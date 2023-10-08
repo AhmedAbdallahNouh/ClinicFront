@@ -1,48 +1,91 @@
 ﻿@page "/alldoctors"
 @layout MainLayoutAdmin
+@inject IAdminService iadminservice
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="flex_row" style="padding: 16px 12px 0px;justify-content:space-between;">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="exampleModalLabel"><b>تجديد الأشتراك</b></h5>
+            </div>
+            <div class="modal-body direction_rtl">
+                <p>تاريخ بداية الأشتراك: @doctorDTO.StartSubscriptionDate</p>
+                <p>تاريخ نهاية الأشتراك: @doctorDTO.EndSubscriptionDate</p>
+            </div>
+            <div class="direction_rtl" style="margin:auto;">
+                <h4 style="margin-bottom: 1rem;text-align: center;">
+                    <b>أدخل تاريخ نهاية الأشتراك</b>
+                </h4>
+                <input type="date" @bind="NewEndSubscriptionDate"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" style="background-color:rgba(240, 68, 68, 1);color:white" data-bs-dismiss="modal">إغلاق</button>
+                <button type="button" class="btn" @onclick="() => ModalSaveChanges()" style="background-color:#03206C;color:white">حفظ التغييرات</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <div class="main_container">
-<h1>كل الأطباء</h1>
+<h1>كـــل الأطبـــــاء</h1>
+
+    @*    Search and Filter Button*@    
+    <input class="form-control search" @bind="Search" @onkeydown="FilterDoctorBySearch" list="datalistOptions" id="exampleDataList" placeholder="إبحث عن طبيب معين ...">
+
+
 
     <div class="row" style="justify-content:space-evenly;width:100%;">
-        @for(var i = 0; i < 6; i++)
+        @foreach(var doctor in doctorDTOs)
         {
             <div class="cardd rounded-3 col-lg-5 col-md-12 col-sm-12">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none">
-                            <div class="d-flex flex-column mt-4">
-                                <button class="btn Details btn-sm" type="button">
-                                    <h5>تجديد الأشتراك</h5>
-                                </button>
-                                <button class="btn Cart btn-sm mt-2" type="button">
-                                    <h5>حذف</h5>
-                                </button>
-                            </div>
+                                
                         </div>
 
-                        <div class="col-md-6 col-lg-6 col-xl-6 flex_column">
-                            <div class="flex">
-                                <h4><b>:الأسم الأول</b></h4>
-                                <h5><b>احمد جمال</b></h5>
+                        <div class="col-md-6 col-lg-6 col-xl-6 flex_column" style="justify-content:start;">
+                            <div>
+                                <div class="flex">
+                                    <h4><b>:الأسم</b></h4>
+                                    <h5><b>@doctor.FirstName</b></h5>
+                                </div>
+                                <div class="flex">
+                                    <h4><b>:التخصص</b></h4>
+                                    <h5><b>@doctor.categoryDTO.Name</b></h5>
+                                </div>
+                                <div class="flex">
+                                    <h4><b>:تاريخ نهاية الأشتراك</b></h4>
+                                    <h5><b>@doctor.EndSubscriptionDate</b></h5>
+                                </div>
                             </div>
-                            <div class="flex">
-                                <h4><b>:الأسم الأخير</b></h4>
-                                <h5><b>احمد جمال</b></h5>
-                            </div>
-                            <div class="flex">
-                                <h4><b>:التخصص</b></h4>
-                                <h5><b>احمد جمال</b></h5>
+
+                        <div class="d-flex flex_row mt-4">
+                            <button class="btn Cart_button_delete btn-sm" @onclick="() => DeleteAdmin(doctor.Id)" type="button">
+                                    <h5>حذف</h5>
+                                </button>
+                                <button class="btn Cart_button btn-sm" @onclick="() => SendDoctorToModal(doctor)" data-bs-toggle="modal" data-bs-target="#exampleModal" type="button">
+                                    <h5>تجديد الأشتراك</h5>
+                                </button>
+                                <a class="btn Cart_button btn-sm" type="button">
+                                    <h5>صفحة الطبيب</h5>
+                                </a>
                             </div>
                         </div>
 
                         <div class="col-md-12 col-lg-3 col-xl-3 mb-1 mb-lg-0 border-start">
-                            <div class="bg-image hover-zoom ripple rounded ripple-surface">
-                                <img src="/assets/Images/clinic.jpeg" class="w-100" />
+                            <div class="bg-image hover-zoom ripple rounded ripple-surface div_img">
+                                <img src="@doctor.Image" class="w-100" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            
         }
     </div>
 
@@ -52,5 +95,34 @@
 
 
 @code {
+    public List<DoctorDTO> doctorDTOs { get; set; } = new List<DoctorDTO>();
+    public DoctorDTO doctorDTO { get; set; } = new DoctorDTO();
+    public DateTime NewEndSubscriptionDate { get; set; } = new DateTime();
+    public string Search { get; set; } = "";
 
+    protected override async void OnInitialized()
+    {
+        doctorDTOs = await iadminservice.getallDoctors();
+
+        StateHasChanged();
+        base.OnInitialized();
+    }
+
+    public void DeleteAdmin(string id)
+    {
+        iadminservice.UpdateDoctor_AsDelete(id);
+    }
+    public void SendDoctorToModal(DoctorDTO doctorDTO)
+    {
+        this.doctorDTO = doctorDTO;    }
+    public void ModalSaveChanges()
+    {
+        doctorDTO.EndSubscriptionDate = NewEndSubscriptionDate;
+        iadminservice.UpdateDoctor(doctorDTO);
+    }
+
+    public void FilterDoctorBySearch()
+    {
+        doctorDTOs = doctorDTOs.Where(d => d.FirstName.Contains(Search, StringComparison.OrdinalIgnoreCase)).ToList();
+    }
 }

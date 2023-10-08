@@ -34,8 +34,21 @@ namespace ClincApi.Controllers
         [HttpGet("/api/getalldoctors")]
         public async Task<ActionResult> GetAllDoctors()
         {
-            List<AppUser> users = (List<AppUser>) await _userManager.GetUsersInRoleAsync("Doctor");
-            if (users.Count != 0) return Ok(users);
+            List<AppUser> users = (List<AppUser>)await _userManager.GetUsersInRoleAsync("Doctor");
+            if (users.Count != 0)
+            {
+                List<DoctorDTO> doctorDTOs = new List<DoctorDTO>();
+
+                foreach (var doctor in users)
+                {
+                    DoctorDTO doctorDTO = new DoctorDTO(doctor.Id, doctor.FirstName, doctor.LastName, doctor.Age, doctor.PhoneNumber, doctor.Address
+                                             , doctor.LocationLat, doctor.LocationLong, doctor.FaceBook, doctor.Instgram, doctor.WhatsUpNumber,
+                                             doctor.StartSubscriptionDate, doctor.EndSubscriptionDate, doctor.Delete_Doctor,
+                                             doctor.Image, doctor.CoverImage);
+                    doctorDTOs.Add(doctorDTO);
+                }
+                return Ok(doctorDTOs);
+            }
             else return NotFound();
         }
         [HttpGet("/api/getalladmins")]
@@ -46,55 +59,59 @@ namespace ClincApi.Controllers
             else return NotFound();
         }
 
-        [HttpGet("/api/getuserbyid")]    
+        [HttpGet("/api/userlogin")]
         public async Task<AppUser> GetUserbyIdAsync(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            return user;
+            return await _userManager.FindByIdAsync(id);
 
             //var user = this._clinicDBContext.Users.SingleOrDefault(u => u.Id == id);
         }
+
+
         [HttpGet("/api/getdoctorbyid")]
         public async Task<IActionResult> GetDoctorbyIdAsync(string id)
         {
             if (!string.IsNullOrWhiteSpace(id))
             {
-                  var doctor = await _userManager.Users
-                 .Include(d => d.Services)
-                 .Include(d => d.Category)
-                 .SingleOrDefaultAsync(u => u.Id == id);
-                     
-               if (doctor != null)
-               {
-                     DoctorDTO doctorDTO = new DoctorDTO(id , doctor.FirstName, doctor.LastName,doctor.Age,doctor.PhoneNumber,doctor.Address
-                       ,doctor.LocationLat,doctor.LocationLong,doctor.FaceBook,doctor.Instgram,doctor.WhatsUpNumber);
-               
-                     CategoryDTO categoryDTO = new CategoryDTO()
-                     {
-                         Id = (int)doctor.CategoryId,
-                         Name = doctor.Category.Name,
-               
-                     };
-                   doctorDTO.categoryDTO = categoryDTO;
-               
-                   foreach(var doctorService in doctor.Services)
-                   {
-                         DoctorServiceDTO doctorServiceDTO = new DoctorServiceDTO()
-                         {
-                             Id = doctorService.Id,
-                             Title = doctorService.Title,
-                             Discription = doctorService.Discription,
-                             Image = doctorService.Image,
-                         };
-                         doctorDTO.doctorServiceDTOs.Add(doctorServiceDTO);
-               
-                   }
-                     return Ok(doctorDTO);
-               }
-               return NotFound("not found");
-            }                    
+                var doctor = await _userManager.Users
+               .Include(d => d.Services)
+               .Include(d => d.Category)
+               .SingleOrDefaultAsync(u => u.Id == id);
+
+                if (doctor != null)
+                {
+                    DoctorDTO doctorDTO = new DoctorDTO(id, doctor.FirstName, doctor.LastName, doctor.Age, doctor.PhoneNumber, doctor.Address
+                      , doctor.LocationLat, doctor.LocationLong, doctor.FaceBook, doctor.Instgram, doctor.WhatsUpNumber, doctor.StartSubscriptionDate, doctor.EndSubscriptionDate,
+                      doctor.Delete_Doctor, doctor.Image, doctor.CoverImage);
+
+                    CategoryDTO categoryDTO = new CategoryDTO()
+                    {
+                        Id = (int)doctor.CategoryId,
+                        Name = doctor.Category.Name,
+
+                    };
+                    doctorDTO.categoryDTO = categoryDTO;
+
+                    foreach (var doctorService in doctor.Services)
+                    {
+                        DoctorServiceDTO doctorServiceDTO = new DoctorServiceDTO()
+                        {
+                            Id = doctorService.Id,
+                            Title = doctorService.Title,
+                            Discription = doctorService.Discription,
+                            Image = doctorService.Image,
+                        };
+                        doctorDTO.doctorServiceDTOs.Add(doctorServiceDTO);
+
+                    }
+                    return Ok(doctorDTO);
+                }
+                return NotFound("not found");
+            }
             return BadRequest("id is null or empty");
         }
+
+
 
         [HttpPost]
         public async Task<ActionResult> AdminRegistration(AdminRegiterationDTO adminRegiterationDTO)
@@ -135,13 +152,14 @@ namespace ClincApi.Controllers
             if (ModelState.IsValid)
             {
                 AppUser user = new()
-                {   StartSubscriptionDate = doctorRegisterationByAmdinDTO.StartSubscriptionDate,
+                {
+                    StartSubscriptionDate = doctorRegisterationByAmdinDTO.StartSubscriptionDate,
                     EndSubscriptionDate = doctorRegisterationByAmdinDTO.EndSubscriptionDate,
-                    UserName = doctorRegisterationByAmdinDTO.UserName,                                 
+                    UserName = doctorRegisterationByAmdinDTO.UserName,
                 };
                 IdentityResult addUserResult = await _userManager.CreateAsync(user, doctorRegisterationByAmdinDTO.Password);
                 doctorRegisterationByAmdinDTO.Id = user.Id;
-                if (addUserResult.Succeeded )
+                if (addUserResult.Succeeded)
                 {
                     try
                     {
@@ -186,12 +204,45 @@ namespace ClincApi.Controllers
                 return BadRequest("model state invalid");
 
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
-           
-           
+
+
         }
+
+        [HttpPut("/api/EndSubscriptionDate")]
+        public async Task<ActionResult> UpdateEndSubscriptionDate(DoctorDTO doctorDTO)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    AppUser? doctor = await GetUserbyIdAsync(doctorDTO.Id);
+                    if (doctor != null)
+                    {
+
+                        doctor.EndSubscriptionDate = doctorDTO.EndSubscriptionDate;
+
+                        IdentityResult updateDoctorProfileResult = await _userManager.UpdateAsync(doctor);
+                        return updateDoctorProfileResult.Succeeded ? Ok(doctor) : BadRequest("faild to save changes");
+
+                    }
+                    else return NotFound("Doctor is null");
+
+                }
+                return BadRequest("model state invalid");
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+
+        }
+
         [HttpPut("/api/editadminprofile")]
         public async Task<ActionResult> EditAdminProfile(AdminRegiterationDTO adminRegiterationDTO)
         {
@@ -229,6 +280,43 @@ namespace ClincApi.Controllers
 
 
         }
+        [HttpDelete]
+        public async Task<ActionResult> DeleteUser(string id)
+        {
+            AppUser? user = await GetUserbyIdAsync(id);
+
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+        [HttpDelete("/api/deletedoctor")]
+        public async Task<ActionResult> DeleteDoctor(string id)
+        {
+            try
+            {
+                if (id != null)
+                {
+                    AppUser? doctor = await GetUserbyIdAsync(id);
+                    if (doctor != null)
+                    {
+                        doctor.Delete_Doctor = 1;
+                        IdentityResult Result = await _userManager.UpdateAsync(doctor);
+                        return Result.Succeeded ? Ok(doctor) : BadRequest("faild to save changes");
+
+                    }
+                    else return NotFound("user is null");
+                }
+                return BadRequest("Id is Null");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         //[HttpPost("/api/login")]
         //public async Task<IActionResult> Login(LoginDTO loginDTO)

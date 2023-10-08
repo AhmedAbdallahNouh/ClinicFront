@@ -1,49 +1,35 @@
 ﻿@page "/mainpageadmin"
 @layout MainLayoutAdmin
-@attribute [Authorize(Roles = "Admin")]
+@inject IAdminService iadminservice
+
 <div class="main_container">
+    <h1>جميع الأطباء</h1>
+
     <div class="containerswiper">
-        <h1>جميع الأقسام</h1>
-        <div class="swiper margin">
-            <div class="image-box-container swiper-container2">
-                <div class="swiper-wrapper">
-                    @for (var i = 0; i < 5; i++)
-                    {
-                        <div class="swiper-slide">
-                            <div class="card" style="width: 18rem;">
-                                <img src="/assets/Images/clinic.jpeg" class="card-img-top" alt="...">
-                                <div class="card-body">
-                                    <h6>قسم عيون</h6>
-                                </div>
-                            </div>
-                        </div>
-
-                    }
-                </div>
-                <div id="P" class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-                <input type="hidden" id="w" value="some_value" />
-            </div>
-        </div>
-    </div>
-
-    <div class="main_container">
         <h1>جميع الأطباء</h1>
-        <div class="swiper margin">
+        <div class="swiper ">
             <div class="image-box-container swiper-container2">
                 <div class="swiper-wrapper">
                     @for (var i = 0; i < 5; i++)
                     {
                         <div class="swiper-slide">
                             <div class="card" style="width: 18rem;">
-                                <img src="/assets/Images/clinic.jpeg" class="card-img-top" alt="...">
+                                <img src="@doctorDTOs[i].Image" class="card-img-top" alt="...">
                                 <div class="card-body">
-                                    <h6>احمد جمال</h6>
-                                    <h6>قسم عيون</h6>
+                                    <h6>@doctorDTOs[i].FirstName</h6>
+                                    <h6>@doctorDTOs[i].categoryDTO.Name</h6>
                                 </div>
                             </div>
                         </div>
                     }
+                    <div class="swiper-slide">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                                <h2>المزيد</h2>
+                                <i class="bi bi-plus-lg"></i>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="P" class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
@@ -58,44 +44,45 @@
         @for(var i =0; i< 5; i++)
         {
             <div class="col-lg-4 col-md-6">
-                <img class="img_of_admin" src="/assets/Images/Untitled.jpeg" />
-                    <h6 style="text-align:center;">احمد</h6>
+                <img class="img_of_admin" src="@adminRegiterationDTOs[i].Image" />
+                <h6 style="text-align:center;">@adminRegiterationDTOs[i].FirstName</h6>
             </div>
         }
     </div>
-                    
 </div>
-
-
-<AuthorizeView>
-    <Authorized>
-        <h3>Hello @context.User.Identity.Name</h3>
-        <h3>Authentication Type : @context.User.Identity.AuthenticationType</h3>
-        <h3>Is Authenticated : @context.User.Identity.IsAuthenticated</h3>
-        @foreach (var claim in @context.User.Claims)
-        {
-            <h3>@claim.ValueType : @claim.Value </h3>
-
-        }
-
-    </Authorized>
-</AuthorizeView>
-
 
 @code {
     [Inject]
     public IJSRuntime jSRuntime { get; set; }
+    public List<AdminRegiterationDTO> adminRegiterationDTOs { get; set; } = new List<AdminRegiterationDTO>();
+    public List<DoctorDTO> doctorDTOs { get; set; } = new List<DoctorDTO>();
+
     private async Task InitializeSwiper()
     {
         await jSRuntime.InvokeVoidAsync("initializeSwiper");
     }
-    protected override async void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender){
+        if (firstRender)
+        {
             await InitializeSwiper();
-            StateHasChanged();
         }
-          
+
+        StateHasChanged();
+    }
+
+
+    protected override async void OnInitialized()
+    {
+        adminRegiterationDTOs = await iadminservice.getallAdmins();
+
+        StateHasChanged();
+        base.OnInitialized();
+    }
+
+    public void DeleteAdmin(string id)
+    {
+        iadminservice.DeleteUser(id);
     }
 
 }

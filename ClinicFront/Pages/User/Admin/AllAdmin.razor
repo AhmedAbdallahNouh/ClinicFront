@@ -1,0 +1,77 @@
+﻿@page "/alladmin"
+@layout MainLayoutAdmin
+@inject IAdminService iadminservice
+<div class="main_container">
+    <h1>كـــل الأدمـــن</h1>
+
+    <div class="row" style="justify-content:space-evenly;width:100%;">
+        @foreach (var adminRegiterationDTOs in adminRegiterationDTOs)
+        {
+            <div class="cardd rounded-3 col-lg-5 col-md-12 col-sm-12">
+                <div class="card-body">
+                    <div class="row after-card-body">
+
+                        <div class="col-md-6 col-lg-6 col-xl-6 flex_column" style="justify-content:start;">
+                            <div class="flex_row">
+                                <div>
+                                    <div class="flex">
+                                        <h4><b>:الأسم الأول</b></h4>
+                                        <h5><b>@adminRegiterationDTOs.FirstName</b></h5>
+                                    </div>
+                                    <div class="flex">
+                                        <h4><b>:الأسم الأخير</b></h4>
+                                        <h5><b>@adminRegiterationDTOs.LastName</b></h5>
+                                    </div>
+                                </div> 
+                                <div>
+                                    <div class="flex">
+                                        <h4><b>:رقم الهاتف</b></h4>
+                                        <h5><b>@adminRegiterationDTOs.PhoneNumber</b></h5>
+                                    </div>
+                                    <div class="flex">
+                                        <h4><b>:الأيميل</b></h4>
+                                        <h5><b>@adminRegiterationDTOs.Email</b></h5>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex_row mt-4">
+                                <button class="btn Cart_button_delete btn-sm" @onclick="() => DeleteAdmin(adminRegiterationDTOs.Id)" type="button">
+                                    <h5>حذف</h5>
+                                </button>
+                                <a class="btn Cart_button btn-sm" type="button">
+                                    <h5>تعديــل</h5>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 col-lg-3 col-xl-3 mb-1 mb-lg-0 border-start">
+                            <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                                <img src="@adminRegiterationDTOs.Image" class="w-100" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+@code {
+    public List<AdminRegiterationDTO> adminRegiterationDTOs { get; set; } = new List<AdminRegiterationDTO>();
+
+    protected override  async void OnInitialized()
+    {
+        adminRegiterationDTOs = await iadminservice.getallAdmins();
+
+        StateHasChanged();
+        base.OnInitialized();
+    }
+
+
+    public void DeleteAdmin(string id)
+    {
+        iadminservice.DeleteUser(id);
+    }
+}

@@ -1,0 +1,257 @@
+﻿@page "/profileofdoctor"
+@layout MainLayoutDoctor
+
+<div class="container-lg" style="margin-top: -1.1rem;">
+    <div class="containerofimage">
+        <img src="@CoverPhoto" class="img"/>
+
+        <label type="submit" class="btn btn-lg btn-block fw-bold button coverphoto_button">
+            <InputFile id="ProfileName" type="file" @onclick="() => Handelcover_img('c')" OnChange="@HandleFileSelected" class="input_i" style="display:none;" multiple />
+            <i class="fas fa-camera profileicon" style="font-size:1rem"><b style="margin-right:1rem">صورة الغلاف</b></i>
+        </label>
+
+        <div class="profileimage">
+            @if(!string.IsNullOrEmpty(image)){
+                <img src="@image" class="img" style="border-radius: 50%;" />
+            }
+            else
+            {
+                <i class="bi bi-person-circle"></i>
+            }
+            <label class="profilechange">
+                <InputFile id="ProfileName" type="file" @onclick="() => Handelcover_img('i')" OnChange="@HandleFileSelected" class="input_i" style="display:none;" multiple />
+                <i class="fas fa-camera profileicon" style="font-size:1rem;color: #03206C;"></i>
+            </label>
+        </div>
+    </div>
+
+    <div class="containerofcntent">
+        <div class="subcontainerofcntent">
+        <h2><b>قم بإدخال هذه البيانات</b></h2>
+            <EditForm Model="@doctorDTO" class="form-signup">
+                <DataAnnotationsValidator />
+                    <h3><b>يجب إدخال هذه البيانات: </b></h3>
+                <div class="nessacrydata flexrow">
+                    <div class="flexcolumn">
+                        <label class="fw-bold label"><b>الأسم الأول</b></label>
+                        <div class="mb-2 input-container">
+                            <InputText id="fname"
+                                       @bind-Value="doctorDTO.FirstName"
+                                       @oninput="() => HandleInput(doctorDTO.FirstName,Fname)"
+                                       name="Fname"
+                                       style="padding-right:3rem;"
+                                       class="form-control input_i" />
+                            <label class="p @Fname" for="fname"><b>الأسم الأول</b></label>
+                            <i class="fas fa-user icon"></i>
+                        </div>
+                        <ValidationMessage For="@(() => doctorDTO.LastName)" style="text-align:center" />
+
+                        <label class="fw-bold label"><b>الأسم الأخير</b></label>
+                        <div class="mb-2 input-container">
+                            <InputText id="lname"
+                                       @bind-Value="@doctorDTO.LastName"
+                                       @onblur="() => HandleInput(doctorDTO.LastName,Lname)"
+
+                                       name="Lname"
+                                       style="padding-right:3rem;"
+                                       class="form-control ss input_i"/>
+                            <label class="p @Lname" for="lname"><b>الأسم الأخير</b></label>
+                            <i class="fas fa-user icon"></i>
+                        </div>
+                        <ValidationMessage For="@(() => doctorDTO.LastName)" style="text-align:center" />
+
+                        <label class="fw-bold label"><b>رقم الهاتف</b></label>
+                        <div class="mb-2 input-container">
+                            <InputText id="Phone"
+                                       @bind-Value="@doctorDTO.PhoneNumber"
+                                       name="Phone"
+                                       style="padding-right:3rem;"
+                                       class="form-control input_i"/>
+                            <label class="p" for="Phone"><b>رقم الهاتف</b></label>
+                            <i class="fas fa-phone-alt icon"></i>
+                        </div>
+                        <ValidationMessage For="@(() => doctorDTO.PhoneNumber)" style="text-align:center" />
+                    </div>
+
+
+
+                    <div class="flexcolumn">
+                        <label class="fw-bold label">العمـر</label>
+                        <div class="mb-2 input-container">
+                            <InputNumber id="age"
+                                         @bind-Value="@doctorDTO.Age"
+                                         name="Age"
+                                         style="padding-right:3rem;"
+                                         class="form-control input_i"/>
+                            <label class="p" for="age"><b>العمـر</b></label>
+                            <i class="fas fa-user-friends icon"></i>
+                        </div>
+                        <ValidationMessage For="@(() => doctorDTO.Age)" style="text-align:center" />
+
+                        <label class="fw-bold label"><b>عنوان العيادة</b></label>
+                        <div class="input-container mb-2">
+                            <InputText id="address"
+                                       @bind-Value="@doctorDTO.Address"
+                                       style="padding-right:3rem;"
+                                       class="form-control input_i"/>
+                            <label class="p" for="address"><b>عنوان العيادة</b></label>
+                            <i class="fas fa-envelope icon"></i>
+                        </div>
+                        <ValidationMessage For="@(() => doctorDTO.Address)" style="text-align:center" />
+
+                        <label class="fw-bold label"><b>الوصف</b></label>
+                        <div class="mb-2 input-container">
+                            <InputTextArea id="discription"
+                                       @bind-Value="@doctorDTO.Discription"
+                                       style="padding-right:3rem;min-height:10rem;"
+                                       class="form-control input_i"/>
+                            <label class="p" for="discription"><b>الوصف</b></label>
+                            <i class="fas fa-lock icon"></i>
+                        </div>
+                        <ValidationMessage For="@(() => doctorDTO.Discription)" style="text-align:center" />
+                    </div>
+                </div>
+                
+                <h3><b>هذه البيانات إختياريه:</b></h3>
+                <div class="flexrow">
+                    <div class="flexcolumn">
+                        <label class="fw-bold label"><b>حساب Facebook</b></label>
+                        <div class="mb-2 input-container">
+
+                            <InputText id="facebook"
+                                       @bind-Value="@doctorDTO.FaceBook"
+                                       name="Fname"
+                                       style="padding-right:3rem;"
+                                       class="form-control input_i ss" />
+                            <label class="p" for="facebook"><b>حساب Facebook</b></label>
+                            <i class="fas fa-user icon"></i>
+                        </div>
+                        <ValidationMessage For="@(() => doctorDTO.FaceBook)" style="text-align:center" />
+
+                        <label class="fw-bold label"><b>حساب Gmail</b></label>
+                        <div class="mb-2 input-container">
+                            <InputText id="gmail"
+                                       @bind-Value="@doctorDTO.Email"
+                                       name="Fname"
+                                       style="padding-right:3rem;"
+                                       class="form-control input_i ss" />
+                            <label class="p" for="gmail"><b>حساب Gmail</b></label>
+                            <i class="fas fa-user icon"></i>
+                        </div>
+                        <ValidationMessage For="@(() => doctorDTO.Email)" style="text-align:center" />
+                    </div>       
+                    
+                    
+                    <div class="flexcolumn">
+                        <label class="fw-bold label"><b>حساب Instagram</b></label>
+                        <div class="mb-2 input-container">
+                            <InputText id="instagram"
+                                       @bind-Value="@doctorDTO.Instgram"
+                                       name="Fname"
+                                       style="padding-right:3rem;"
+                                       class="form-control input_i ss" />
+                            <label class="p" for="instagram"><b>حساب Instagram</b></label>
+                            <i class="fas fa-user icon"></i>
+                        </div>
+                        <ValidationMessage For="@(() => doctorDTO.Instgram)" style="text-align:center" />
+
+                        <label class="fw-bold label"><b>رقم Whatsapp</b></label>
+                        <div class="mb-2 input-container">
+                            <InputText id="whatsapp"
+                                       @bind-Value="@doctorDTO.WhatsUpNumber"
+                                       name="Fname"
+                                       style="padding-right:3rem;"
+                                       class="form-control input_i ss" />
+                            <label class="p" for="whatsapp"><b>رقم Whatsapp</b></label>
+                            <i class="fas fa-user icon"></i>
+                        </div>
+                        <ValidationMessage For="@(() => doctorDTO.WhatsUpNumber)" style="text-align:center" />
+                    </div>
+                </div>
+                
+
+                <button type="submit" class="btn btn-lg btn-block fw-bold button" style="padding: .2rem 0rem;" @onclick="UpdateDoctor">
+                    حفــظ
+                </button>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    [Inject]
+    public IJSRuntime navjs { get; set; }
+    [Inject]
+    public IAdminService adminService { get; set; }
+    [Inject]
+    public IDoctorService doctorService { get; set; }
+    public DoctorDTO doctorDTO { get; set; } = new DoctorDTO();
+
+    public string Fname { get; set; }
+    public string Lname { get; set; } = "Lname";
+    public string PhoneNumber { get; set; }
+    public string Age { get; set; }
+    public string Area { get; set; }
+    public string Discription { get; set; }
+    public string Facebook { get; set; }
+    public string Gmail { get; set; }
+    public string Instagram { get; set; }
+    public int Whatsapp { get; set; }
+    public char handelcover_img { get; set; }
+    public string CoverPhoto { get; set; } = "assets/images/halfdoctor.jpeg";
+    public string image { get; set; } = "";
+    public bool check { get; set; } = false;
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        
+    }
+    public async void UpdateDoctor()
+    {
+        await doctorService.UpdateDoctorProfile(doctorDTO);
+    }
+    private void HandleInput(string value,string propname)
+    {
+        navjs.InvokeVoidAsync("console.log", value);
+        if (string.IsNullOrEmpty(value))
+        {
+            Lname = "p";
+        }
+        else
+        {
+           Lname = "p_focus";
+        }
+    }
+    private void Handelcover_img(char img)
+    {
+        handelcover_img = img;
+    }
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        await navjs.InvokeVoidAsync("console.log", CoverPhoto);
+        await navjs.InvokeVoidAsync("console.log", image);
+
+        var file = e.File;
+        if (file != null)
+        {
+            var format = "image/png";
+            var resizedImageFile = await file.RequestImageFileAsync(format, 400, 400);
+
+            using var ms = new MemoryStream();
+            await resizedImageFile.OpenReadStream().CopyToAsync(ms);
+            var buffer = ms.ToArray();
+
+            var imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+            if (handelcover_img == 'c')
+            {
+                CoverPhoto = imageDataUrl;
+            }
+            else
+            {
+                image = imageDataUrl;
+            }
+            check = true;
+        }
+    }
+}

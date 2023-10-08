@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text;
 using ClinicModels.DTOs.DoctorDTO;
+using ClinicModels.DTOs.MainDTO;
 
 namespace ClinicFront.Services
 {
@@ -19,6 +20,13 @@ namespace ClinicFront.Services
             var stream = await response.Content.ReadAsStreamAsync();
             var t = await JsonSerializer.DeserializeAsync<DoctorDTO>(stream, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             return t;
+        }
+
+        public async Task<HttpResponseMessage> UpdateDoctorProfile(DoctorDTO doctorDTO)
+        {
+            var newDoctorToAdd = new StringContent(JsonSerializer.Serialize(doctorDTO), Encoding.UTF8, "application/json");
+            var response = await _http.PostAsync("/api/doctorregister", newDoctorToAdd);
+            return response;
         }
     }
 }

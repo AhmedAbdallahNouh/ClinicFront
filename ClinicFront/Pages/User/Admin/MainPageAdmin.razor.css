@@ -1,5 +1,5 @@
 ﻿.main_container {
-    width: 90rem;
+    width: 80%;
     height: 100%;
 }
 .container_admin {
@@ -15,7 +15,7 @@
     border-radius: 50%;
 }
 h1{
-    margin-bottom:2rem;
+    margin-bottom:3rem;
     direction:rtl;
 }
 h6{
@@ -28,6 +28,11 @@ h6{
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom:6rem;
+}
+.swiper-slide{
+    gap:7px;
+    margin-right:5rem
 }
 .swiper-wrapper {
     gap: 15px;
@@ -36,12 +41,19 @@ h6{
     overflow: hidden;
     width: 90%;
 }
-@media (max-width: 1835px) {
-    .containerswiper {
-        width: 80%
+@media (max-width: 1590px) {
+    .swiper-wrapper {
+        gap: 70px;
     }
-}@media (max-width: 1790px) {
-    .containerswiper {
-        width: 60%
+}
+@media (max-width: 1237px) {
+    .main_container {
+        width: 100%;
+    }
+    .containerswiper{
+        width:100%;
+    }
+    .swiper-wrapper {
+        gap: 70px;
     }
 }
