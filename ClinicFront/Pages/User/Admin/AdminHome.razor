@@ -1,0 +1,342 @@
+﻿@page "/adminHome"
+@layout MainLayoutAdmin
+@inject ICategoryService _categorySrevice
+<div class="bodybackground"></div>
+    <div class="main-container">
+        <div class="row justify-content-evenly all-time-statistics-row">
+            <div class="col-lg-4 col-md-12 col-sm-12 mt-4 ads-row-first-col">
+                <div class="month-statistics-div">
+                    <p>عـدد تجـديــد الإشتــراك</p>
+                    <p>12</p>
+                    <div>
+                        <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 14H3V10H9V14ZM18 10V8L17 3H1L0 8V10H1V16H11V10H15V16H17V10H18ZM17 0H1V2H17V0Z" fill="white" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="month-statistics-div">
+                    <p>عــدد الإعـلانــات </p>
+                    <p>7</p>
+                    <div>
+                        <svg width="20" height="18" viewBox="0 0 20 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M20 18H0V0H2V16H4V7H8V16H10V3H14V16H16V11H20V18Z" fill="white" />
+                        </svg>
+                    </div>
+                </div>
+
+                <div class=" month-statistics-div">
+                    <p>عــدد الــزوار</p>
+                    <p>230</p>
+                    <div>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 17.2C7.5 17.2 5.29 15.92 4 14C4.03 12 8 10.9 10 10.9C12 10.9 15.97 12 16 14C14.71 15.92 12.5 17.2 10 17.2ZM10 3C10.7956 3 11.5587 3.31607 12.1213 3.87868C12.6839 4.44129 13 5.20435 13 6C13 6.79565 12.6839 7.55871 12.1213 8.12132C11.5587 8.68393 10.7956 9 10 9C9.20435 9 8.44129 8.68393 7.87868 8.12132C7.31607 7.55871 7 6.79565 7 6C7 5.20435 7.31607 4.44129 7.87868 3.87868C8.44129 3.31607 9.20435 3 10 3V3ZM10 0C8.68678 0 7.38642 0.258658 6.17317 0.761205C4.95991 1.26375 3.85752 2.00035 2.92893 2.92893C1.05357 4.8043 0 7.34784 0 10C0 12.6522 1.05357 15.1957 2.92893 17.0711C3.85752 17.9997 4.95991 18.7362 6.17317 19.2388C7.38642 19.7413 8.68678 20 10 20C12.6522 20 15.1957 18.9464 17.0711 17.0711C18.9464 15.1957 20 12.6522 20 10C20 4.47 15.5 0 10 0Z" fill="white" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="card col-lg-6 col-sm-12 ads-row-second-col">
+                <div class="card-body">
+                    <div>
+                        <Chart @ref="barChart" Type="ChartType.Bar" TItem="double" Clicked="@OnClicked" />
+                    </div>
+                    <h4 class="card-subtitle mb-2 text-body-secondary">الإعــلانــات</h4>
+                    <div class="card-foot"><p>العدد الإجمالى : 30</p></div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-evenly all-time-statistics-row">
+            <div class="card col-lg-6 second-chart-col">
+                <div class="card-body">
+                    <div>
+                        <LineChart @ref="lineChart" TItem="double" />
+                    </div>
+                <h4 class="card-subtitle mb-2 text-body-secondary">الإشتــراكـات</h4>
+                <div class="card-foot"><p>العدد الإجمالى : 30</p></div>
+                </div>
+            </div>
+            <div class="card col-lg-6 all-time-statistics-row-thir-div">
+                <div class="card-body">
+                    <div>
+                        <LineChart @ref="lineChart2" TItem="double" />
+                    </div>
+                <h4 class="card-subtitle mb-2 text-body-secondary">الــزوار</h4>
+                <div class="card-foot"><p>العدد الإجمالى : 30</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-evenly admins-row">
+            <div class=" col-lg-3 col-md-4 col-sm-12 admin-row-div ">
+                <div class="admin-img-container">
+                    <img src="/assets/Images/doc.jpeg" />
+                </div>
+                <h4 class="card-subtitle mb-2 mt-3 text-body-secondary">محمد على</h4>
+            </div>
+        <div class=" col-lg-3 col-md-4 ">
+                <div class="admin-img-container">
+                    <img src="/assets/Images/doc.jpeg" />
+                </div>
+                <h4 class="card-subtitle mb-2 mt-3 text-body-secondary">أحمد جمال</h4>
+            </div>
+        <div class=" col-lg-3 col-md-4 ">
+                <div class="admin-img-container">
+                    <img src="/assets/Images/doc.jpeg" />
+                </div>
+                <h4 class="card-subtitle mb-2 mt-3 text-body-secondary">عبدالله نوح</h4>
+            </div>
+        <div class=" col-lg-3 col-md-4 ">
+                <div class="admin-img-container">
+                    <img src="/assets/Images/doc.jpeg" />
+                </div>
+                <h4 class="card-subtitle mb-2 mt-3 text-body-secondary">مروة السيد</h4>
+            </div>
+        </div>
+        <div class="row  specialties-container-div">
+            @foreach(var categoryDTO in CategoryDTOs)
+            {
+            <div class="specialties-div col-lg-2" @onclick="()=>SetUpdateValue2(categoryDTO)"> <p class="specialties-p ">@categoryDTO.Name</p></div>
+
+            }         
+        </div>
+
+        <div class="row">
+        <EditForm Model="@CategoryDTO">
+            <div class="form-input-container">
+                <div class="category-name-input">
+                    <InputText class="text-center" @bind-Value="CategoryDTO.Name"
+                               style="width:100%; height: 100%; border: none; color: black;font-size: x-large;font-weight: bold;"
+                              disabled>
+                    </InputText>
+                </div>  
+            </div>
+            <div class="d-flex category-modify-btns-div">
+                <div>
+                    <button class="modify-btn-enable" @onclick="SetAddCategoryFunction" data-bs-toggle="modal" data-bs-target="#exampleModal">إضافة جديد</button>
+                </div>
+                <div>
+                    <button class="@DeleteAddBtnClass" @onclick="SetUpdateCategoryFunction" disabled="@DeleteAddBtnDisabled" data-bs-toggle="modal" data-bs-target="#exampleModal">تعديل</button>
+                    <button class="@DeleteAddBtnClass" @onclick="SetDeleteFunction" disabled="@DeleteAddBtnDisabled" data-bs-toggle="modal" data-bs-target="#exampleModal">حذف</button>
+                </div>
+              
+            </div>
+        </EditForm>
+        </div>
+        
+    </div>
+
+
+<ConfirmDeleteModal categoryDelegate="@categoryDelegate" OnConfirmDelete="@ActionStatusFunction" ActionStatus="@ActionStatus" />
+
+@code {
+    public delegate void CategoryDelegate(string CategoryName);
+    Chart<double> barChart;
+    LineChart<double> lineChart;
+    LineChart<double> lineChart2;
+    public CategoryDTO CategoryDTO { get; set; } = new CategoryDTO();
+    public List<CategoryDTO> CategoryDTOs { get; set; } = new List<CategoryDTO>();
+    public string ActionStatus { get; set; }
+    public string DeleteAddBtnClass { get; set; } = "modify-btn-disable";
+    public bool DeleteAddBtnDisabled { get; set; } = true;
+    public Action ActionStatusFunction { get; set; } 
+    public ClinicFront.Pages.User.Admin.AdminHome.CategoryDelegate categoryDelegate { get; set; }
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        CategoryDTOs = await _categorySrevice.getallcategory();
+
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+
+            await HandleRedraw();
+            StateHasChanged();
+        }
+
+    }
+    public void SetAddCategoryFunction()
+    {
+        categoryDelegate = AddCategory;
+        ActionStatus = "تأكيد الإضافة";
+    }
+    public void SetUpdateCategoryFunction()
+    {
+        categoryDelegate = UpdateCategory;
+        ActionStatus = "تأكيد التعديل";
+
+    }
+    public void SetDeleteFunction()
+    {
+        ActionStatusFunction = DeleteCategory;
+        ActionStatus = "تأكيد الحذف";
+    }
+
+    public async void AddCategory(string categoryNameToAdd)
+    {
+        ClinicModels.CategoryDTO categoryDTOToAdd = new CategoryDTO();
+        categoryDTOToAdd.Name = categoryNameToAdd;
+        var response = await _categorySrevice.Addcategory(categoryDTOToAdd);
+        if (response.StatusCode.ToString() == "NoContent")
+        {
+            CategoryDTOs.Add(categoryDTOToAdd);
+            StateHasChanged();
+
+        }
+    }
+    public async void UpdateCategory(string newCategoryNameToUpdate)
+    {
+
+
+        CategoryDTO.Name = newCategoryNameToUpdate;
+        var response =   await  _categorySrevice.Updatecategory(CategoryDTO);
+        if (response.StatusCode.ToString() == "NoContent")
+        {
+            var updatedCategoryDTOindex = CategoryDTOs.FindIndex(a => a.Id == CategoryDTO.Id);
+            if (updatedCategoryDTOindex != -1)
+            {
+                CategoryDTOs[updatedCategoryDTOindex].Name = newCategoryNameToUpdate;
+            }
+        }
+        StateHasChanged();
+    }
+
+    public async void DeleteCategory()
+    {
+
+        var response = await _categorySrevice.Deletecategory(CategoryDTO.Id);
+        if (response.StatusCode.ToString() == "NoContent")
+        {
+            var deletedCategoryDTOindex = CategoryDTOs.FindIndex(a => a.Name == CategoryDTO.Name);
+            CategoryDTOs.RemoveAt(deletedCategoryDTOindex);
+        }
+        StateHasChanged();
+    }
+    private void SetUpdateValue2(CategoryDTO C)
+    {
+        CategoryDTO.Name = C.Name;
+        CategoryDTO.Id = C.Id;
+        if (!string.IsNullOrEmpty(CategoryDTO.Name))
+        {
+            DeleteAddBtnClass = "modify-btn-enable";
+            DeleteAddBtnDisabled = false;
+        }
+       
+
+    }
+
+    private void Save()
+    {
+        
+    }
+    private void ShowInvalidModal()
+    {
+
+    }
+    private async Task<(List<string> labels, List<double> data)> GetOrdersPerMonth()
+    {
+
+
+        // var orders = order.GetOrders()
+        //     .Where(o => o.OrderItems.Any(oi => oi.ProductSellerID == sellerId))
+        //     .GroupBy(o => new { o.CreatedDate.Value.Year, o.CreatedDate.Value.Month })
+        //     .Select(g => new { Date = g.Key, Count = g.Count() })
+        //     .OrderBy(x => x.Date.Year)
+        //     .ThenBy(x => x.Date.Month)
+        //     .ToList();
+
+        // Convert to list of labels and counts for the chart
+        // var labels = orders.Select(p => $"{new DateTime(p.Date.Year, p.Date.Month, 1):MMM yyyy}").ToList();
+        // var data = orders.Select(p => (double)p.Count).ToList();
+        List<string> labels = new List<string>() { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+        List<double> data = new List<double> { 1, 5, 6, 10, 39, 40, 56.7, 98, 100.9, 196, 332.5, 20 };
+
+
+        return (labels, data);
+    }
+    async Task HandleRedraw()
+    {
+        //line chart
+        await lineChart.Clear();
+        await lineChart.AddLabelsDatasetsAndUpdate(Labels, GetLineChartDataset());
+        //line chart2
+        await lineChart2.Clear();
+        await lineChart2.AddLabelsDatasetsAndUpdate(Labels, GetLineChartDataset());
+
+        await barChart.Clear();
+        var dataset = await GetBarChartDataset();
+        await barChart.AddLabelsDatasetsAndUpdate(Labels, dataset);
+    }
+
+
+    //Start Bar Chart
+    private async Task<BarChartDataset<double>> GetBarChartDataset()
+    {
+        // var (labels, data) = await GetOrdersPerMonth();
+        // Labels = labels.ToArray();
+        return new()
+            {
+                Label = "# of Orders",
+                Data =  new List<double> { 1, 5, 6, 10, 39, 40, 56.7, 98, 100.9, 196, 332.5, 100 },
+                BackgroundColor = backgroundColors,
+                BorderColor = borderColors,
+                BorderWidth = 1
+            };
+    }
+
+    string[] Labels = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" }; 
+    List<string> backgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
+    List<string> borderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };
+
+
+    Task OnClicked(ChartMouseEventArgs e)
+    {
+        var model = e.Model as BarChartModel;
+
+        Console.WriteLine($"Handling event for {nameof(BarChartModel)}: x:{model.X} y:{model.Y}");
+        return Task.CompletedTask;
+    }
+    //End Bar Chart
+
+    //Start Line Chart
+    LineChartDataset<double> GetLineChartDataset()
+    {
+        return new LineChartDataset<double>
+            {
+                Label = "# of randoms",
+                Data = RandomizeData(),
+                BackgroundColor = lineChartbackgroundColors,
+                BorderColor = lineChartborderColors,
+                Fill = true,
+                PointRadius = 3,
+                CubicInterpolationMode = "monotone",
+            };
+    }
+
+    List<string> lineChartbackgroundColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
+    List<string> lineChartborderColors = new List<string> { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };
+
+    List<double> RandomizeData()
+    {
+        var r = new Random(DateTime.Now.Millisecond);
+
+        return new List<double> {
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble(),
+            r.Next( 3, 50 ) * r.NextDouble() };
+    }
+
+
+
+}

@@ -1,0 +1,68 @@
+﻿.nav {
+    padding: 0px 3rem;
+    box-shadow: 0px 3px 5px 2px rgb(50 63 105 / 53%);
+    position: fixed;
+    width: 100%;
+    z-index: 10000;
+    display: flex;
+    background-color: #000e45;
+     align-items: center; 
+     justify-content: space-between; 
+   
+}
+
+.hide_nav {
+    display: none !important;
+}
+
+.color_white {
+    color: white !important;
+}
+
+button {
+    border-color: white !important;
+}
+
+@font-face {
+    font-family: 'playball-regular';
+    src: url('../fonts/playball-regular(1).ttf') format('truetype');
+}
+
+.logo {
+    font-family: playball-regular;
+    font-size: 2rem;
+}
+
+.flex {
+    display: flex;
+    place-content: space-between;
+    align-content: center;
+    width: 100%
+}
+
+.lord_icon {
+    width: 4rem;
+    height: 2.2rem;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.flex_center {
+    display: flex;
+    place-content: center;
+    align-content: center;
+}
+
+li {
+    display: inline-block;
+    margin-right: 2rem
+}
+
+h5 {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-left: 3rem;
+    margin-top: .2rem;
+}

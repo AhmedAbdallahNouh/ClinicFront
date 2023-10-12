@@ -1,0 +1,132 @@
+﻿@inject IJSRuntime jsruntime
+<PageTitle>Index</PageTitle>
+<table>
+    <tr>
+        <td>
+            Name :  <select id="name" @onchange=@((ChangeEventArgs args)=> NameChanged(args.Value.ToString()))>
+                <option value="">Select</option>
+                <option value="Alibaug">Alibaug</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Pune">Pune</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Description :  <select id="description" @onchange=@((ChangeEventArgs args)=> DescriptionChanged(args.Value.ToString()))>
+                <option>Select</option>
+                <option value="Alibaug">Alibaug</option>
+                <option value="Mumbai">Mumbai</option>
+                <option value="Pune">Pune</option>
+            </select>
+        </td>
+    </tr>
+</table>
+<button @onclick="GetUserLocation">Get My Location</button>
+<hr />
+<div id="map" style="width: 400px; height: 400px;"></div>
+
+@code {
+    public string? name;
+    public string? description;
+    public List<MapModel>? mapData;
+
+    public List<MapModel> GetData()
+    {
+        mapData = new List<MapModel>();
+        mapData.Add(new MapModel
+            {
+                Name = "Alibaug",
+                Latitude = 18.641400m,
+                Longitude = 72.872200m,
+                Description = "Alibaug is a coastal town and a municipal council in Raigad District in the Konkan region of Maharashtra, India."
+            });
+        mapData.Add(new MapModel
+            {
+                Name = "Mumbai",
+                Latitude = 18.964700m,
+                Longitude = 72.825800m,
+                Description = "Mumbai formerly Bombay, is the capital city of the Indian state of Maharashtra."
+            });
+        mapData.Add(new MapModel
+            {
+                Name = "Pune",
+                Latitude = 18.523600m,
+                Longitude = 73.847800m,
+                Description = "Pune is the seventh largest metropolis in India, the second largest in the state of Maharashtra after Mumbai."
+            });
+
+        return mapData;
+    }
+
+    protected void NameChanged(string name)
+    {
+        InitializeMap();
+        this.name = name;
+        FilterMarkers();
+    }
+
+    protected void DescriptionChanged(string description)
+    {
+        InitializeMap();
+        this.description = description;
+        FilterMarkers();
+    }
+
+    private void InitializeMap()
+    {
+        GetData();
+        jsruntime.InvokeVoidAsync("initializeMap", mapData);
+    }
+
+    private void FilterMarkers()
+    {        
+        InitializeMap();
+        if (!string.IsNullOrEmpty(this.name))
+        {
+            mapData = mapData.Where(x => x.Name == this.name).ToList();
+        }
+        if (!string.IsNullOrEmpty(this.description))
+        {
+            mapData = mapData.Where(x => x.Description.Contains(this.description)).ToList();
+        }
+
+        jsruntime.InvokeVoidAsync("filterMarkers", this.name, this.description, mapData);
+    }
+
+    public class MapModel
+    {
+        public string? Name { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
+        public string? Description { get; set; }
+    }
+
+    private async Task GetUserLocation()
+    {
+        GetUserLocationSuccess = false;
+        GetUserLocationError = null;
+
+        try
+        {
+            // Use two separate variables to store latitude and longitude
+            var latitude = await jsruntime.InvokeAsync<double>("getUserLocation");
+            var longitude = await jsruntime.InvokeAsync<double>("getUserLocation");
+
+            UserLatitude = latitude;
+            UserLongitude = longitude;
+
+            GetUserLocationSuccess = true;
+            FilterMarkers();
+        }
+        catch (Exception ex)
+        {
+            GetUserLocationError = ex.Message;
+        }
+    }
+
+    private bool GetUserLocationSuccess = false;
+    private double UserLatitude = 0.0;
+    private double UserLongitude = 0.0;
+    private string GetUserLocationError = null;
+}

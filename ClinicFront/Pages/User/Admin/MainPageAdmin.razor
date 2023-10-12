@@ -1,6 +1,8 @@
 ﻿@page "/mainpageadmin"
+@using System.Security.Claims;
 @layout MainLayoutAdmin
 @inject IAdminService iadminservice
+
 
 <div class="main_container">
     <h1>جميع الأطباء</h1>
@@ -10,6 +12,7 @@
         <div class="swiper ">
             <div class="image-box-container swiper-container2">
                 <div class="swiper-wrapper">
+                    
                     @for (var i = 0; i < 5; i++)
                     {
                         <div class="swiper-slide">
@@ -56,7 +59,6 @@
     public IJSRuntime jSRuntime { get; set; }
     public List<AdminRegiterationDTO> adminRegiterationDTOs { get; set; } = new List<AdminRegiterationDTO>();
     public List<DoctorDTO> doctorDTOs { get; set; } = new List<DoctorDTO>();
-
     private async Task InitializeSwiper()
     {
         await jSRuntime.InvokeVoidAsync("initializeSwiper");

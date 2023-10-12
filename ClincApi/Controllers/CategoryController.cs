@@ -59,26 +59,28 @@ namespace ClincApi.Controllers
         }
 
         [HttpPut]
-        public ActionResult UpdateCategory(CategoryDTO categoryDTO, int id)
+        public ActionResult UpdateCategory(CategoryDTO categoryDTO)
         {
-            if (id != categoryDTO.Id)
+            if (!ModelState.IsValid)
             {
                 return BadRequest();
             }
-
-            try
+            else
             {
-                Category category = new Category()
+                try
                 {
-                    Id = categoryDTO.Id,
-                    Name = categoryDTO.Name
-                };
-                _categoryRepo.UpdateCategory(category);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
+                    Category category = new Category()
+                    {
+                        Id = categoryDTO.Id,
+                        Name = categoryDTO.Name
+                    };
+                    _categoryRepo.UpdateCategory(category);
+                    return NoContent();
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
 
         }
@@ -89,21 +91,24 @@ namespace ClincApi.Controllers
             {
                 return BadRequest();
             }
-
-            try
+            else
             {
-                Category category = new Category()
+                try
                 {
-                    Id = categoryDTO.Id,
-                    Name = categoryDTO.Name
-                };
-                _categoryRepo.addCategory(category);
-                return NoContent();
+                    Category category = new Category()
+                    {
+                        Id = categoryDTO.Id,
+                        Name = categoryDTO.Name
+                    };
+                    _categoryRepo.addCategory(category);
+                    return NoContent();
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+          
         }
 
         [HttpDelete]

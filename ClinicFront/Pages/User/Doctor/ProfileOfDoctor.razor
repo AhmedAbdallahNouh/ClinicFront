@@ -1,7 +1,7 @@
 ﻿@page "/profileofdoctor"
 @layout MainLayoutDoctor
 
-<div class="container-lg" style="margin-top: -1.1rem;">
+<div class="container-lg" style="margin-top: -1.1rem; width: 70%;position: relative;right: 6%;">
     <div class="containerofimage">
         <img src="@CoverPhoto" class="img"/>
 
@@ -16,11 +16,11 @@
             }
             else
             {
-                <i class="bi bi-person-circle"></i>
+                <i class="bi bi-person-circle" style="color: #03206C;"></i>
             }
             <label class="profilechange">
                 <InputFile id="ProfileName" type="file" @onclick="() => Handelcover_img('i')" OnChange="@HandleFileSelected" class="input_i" style="display:none;" multiple />
-                <i class="fas fa-camera profileicon" style="font-size:1rem;color: #03206C;"></i>
+                <i class="fas fa-camera profileicon" style="font-size:1rem;"></i>
             </label>
         </div>
     </div>
@@ -31,13 +31,13 @@
             <EditForm Model="@doctorDTO" class="form-signup">
                 <DataAnnotationsValidator />
                     <h3><b>يجب إدخال هذه البيانات: </b></h3>
-                <div class="nessacrydata flexrow">
-                    <div class="flexcolumn">
+                <div class="nessacrydata flexrow row">
+                    <div class="col-lg-6 col-md-12">
                         <label class="fw-bold label"><b>الأسم الأول</b></label>
                         <div class="mb-2 input-container">
                             <InputText id="fname"
                                        @bind-Value="doctorDTO.FirstName"
-                                       @oninput="() => HandleInput(doctorDTO.FirstName,Fname)"
+                                       @onblur=@(()=>HandleInput(doctorDTO.FirstName,"Fname"))
                                        name="Fname"
                                        style="padding-right:3rem;"
                                        class="form-control input_i" />
@@ -50,11 +50,10 @@
                         <div class="mb-2 input-container">
                             <InputText id="lname"
                                        @bind-Value="@doctorDTO.LastName"
-                                       @onblur="() => HandleInput(doctorDTO.LastName,Lname)"
-
+                                       @onblur=@(()=>HandleInput(doctorDTO.LastName,"Lname"))
                                        name="Lname"
                                        style="padding-right:3rem;"
-                                       class="form-control ss input_i"/>
+                                       class="form-control input_i"/>
                             <label class="p @Lname" for="lname"><b>الأسم الأخير</b></label>
                             <i class="fas fa-user icon"></i>
                         </div>
@@ -64,10 +63,11 @@
                         <div class="mb-2 input-container">
                             <InputText id="Phone"
                                        @bind-Value="@doctorDTO.PhoneNumber"
+                                       @onblur=@(()=>HandleInput(doctorDTO.PhoneNumber,"phonenumber"))
                                        name="Phone"
                                        style="padding-right:3rem;"
                                        class="form-control input_i"/>
-                            <label class="p" for="Phone"><b>رقم الهاتف</b></label>
+                            <label class="p @PhoneNumber" for="Phone"><b>رقم الهاتف</b></label>
                             <i class="fas fa-phone-alt icon"></i>
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.PhoneNumber)" style="text-align:center" />
@@ -75,16 +75,20 @@
 
 
 
-                    <div class="flexcolumn">
+                    <div class="col-lg-6 col-md-12">
                         <label class="fw-bold label">العمـر</label>
                         <div class="mb-2 input-container">
                             <InputNumber id="age"
                                          @bind-Value="@doctorDTO.Age"
+                                         @onblur=@(()=>HandleInput(doctorDTO.Age.ToString(),"age"))
                                          name="Age"
                                          style="padding-right:3rem;"
                                          class="form-control input_i"/>
-                            <label class="p" for="age"><b>العمـر</b></label>
-                            <i class="fas fa-user-friends icon"></i>
+                            <label class="p @Age" for="age"><b>العمـر</b></label>
+                            <svg width="24" height="24" class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M8 10C7.44772 10 7 10.4477 7 11C7 11.5523 7.44772 12 8 12H16C16.5523 12 17 11.5523 17 11C17 10.4477 16.5523 10 16 10H8Z" fill="black" />
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6 3C4.34315 3 3 4.34315 3 6V18C3 19.6569 4.34315 21 6 21H18C19.6569 21 21 19.6569 21 18V6C21 4.34315 19.6569 3 18 3H6ZM5 18V8H19V18C19 18.5523 18.5523 19 18 19H6C5.44772 19 5 18.5523 5 18Z" fill="black" />
+                            </svg>
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.Age)" style="text-align:center" />
 
@@ -92,10 +96,20 @@
                         <div class="input-container mb-2">
                             <InputText id="address"
                                        @bind-Value="@doctorDTO.Address"
+                                       @onblur=@(()=>HandleInput(doctorDTO.Address,"adderss"))
                                        style="padding-right:3rem;"
                                        class="form-control input_i"/>
-                            <label class="p" for="address"><b>عنوان العيادة</b></label>
-                            <i class="fas fa-envelope icon"></i>
+                            <label class="p @adderss" for="address"><b>عنوان العيادة</b></label>
+                            <svg width="24" height="24" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0_1427_1669)">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill-opacity="0.54" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0_1427_1669">
+                                        <rect width="24" height="24"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.Address)" style="text-align:center" />
 
@@ -103,28 +117,33 @@
                         <div class="mb-2 input-container">
                             <InputTextArea id="discription"
                                        @bind-Value="@doctorDTO.Discription"
+                                       @onblur=@(()=>HandleInput(doctorDTO.Discription,"discription"))
                                        style="padding-right:3rem;min-height:10rem;"
                                        class="form-control input_i"/>
-                            <label class="p" for="discription"><b>الوصف</b></label>
-                            <i class="fas fa-lock icon"></i>
+                            <label class="p @Discription" for="discription"><b>الوصف</b></label>
+                            <svg width="24" height="24" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path clip-rule="evenodd" d="M21.2635 2.29289C20.873 1.90237 20.2398 1.90237 19.8493 2.29289L18.9769 3.16525C17.8618 2.63254 16.4857 2.82801 15.5621 3.75165L4.95549 14.3582L10.6123 20.0151L21.2189 9.4085C22.1426 8.48486 22.338 7.1088 21.8053 5.99367L22.6777 5.12132C23.0682 4.7308 23.0682 4.09763 22.6777 3.70711L21.2635 2.29289ZM16.9955 10.8035L10.6123 17.1867L7.78392 14.3582L14.1671 7.9751L16.9955 10.8035ZM18.8138 8.98525L19.8047 7.99429C20.1953 7.60376 20.1953 6.9706 19.8047 6.58007L18.3905 5.16586C18 4.77534 17.3668 4.77534 16.9763 5.16586L15.9853 6.15683L18.8138 8.98525Z" />
+                                <path d="M2 22.9502L4.12171 15.1717L9.77817 20.8289L2 22.9502Z" />
+                            </svg>
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.Discription)" style="text-align:center" />
                     </div>
                 </div>
                 
                 <h3><b>هذه البيانات إختياريه:</b></h3>
-                <div class="flexrow">
-                    <div class="flexcolumn">
+                <div class="flexrow row">
+                    <div class="col-lg-6 col-md-12">
                         <label class="fw-bold label"><b>حساب Facebook</b></label>
                         <div class="mb-2 input-container">
 
                             <InputText id="facebook"
                                        @bind-Value="@doctorDTO.FaceBook"
+                                       @onblur=@(()=>HandleInput(doctorDTO.FaceBook,"facebook"))
                                        name="Fname"
                                        style="padding-right:3rem;"
                                        class="form-control input_i ss" />
-                            <label class="p" for="facebook"><b>حساب Facebook</b></label>
-                            <i class="fas fa-user icon"></i>
+                            <label class="p @Facebook" for="facebook"><b>حساب Facebook</b></label>
+                            <i class="bi bi-facebook icon"></i>
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.FaceBook)" style="text-align:center" />
 
@@ -132,26 +151,28 @@
                         <div class="mb-2 input-container">
                             <InputText id="gmail"
                                        @bind-Value="@doctorDTO.Email"
+                                       @onblur=@(()=>HandleInput(doctorDTO.Email,"gmail"))
                                        name="Fname"
                                        style="padding-right:3rem;"
                                        class="form-control input_i ss" />
-                            <label class="p" for="gmail"><b>حساب Gmail</b></label>
-                            <i class="fas fa-user icon"></i>
+                            <label class="p @Gmail" for="gmail"><b>حساب Gmail</b></label>
+                            <i class="bi bi-envelope-at icon"></i>
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.Email)" style="text-align:center" />
                     </div>       
                     
                     
-                    <div class="flexcolumn">
+                    <div class="col-lg-6 col-md-12">
                         <label class="fw-bold label"><b>حساب Instagram</b></label>
                         <div class="mb-2 input-container">
                             <InputText id="instagram"
                                        @bind-Value="@doctorDTO.Instgram"
+                                       @onblur=@(()=>HandleInput(doctorDTO.Instgram,"instagram"))
                                        name="Fname"
                                        style="padding-right:3rem;"
                                        class="form-control input_i ss" />
-                            <label class="p" for="instagram"><b>حساب Instagram</b></label>
-                            <i class="fas fa-user icon"></i>
+                            <label class="p @Instagram" for="instagram"><b>حساب Instagram</b></label>
+                            <i class="bi bi-instagram icon"></i>
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.Instgram)" style="text-align:center" />
 
@@ -159,11 +180,12 @@
                         <div class="mb-2 input-container">
                             <InputText id="whatsapp"
                                        @bind-Value="@doctorDTO.WhatsUpNumber"
+                                       @onblur=@(()=>HandleInput(doctorDTO.WhatsUpNumber,"whatsapp"))
                                        name="Fname"
                                        style="padding-right:3rem;"
                                        class="form-control input_i ss" />
-                            <label class="p" for="whatsapp"><b>رقم Whatsapp</b></label>
-                            <i class="fas fa-user icon"></i>
+                            <label class="p @Whatsapp" for="whatsapp"><b>رقم Whatsapp</b></label>
+                            <i class="bi bi-whatsapp icon"></i>
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.WhatsUpNumber)" style="text-align:center" />
                     </div>
@@ -192,15 +214,15 @@
     public string Lname { get; set; } = "Lname";
     public string PhoneNumber { get; set; }
     public string Age { get; set; }
-    public string Area { get; set; }
+    public string adderss { get; set; }
     public string Discription { get; set; }
     public string Facebook { get; set; }
     public string Gmail { get; set; }
     public string Instagram { get; set; }
-    public int Whatsapp { get; set; }
-    public char handelcover_img { get; set; }
+    public string Whatsapp { get; set; }
     public string CoverPhoto { get; set; } = "assets/images/halfdoctor.jpeg";
     public string image { get; set; } = "";
+    public char handelcover_img { get; set; }
     public bool check { get; set; } = false;
 
     protected override async void OnAfterRender(bool firstRender)
@@ -213,14 +235,119 @@
     }
     private void HandleInput(string value,string propname)
     {
-        navjs.InvokeVoidAsync("console.log", value);
-        if (string.IsNullOrEmpty(value))
+        
+        @switch (propname)
         {
-            Lname = "p";
-        }
-        else
-        {
-           Lname = "p_focus";
+            case "Fname":
+                if (string.IsNullOrEmpty(value))
+                {
+
+                    Fname = "p";
+                }
+                else
+                {
+                    Fname = "p_focus";
+                }
+                break;
+            case "Lname":
+                if (string.IsNullOrEmpty(value))
+                {
+
+                    Lname = "p";
+                }
+                else
+                {
+                    Lname = "p_focus";
+                }
+                break;
+            case "phonenumber":
+                if (string.IsNullOrEmpty(value))
+                {
+
+                    PhoneNumber = "p";
+                }
+                else
+                {
+                    PhoneNumber = "p_focus";
+                }
+                break;
+            case "age":
+                if (string.IsNullOrEmpty(value))
+                {
+
+                    Age = "p";
+                }
+                else
+                {
+                    Age = "p_focus";
+                }
+                break;
+            case "adderss":
+                if (string.IsNullOrEmpty(value))
+                {
+
+                    adderss = "p";
+                }
+                else
+                {
+                    adderss = "p_focus";
+                }
+                break;
+            case "discription":
+                if (string.IsNullOrEmpty(value))
+                {
+
+                    Discription = "p";
+                }
+                else
+                {
+                    Discription = "p_focus";
+                }
+                break;
+            case "facebook":
+                if (string.IsNullOrEmpty(value))
+                {
+
+                    Facebook = "p";
+                }
+                else
+                {
+                    Facebook = "p_focus";
+                }
+                break;
+            case "gmail":
+                if (string.IsNullOrEmpty(value))
+                {
+
+                    Gmail = "p";
+                }
+                else
+                {
+                    Gmail = "p_focus";
+                }
+                break;
+            case "instagram":
+                if (string.IsNullOrEmpty(value))
+                {
+
+                    Instagram = "p";
+                }
+                else
+                {
+                    Instagram = "p_focus";
+                }
+                break;
+            case "whatsapp":
+                if (string.IsNullOrEmpty(value))
+                {
+
+                    Whatsapp = "p";
+                }
+                else
+                {
+                    Whatsapp = "p_focus";
+                }
+                break;
         }
     }
     private void Handelcover_img(char img)
@@ -229,9 +356,6 @@
     }
     private async Task HandleFileSelected(InputFileChangeEventArgs e)
     {
-        await navjs.InvokeVoidAsync("console.log", CoverPhoto);
-        await navjs.InvokeVoidAsync("console.log", image);
-
         var file = e.File;
         if (file != null)
         {

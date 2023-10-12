@@ -33,15 +33,17 @@ namespace ClinicFront.Services
             return response;
         }
 
-        public async void Updatecategory(CategoryDTO categoryDTO)
+        public async Task<HttpResponseMessage> Updatecategory(CategoryDTO categoryDTO)
         {
             var newuser = new StringContent(JsonSerializer.Serialize(categoryDTO), Encoding.UTF8, "application/json");
-            await http.PutAsync("/api/Category" + categoryDTO.Id, newuser);
+            var response = await http.PutAsync("/api/Category", newuser);
+            return response;
         }
 
-        public async Task Deletecategory(int id)
+        public async Task<HttpResponseMessage> Deletecategory(int id)
         {
-            await http.DeleteAsync("/api/Category/" + id);
+            var response = await http.DeleteAsync($"/api/Category?id={id}" );
+            return response;
         }
     }
 }

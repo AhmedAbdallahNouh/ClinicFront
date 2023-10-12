@@ -17,7 +17,7 @@ namespace ClincApi.Models
         public AppUser AppUser { get; set; }
 
         //relation between Post And PostImage
-        public List<PostImage>? PostImages { get; set; }
+        public List<PostImage>? PostImages { get; set; } = new List<PostImage>();
 
     }
 }

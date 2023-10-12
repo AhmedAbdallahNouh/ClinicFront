@@ -1,0 +1,137 @@
+﻿@page "/maindoctorpage"
+@layout MainLayoutDoctor
+<div class="backgroundimgOfPage">
+
+</div>
+<div class="container-lg main_container">
+    <div class="containerofimage">
+        <img src="@CoverPhoto" class="img" />
+
+        <div class="profileimage">
+            @if (!string.IsNullOrEmpty(image))
+            {
+                <img src="@image" class="img" style="border-radius: 50%;" />
+            }
+            else
+            {
+                <i class="bi bi-person-circle" style="color: #03206C;"></i>
+            }
+        </div>
+        <div class="divOfName">
+            <h4><b>احمد جمال</b></h4>
+            <h5><b>دكتور عيون</b></h5>
+        </div>
+        <div class="links">
+            <a href=""><i class="bi bi-facebook icon pointer"></i></a>
+            <a href=""><i class="bi bi-envelope-at icon pointer"></i></a>
+            <a href=""><i class="bi bi-instagram icon pointer"></i></a>
+            <a href=""><i class="bi bi-whatsapp icon pointer"></i></a>
+        </div>
+    </div>
+
+    <div class="containerofcntent">
+        <div class="subcontainerofcntent">
+            <div>
+                <h2><b>نبذة:</b></h2>
+                <p class="discription"><b>اااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااااا</b></p>
+            </div>
+
+            <div>
+                <div class="flexrow" style="align-items: baseline;">
+                    <i class="fas fa-phone-alt icon"></i>
+                    <h6><b>01063832984</b></h6>
+                </div>
+                <div class="flexrow" style="margin-right: -.5%;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" class="icon" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 10C7.44772 10 7 10.4477 7 11C7 11.5523 7.44772 12 8 12H16C16.5523 12 17 11.5523 17 11C17 10.4477 16.5523 10 16 10H8Z" fill="black" />
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M6 3C4.34315 3 3 4.34315 3 6V18C3 19.6569 4.34315 21 6 21H18C19.6569 21 21 19.6569 21 18V6C21 4.34315 19.6569 3 18 3H6ZM5 18V8H19V18C19 18.5523 18.5523 19 18 19H6C5.44772 19 5 18.5523 5 18Z" fill="black" />
+                    </svg>
+                    <h6><b>38</b></h6>
+                </div>
+                <div class="flexrow" style="margin-right: -.5%;margin-bottom: 2rem;">
+                    <svg width="24" height="24" class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_1427_1669)">
+                            <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill="black" fill-opacity="0.54" />
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_1427_1669">
+                                <rect width="24" height="24" fill="white" />
+                            </clipPath>
+                        </defs>
+                    </svg>
+                    <h6><b>اتيلتالبسيلبليسبليعبليبععيلبللبعبلعغبلعغليعبليعلعغبليسلعغبلسعشل</b></h6>
+                </div>
+            </div>
+            <div class="divOfswitchbutton">
+                <a class="switch" @onclick="() => Switch(false)" style="border-left: 1px solid;"><b>الخدمات</b></a>
+                <a class="switch" @onclick="() => Switch(true)"><b>المنشورات</b></a>
+            </div>
+
+            <Map/>
+
+            @if (SwitchPosts_Service)
+            {
+                <DoctorPosts/>
+            }
+            else
+            {
+                <ServiceOfDoctor/>
+            }
+
+        </div>
+    </div>
+
+   
+</div>
+@code {
+    [Inject]
+    public IJSRuntime navjs { get; set; }
+    [Inject]
+    public IAdminService adminService { get; set; }
+    [Inject]
+    public IDoctorService doctorService { get; set; }
+    public DoctorDTO doctorDTO { get; set; } = new DoctorDTO();
+
+    public string CoverPhoto { get; set; } = "assets/images/halfdoctor.jpeg";
+    public string image { get; set; } = "";
+    public char handelcover_img { get; set; }
+    public bool check { get; set; } = false;
+
+    public bool SwitchPosts_Service { get; set; } = true;
+
+    private void Switch(bool switchposts_service)
+    {
+        SwitchPosts_Service = switchposts_service;
+    } 
+    private void Handelcover_img(char img)
+    {
+        handelcover_img = img;
+    }
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        await navjs.InvokeVoidAsync("console.log", CoverPhoto);
+        await navjs.InvokeVoidAsync("console.log", image);
+
+        var file = e.File;
+        if (file != null)
+        {
+            var format = "image/png";
+            var resizedImageFile = await file.RequestImageFileAsync(format, 400, 400);
+
+            using var ms = new MemoryStream();
+            await resizedImageFile.OpenReadStream().CopyToAsync(ms);
+            var buffer = ms.ToArray();
+
+            var imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+            if (handelcover_img == 'c')
+            {
+                CoverPhoto = imageDataUrl;
+            }
+            else
+            {
+                image = imageDataUrl;
+            }
+            check = true;
+        }
+    }
+}

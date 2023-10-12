@@ -34,8 +34,20 @@ a, .btn-link {
     outline: 1px solid red;
 }
 
+
 .validation-message {
     color: red;
+}
+@media(max-width:488px) {
+    .validation-message {
+        padding-right: 3rem!important;
+    }
+}
+@media (min-width: 530px) and (max-width: 767px) {
+    .validation-message {
+        color: red;
+        padding-right: 8rem !important;
+    }
 }
 
 #blazor-error-ui {

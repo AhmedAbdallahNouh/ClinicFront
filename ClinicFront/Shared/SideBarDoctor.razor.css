@@ -7,9 +7,9 @@
 .sidebar {
     position: fixed;
     z-index: 9;
-    box-shadow: -1rem 0px 1.5rem 0px #001751;
+    box-shadow: -0.1rem 0px 1.5rem 0px #001751;
     width: 17rem;
-    right: -24rem;
+    right: 0rem;
     height: 100%;
     background-image: linear-gradient(180deg,#001751 50%,#0178BB);
     transition: all .5s ease;
@@ -49,12 +49,14 @@ label{
     display:block;
 }
 label #btn,label #cancel {
+    display:none;
     position:fixed;
     cursor:pointer;
     background-color:#042331;
     border-radius:.4rem;
 }
 label #btn{
+    z-index:100;
     right:2%;
     top:2rem;
     font-size:1.4rem;
@@ -73,22 +75,23 @@ label #cancel {
     transition: all .5s ease;
 }
 #check:checked ~ .sidebar {
-    right:0rem;
+    right: 0rem;
 }
+
 #check:checked ~ label #btn {
     right: 22%;
     opacity: 0;
     pointer-events: none;
 }
+
 #check:checked ~ label #cancel {
     left: 82%;
 }
-/*@media (max-width: 1120px) {
-    .label #btn {
-        left: 93%;
+@media (max-width: 1200px) {
+    .sidebar {
+        right: -24rem;
     }
-
-    #check:checked ~ label #btn {
-        left: 89%;
+    label #btn, label #cancel{
+        display:block;
     }
-}*/
+}

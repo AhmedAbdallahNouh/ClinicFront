@@ -1,0 +1,172 @@
+﻿h1, h3 {
+    text-align: center;
+    margin: 3rem auto;
+    font-size: -webkit-xxx-large;
+}
+.containerofcntent {
+    width: 90%;
+    margin: auto;
+    background-image: url('assets/images/halfdoctorbluer.jpeg');
+    background-size: cover;
+    margin: auto;
+    margin-top: -1.5rem;
+}
+.subcontainerofcntent {
+    background-color: rgba(1, 14, 126, 0.2);
+    width: 100%;
+    margin: auto;
+    padding: 0.5rem 3rem 2rem;
+    direction: rtl;
+    position: relative;
+}
+.button {
+    width: 146%;
+    margin: 2rem auto;
+    background-color: #03206C;
+    color: white;
+}
+.AddButton {
+    padding: 0.2rem 0rem;
+    width: 27%;
+    position: absolute;
+    bottom: 1%;
+    right: 35%;
+}
+.flexrow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3rem;
+}
+label {
+    font-size: x-large;
+}
+.divOfUploadserviceImage {
+    background-color: white;
+    width: 13rem;
+    min-height: 12rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    transition: all .5s ease;
+}
+/*.image {
+    width: 400px;
+    height: 380px;
+    margin-right: 20px;
+    margin-block-end: 5px;
+    margin-top: 5px;
+}*/
+
+.content {
+    flex: 1;
+    margin-top: 20px;
+    margin-block-end: 20px;
+}
+
+.header {
+    text-align: left;
+}
+
+.description {
+    text-align: left;
+}
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    direction: rtl;
+}
+
+.card {
+    position: relative;
+    width: 80%;
+    height: 17rem;
+    margin-left: 32px;
+    margin-bottom: 32px;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.05), 2px 4px 32px 0 rgba(0, 0, 0, 0.1), 0 0 64px 0 rgba(0, 0, 0, 0.2);
+    font-family: 'Open Sans', Helvetica, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: transform 300ms ease;
+    stroke-width: inherit;
+    border-radius: 1rem;
+}
+
+.card .image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 70px;
+    left: 0;
+    background-position: center;
+    background-size: cover;
+    transition: bottom 300ms ease;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card .content {
+    position: absolute;
+    z-index: 10;
+    padding: .5rem;
+    height: 100%;
+    background: white;
+    transform: translateY(314px);
+    transition: transform 200ms ease;
+    margin-block-end: 2rem;
+}
+.card .content .header {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+.card .content .meta {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+}
+.card .content .description {
+    opacity: 0;
+    transition: opacity 500ms ease 100ms;
+}
+/*.card:hover {
+    transform: translateY(-30px);
+}*/
+.card:hover .image {
+    bottom: 280px;
+}
+
+.card:hover .content {
+    transform: translateY(0px);
+    overflow-y:auto;
+}
+.card:hover .content::-webkit-scrollbar, .post::-webkit-scrollbar {
+    background-color: #ddd;
+    border-radius: 16px;
+    width: 11px;
+}
+
+.card:hover .content::-webkit-scrollbar-thumb, .post::-webkit-scrollbar-thumb {
+    background-color: #03206D;
+    border-radius: 5px;
+}
+.card:hover .content .description {
+    opacity: 1;
+}
+@media (max-width: 650px) {
+    .divOfUploadserviceImage{
+        width:11rem;
+    }
+}
+@media (max-width: 1310px) {
+    .card {
+        width: 88%;
+    }
+}

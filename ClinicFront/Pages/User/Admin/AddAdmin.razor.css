@@ -1,13 +1,130 @@
-﻿.container-signup {
-    padding-top: 40px;
-    padding-bottom: 40px;
+﻿
+body {
+    font-family: system-ui;
 }
 
-.form-signup {
+h1 {
+    margin-top: 1rem;
+    margin-top: 5%;
+}
+
+.main-container {
+    background-image: url(assets/images/b-g-doctor.jpeg);
+    background-size: contain;
     width: 100%;
-    max-width: 380px;
-    padding: 10px;
-    margin: auto;
+    height: 100%;
+    position: fixed;
+    top: 0rem;
+    left: 0rem;
+}
+
+.container-signup {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    border: red solid;
+    width: 80%;
+    background-color: #0017515c;
+    margin-left: 3rem;
+    border-radius: 2rem;
+}
+
+
+@media (min-width: 1238px) and (max-width: 1616px) {
+
+
+    .container-signup {
+        width: 74% !important;
+        /*margin-left:auto;*/
+        margin-right: auto;
+    }
+
+    .input-container {
+        width: 74% !important;
+    }
+
+    .sub-label {
+        margin-left: 1rem !important;
+        width: 69% !important;
+    }
+
+    .sub-input-container div {
+        width: 103% !important;
+    }
+
+    label {
+        width: 49%;
+    }
+}
+
+@media (max-width:1237px) {
+    .container-signup {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    h1 {
+        width: 103% !important;
+    }
+}
+
+@media (max-width:991px) {
+    .form-first-col {
+        margin-right: 15%;
+    }
+}
+
+@media (min-width: 992px) and (max-width:1237px) {
+    .input-container {
+        width: 86% !important;
+    }
+
+    label {
+        width: 53% !important;
+    }
+
+    input {
+        width: 105% !important;
+    }
+
+    .sub-label {
+        margin-left: 0 !important;
+        width: 59% !important;
+    }
+
+    .sub-input-container {
+        width: 92% !important;
+    }
+}
+
+@media(max-width:488px) {
+    .input-container{
+        margin-top:0!important;
+    }
+    .input-container div {
+        display: inline !important;
+    }
+    .icon {
+        top: 36px !important;
+    }
+    label {
+        width: 69% !important;
+        padding-right: 3rem;
+    }
+
+    .form-second-col {
+        margin-top: -3rem !important;
+    }
+}
+
+form {
+    /*width: 100%;*/
+    /*max-width: 380px;*/
+    /*margin: auto;*/
+    padding: 10px !important;
+    width: 74% !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    border: black solid !important;
 }
 
 .container-img {
@@ -34,8 +151,17 @@
 label {
     text-align: center;
     margin: auto;
-    width: 100%;
-    margin-bottom: 1rem;
+    width: 37%;
+    line-height: 100%;
+}
+
+.sub-label {
+    margin-left: 2rem;
+    width: 52%;
+}
+
+select {
+    padding-left: 3rem;
 }
 
 .container-img input[type="file"] {
@@ -53,6 +179,8 @@ label {
 }
 
 .color-text {
+    margin-bottom: 2rem !important;
+    width: 80%;
     color: #2b124c;
 }
 
@@ -88,9 +216,9 @@ label {
 
 .input-container {
     display: -ms-flexbox;
-    display: flex;
-    width: 40%;
-    margin: auto;
+    /*display: flex;*/
+    width: 60%;
+    margin: 2rem 0 2rem 0;
     position: relative;
 }
 
@@ -187,7 +315,8 @@ label {
 }
 
 .button {
-    margin: auto 48%;
+    margin: auto 13%;
+    width: 50%;
     background-color: #2b124c;
     color: white
 }
@@ -239,3 +368,39 @@ label {
     border: 1px solid #f7e3ac;
     box-shadow: 0px 0px 2px 2px rgba(31, 149, 161, 0.2);
 }
+
+
+.form-second-col {
+}
+
+.sub-input-container {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h3 {
+    text-align: center;
+    margin-top: 5rem;
+}
+
+.submit-btn-container {
+    margin-top: 4rem;
+}
+
+.validation-div {
+}
+/*row {
+    width: 74%;
+    margin-left: auto;
+    margin-right: auto;
+    border: black solid;
+}
+*/
+
+
+/*container {
+    border: red solid;
+    width: 80%;
+}
+*/
+

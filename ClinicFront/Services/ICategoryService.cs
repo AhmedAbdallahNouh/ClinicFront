@@ -5,8 +5,8 @@ namespace ClinicFront.Services
     public interface ICategoryService
     {
         Task<HttpResponseMessage> Addcategory(CategoryDTO category);
-        Task Deletecategory(int id);
+        Task<HttpResponseMessage> Deletecategory(int id);
         Task<List<CategoryDTO>> getallcategory();
-        void Updatecategory(CategoryDTO categoryDTO);
+        Task<HttpResponseMessage> Updatecategory(CategoryDTO categoryDTO);
     }
 }

@@ -1,0 +1,158 @@
+﻿.addpost {
+    width: 50%;
+    margin: 3rem auto;
+    background-color: white;
+    color: #a39d9d;
+    padding-right: 40px !important;
+    cursor: pointer;
+    border-radius: 18px;
+    box-shadow: 0px 0px 8px 4px #ddd !important;
+}
+h3 {
+    margin-top: 5px;
+}
+.post {
+    background-color: white;
+    width: 70%;
+    min-height: 16rem;
+    max-height: 45rem;
+    overflow-y: auto;
+    overflow-wrap: break-word;
+    margin: 3rem auto;
+    padding: 2rem 3rem;
+    border-radius: 10px;
+    position: relative;
+    box-shadow: 0px 0px 15px -1px #ddd;
+}
+.doctorimgInPost {
+    background-color: white;
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.doctorimgInPost i {
+    color: #03206C;
+    font-size: 5.3rem;
+}
+.doctorimgInPost img {
+    font-size: 5.3rem;
+}
+.doctornameInPost {
+    position: absolute;
+    right: 16%;
+    top: 6%;
+    line-height: 9px;
+}
+.postvideo {
+    width: 80%;
+    height: 25rem;
+    margin: auto;
+}
+.postbody {
+    margin-top: 3rem;
+    max-height: 11rem;
+    overflow-y: auto;
+    overflow-wrap: break-word;
+
+}
+.postbody::-webkit-scrollbar {
+    background-color: #ddd;
+    border-radius: 16px;
+    width: 11px;
+}
+
+.postbody::-webkit-scrollbar-thumb {
+    background-color: #03206D;
+    border-radius: 5px;
+}
+/*modal*/
+.flex_row {
+    padding: 16px 12px 0px;
+    display: flex;
+    justify-content: space-between;
+}
+.divOfModal_Title {
+    display: flex;
+    align-items: center;
+}
+.doctorimIngmodal {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 0.5rem;
+}
+.divofuplaodphoto_Photo {
+     width: 100%;
+    position: relative;
+    height: 18rem;
+    max-height: 18rem;
+    margin: auto;
+    justify-content:space-evenly;
+}
+.imagess {
+    height: inherit;
+    margin-bottom: 1rem;
+}
+.divofuplaodphoto_video {
+    width: 40%;
+    display: flex;
+    justify-content: space-evenly;
+}
+.modalButton {
+    width: 50%;
+    margin-left: 1rem;
+    border-radius: 15px;
+    background-color: white;
+    border: none;
+    box-shadow: 0px 2px 8px 1px #ddd;
+}
+.divofpuplish {
+    width: 12%;
+    margin-left: 1rem;
+}
+.puplish {
+    width: 120%;
+}
+textarea {
+    padding: 1rem;
+    width: 100%;
+    height: 12rem;
+    max-height: 12rem;
+    overflow-y: auto;
+    border-radius: 15px;
+    background-color: white;
+    border: none;
+    outline: none;
+    box-shadow: 0px 2px 8px 1px #ddd;
+}
+textarea::-webkit-scrollbar {
+    background-color: #ddd;
+    border-radius: 16px;
+    width: 11px;
+}
+textarea::-webkit-scrollbar-thumb {
+    background-color: #03206D;
+    border-radius: 5px;
+}
+.video_img {
+    margin: 2rem auto;
+    max-height:18rem;
+    overflow-y:auto;
+}
+.video_img::-webkit-scrollbar, .post::-webkit-scrollbar {
+    background-color: #ddd;
+    border-radius: 16px;
+    width: 11px;
+}
+
+.video_img::-webkit-scrollbar-thumb, .post::-webkit-scrollbar-thumb {
+    background-color: #03206D;
+    border-radius: 5px;
+}

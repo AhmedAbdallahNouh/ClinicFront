@@ -1,8 +1,147 @@
 ﻿@page "/addNewAdmin"
 @inject IAdminService _adminService
 @layout MainLayoutAdmin
-<h3>AddDoctor</h3>
 
+
+@* <h1>@claimsPrincipal.Identity.Name</h1> *@
+@* <h1>@ClaimsPrincipal.Current.Identity.Name</h1>
+ *@
+
+<div class="main-container">
+    <h1 class="h3 mb-0 fw-bold text-center color-text form-title">
+        إضافة أدمن جديد
+    </h1>
+    <div class="container-signup">
+        @* <div class="row"> *@
+        <EditForm Model="@adminRegiterationDTO" class="add-doctor-form row" style="direction:rtl" OnValidSubmit="RegisterNewAdmin" OnInvalidSubmit="ShowInvalidModal">
+            <DataAnnotationsValidator />
+            <div class="col-lg-6 col-sm-12 form-first-col">
+                <div class="mb-2 input-container">
+                    <div class="d-flex">
+                        <label class="fw-bold"> الإسم الأول  </label>
+                        <InputText id="fname"
+                        @bind-Value="@adminRegiterationDTO.FirstName"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل الإسم الأول" />
+                        <i class="fas fa-user icon"></i>
+
+                    </div>
+                    <ValidationMessage For="@(() => adminRegiterationDTO.FirstName)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                </div> 
+                <div class="mb-2 input-container">
+                    <div class="d-flex">
+                        <label class="fw-bold"> الإسم الأخير  </label>
+                        <InputText id="lname"
+                        @bind-Value="@adminRegiterationDTO.LastName"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل الإسم الأخير" />
+                        <i class="fas fa-user icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => adminRegiterationDTO.LastName)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                </div>
+                <div class="mb-2 input-container">
+                    <div class="d-flex">
+                        <label class="fw-bold"> إسم المستخدم</label>
+                        <InputText id="user-name"
+                        @bind-Value="@adminRegiterationDTO.UserName"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل إسم المستخدم" />
+                        <i class="fas fa-user icon"></i>
+
+                    </div>
+                    <ValidationMessage For="@(() => adminRegiterationDTO.UserName)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                </div>
+                <div class="mb-2 input-container">
+                    <div class="d-flex">
+                        <label class="fw-bold"> الإيميل</label>
+                        <InputText id="email"
+                        @bind-Value="@adminRegiterationDTO.Email"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل الإسم الأخير" />
+                        <i class="fas fa-envelope icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => adminRegiterationDTO.Email)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                </div>
+                <div class="mb-4 input-container">
+                    <div class="d-flex">
+                        <label for="inputPassword" class="fw-bold"> رقم الهاتف </label>
+                        <InputText type="password" id="ConPassword"
+                        @bind-Value="@adminRegiterationDTO.PhoneNumber"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل رقم الهاتف" />
+                        <i class="fas fa-phone-alt icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => adminRegiterationDTO.PhoneNumber)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
+                </div>
+            </div> 
+
+            <div class="col-lg-6 col-sm-12 form-first-col">                                                       
+                <div class="mb-3 input-container">
+                    <div class="d-flex">
+                        <label for="inputPassword" class="fw-bold">كلمة المرور</label>
+                        <InputText type="password" id="inputPassword"
+                        @bind-Value="@adminRegiterationDTO.Password"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل كلمة المرور" />
+                        <i class="fas fa-lock icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => adminRegiterationDTO.Password)" style=" text-align: start ; padding-right: 7rem; padding-top: 0.8rem ;" />
+                </div>
+
+                <div class="mb-4 input-container">
+                    <div class="d-flex">
+                        <label for="inputPassword" class="fw-bold"> تأكيد كلمة المرور </label>
+                        <InputText type="password" id="ConPassword"
+                        @bind-Value="@adminRegiterationDTO.ConfirmPassword"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل تأكيد كلمة المرور" />
+                        <i class="fas fa-lock icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => adminRegiterationDTO.ConfirmPassword)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
+                </div>
+                
+                <div class="mb-4 input-container">
+                    <div class="d-flex">
+                        <label for="inputPassword" class="fw-bold">العمر </label>
+                        <InputNumber type="password" id="ConPassword"
+                        @bind-Value="@adminRegiterationDTO.Age"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل عمرك" />
+                        <i class="fas fa-phone-alt icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => adminRegiterationDTO.Age)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
+                </div>
+              
+                <div class="mb-4 input-container">
+                    <div class="d-flex">
+                        <label for="inputPassword" class="fw-bold"> العنوان </label>
+                        <InputText type="password" id="ConPassword"
+                        @bind-Value="@adminRegiterationDTO.Address"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل العنوان" />
+                        <i class="fas fa-lock icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => adminRegiterationDTO.Address)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
+                </div>
+                <div class="submit-btn-container"><button type="submit" class="mb-2 btn btn-lg btn-block fw-bold button  ">Finish</button></div>
+            </div>
+
+
+        </EditForm>
+
+    </div>
+</div>
+
+@* 
 <div class="container-signup">
     <EditForm Model="@adminRegiterationDTO" class="form-signup">
         <DataAnnotationsValidator/>
@@ -72,9 +211,7 @@
                        class="form-control input_i"
                        placeholder="Enter your password" />
             <i class="fas fa-lock icon"></i>
-            @*<span class="span-eye">
-            <i class="fas fa-eye"></i>
-            </span>*@
+           
         </div>
         <ValidationMessage For="@(() => adminRegiterationDTO.Password)" style="text-align:center" />
 
@@ -85,10 +222,7 @@
                        style="padding-left:3rem;"
                        class="form-control input_i"
                        placeholder="Enter your password" />
-            <i class="fas fa-lock icon"></i>
-            @* <span class="span-eye-confirm">
-            <i class="fas fa-eye"></i>
-            </span>*@
+            <i class="fas fa-lock icon"></i>       
         </div>
         <ValidationMessage For="@(() => adminRegiterationDTO.ConfirmPassword)" style="text-align:center" />
 
@@ -144,7 +278,7 @@
         </button>
     </EditForm>
 </div>
-
+ *@
 @code {
     // [Inject]
     // public IJSRuntime navjs { get; set; }
@@ -153,6 +287,7 @@
     [Inject]
     public NavigationManager navigat { get; set; }
 
+    public ClaimsPrincipal claimsPrincipal { get; set; } = new ClaimsPrincipal();
     public AdminRegiterationDTO adminRegiterationDTO { get; set; } = new AdminRegiterationDTO();
 
     public int MyProperty { get; set; }
@@ -165,5 +300,11 @@
     {
         var response = _adminService.AddAdmin(adminRegiterationDTO);
         navigat.NavigateTo("/mainpageadmin");
+    } 
+    public async void ShowInvalidModal()
+    {
+        // var response = _adminService.AddAdmin(adminRegiterationDTO);
+        // navigat.NavigateTo("/mainpageadmin");
     }
+
 }

@@ -51,31 +51,28 @@ namespace ClinicFront.Areas.Identity.Pages.Account
                         // Retrieve the user's roles
                         var userRoles = await _userManager.GetRolesAsync(user);
 
-                        // Create claims for email and roles
+                        // Create claims 
+                        var IdClaim = new Claim(ClaimTypes.NameIdentifier, user.Id);
                         var rolesClaim = new Claim(ClaimTypes.Role, string.Join(",", userRoles));
-                        if (user.Email != null)
+                        List<Claim> claims = new List<Claim>();
+                        claims.Add(IdClaim);
+                        claims.Add(rolesClaim);
+                        claims.Add(new Claim(ClaimTypes.Name, user.UserName));
+
+                        if (user.Email != null) claims.Add(new Claim(ClaimTypes.Email, user.Email));
+                        if (!string.IsNullOrEmpty(user.Image))
                         {
-                            var emailClaim = new Claim(ClaimTypes.Email, user.Email);
-                            // Create a new ClaimsIdentity with the claims
-                            claimsIdentity = new ClaimsIdentity(new[]
-                            {
-                            new Claim(ClaimTypes.Name, user.UserName),  // You can add the username as well
-                            emailClaim,
-                            rolesClaim
-                            }, IdentityConstants.ApplicationScheme);
+                            claims.Add(new Claim("Image", user.Image));
                         }
                         else
                         {
-                            // Create a new ClaimsIdentity with the claims
-                            claimsIdentity = new ClaimsIdentity(new[]
-                            {
-                            new Claim(ClaimTypes.Name, user.UserName),  // You can add the username as well
-                            rolesClaim
-                            }, IdentityConstants.ApplicationScheme);
+                            claims.Add(new Claim("Image", "https://upload.wikimedia.org/wikipedia/commons/c/cc/Ismaily_SC_logo.png"));
                         }
-                       
+                        // Create a new ClaimsIdentity with the claims
+                        claimsIdentity = new ClaimsIdentity(claims ,IdentityConstants.ApplicationScheme);
+
                         // Sign in the user with the custom claims
-                            await HttpContext.SignInAsync(
+                        await HttpContext.SignInAsync(
                             IdentityConstants.ApplicationScheme,
                             new ClaimsPrincipal(claimsIdentity),
                             new AuthenticationProperties { IsPersistent = false }

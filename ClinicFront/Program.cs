@@ -1,3 +1,6 @@
+using Blazorise;
+using Blazorise.Bootstrap;
+using Blazorise.Icons.FontAwesome;
 using ClincApi.Models;
 using ClinicFront.Data;
 using ClinicFront.Services;
@@ -10,6 +13,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+
+// Register Blazorise services
+builder.Services
+    .AddBlazorise(options =>
+    {
+        options.ChangeSliderOnHold = true; // optional
+    })
+    .AddBootstrapProviders()
+    .AddFontAwesomeIcons()
+    .AddLocalization();
+
 
 
 //connect Api

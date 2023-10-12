@@ -33,7 +33,7 @@ namespace ClincApi.Controllers
         }
         [HttpGet("/api/getalldoctors")]
         public async Task<ActionResult> GetAllDoctors()
-        {
+            {
             List<AppUser> users = (List<AppUser>)await _userManager.GetUsersInRoleAsync("Doctor");
             if (users.Count != 0)
             {

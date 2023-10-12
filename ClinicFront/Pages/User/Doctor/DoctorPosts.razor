@@ -1,0 +1,247 @@
+﻿@layout MainLayoutDoctor
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="flex_row" style="padding: 16px 12px 0px;justify-content:space-between;">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="divOfModal_Title">
+                    <h5 class="modal-title" id="exampleModalLabel"><b>احمد جمال</b></h5>
+                    <div class="doctorimIngmodal">
+                        <img src="" />
+                        <i class="bi bi-person-circle" style="color: #03206C;font-size: 3.1rem;"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body direction_rtl">
+               <textarea @bind-Value="Text" @bind-Value:event="onchange" class="contentEditableDiv" />
+               <div class="video_img">
+                    @if (!string.IsNullOrEmpty(Videos))
+                    {
+                        <video src="@Videos" style="width:100%;height:100%" controls></video>
+                    }
+                    @if(Images.Count != 0)
+                    {
+                        <div class="row divofuplaodphoto_Photo" style="width:100%;">
+                            @foreach(var image in Images)
+                            {
+                                @if(Images.Count == 1){
+                                    <img src="@image" class="col-12 imagess" />
+                                }
+                                else if (Images.Count >= 2 || Images.Count <= 4)
+                                {
+                                    <img src="@image" class="col-6 imagess" />
+                                }
+                                else if (Images.Count == 5 || Images.Count == 6)
+                                {
+                                    <img src="@image" class="col-4 imagess" />
+                                }
+                            }
+                        </div>
+                    }
+               </div>
+
+            </div>
+
+            <div class="modal-footer" style="justify-content:space-between;">
+                <div class="divofuplaodphoto_video">
+                    <div class="modalButton" style="text-align: center;">
+                        <InputFile type="file" id="inputvideo" style="display:none;" OnChange="@UplaodVideo" multiple />
+                        <label for="inputvideo">
+                            <i class="bi bi-camera-video-fill" style="color:#03206C;"></i>
+                        </label>
+                    </div>
+                    <div class="modalButton" style="text-align: center;">
+                        <InputFile type="file" id="inputimage" style="display:none;" OnChange="@UplaodImage" multiple />
+                        <label for="inputimage">
+                            <i class="bi bi-image" style="color:#03206C;"></i>
+                        </label>
+                    </div>
+                </div>
+                <div class="divofpuplish">
+                    <button class="modalButton puplish" @onclick="Puplishpost" style="text-align: center;" data-bs-dismiss="modal" aria-label="Close">
+                        <b>نشر</b>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="addpost p-3 mb-5 bg-body-tertiary" data-bs-toggle="modal" data-bs-target="#exampleModal" type="button">
+    <h3><b>إضافة منشور</b></h3>
+    <hr />
+    <div class="divofuplaodphoto_video" style="width:100%;">
+        <button class="modalButton" style="width:25%;"><i class="bi bi-image" style="color:#03206C;"></i></button>
+        <button class="modalButton" style="width:25%;"><i class="bi bi-camera-video-fill" style="color:#03206C;"></i></button>
+    </div>
+</div>
+
+@foreach(var post in postDto)
+{
+    <div class="post">
+        <div class="posttitel">
+            <div class="doctorimgInPost">
+                
+                    <img src="@AppuserImage"/>
+                
+                    <i class="bi bi-person-circle" style="color: #03206C;"></i>
+                
+            </div>
+
+            <div class="doctornameInPost">
+                <h2 class="doctorname"><b>احمد جمال</b></h2>
+                <p class="postdate"><b>2011/10/10</b></p>
+            </div>
+        </div>
+        @if (!string.IsNullOrEmpty(post.Text))
+        {
+            <div class="postbody">
+                <p><b>
+                     @post.Text  
+                </b></p>
+            </div>
+        }
+        @if(post.Image.Count != 0){
+            <div class="row postimage" style="justify-content:space-evenly">
+                    @foreach (var image in post.Image)
+                    {
+                        @if (post.Image.Count == 1)
+                        {
+                            <img src="@image" class="col-12 imagess" />
+                        }
+                        else if (post.Image.Count >= 2 || post.Image.Count <= 4)
+                        {
+                            <img src="@image" class="col-6 imagess" />
+                        }
+                        else if (post.Image.Count == 5 || post.Image.Count == 6)
+                        {
+                            <img src="@image" class="col-4 imagess" />
+                        }
+                    }
+            </div>
+        }
+        @if (!string.IsNullOrEmpty(post.Video))
+        {
+            <div class="postvideo">
+                <video src="@post.Video" style="width: 100%;" controls></video>
+            </div>
+        }
+    </div>
+}
+
+@code {
+
+    public bool uploadingImage { get; set; }
+    public bool uploadingVideo { get; set; }
+    public bool ShowimageInModel { get; set; } = false;
+    public List<PostDTO> postDto { get; set; } = new List<PostDTO>();
+    public string AppuserId { get; set; } = "";
+    public string AppuserImage { get; set; } = "";
+    public string Text { get; set; } = "";
+    public List<string>? Images { get; set; } = new List<string>();
+    public string Videos { get; set; } = "";
+    [Inject]
+    public IJSRuntime jSRuntime { get; set; }
+    [Inject]
+    public IPostService postService { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+
+        return base.OnInitializedAsync();
+    }
+
+    public async Task UplaodImage(InputFileChangeEventArgs e)
+    {
+
+        var imageFiles = e.GetMultipleFiles();
+        var format = "image/jpeg"; // Update this based on your image format
+
+        uploadingImage = true;
+        StateHasChanged();
+
+        foreach (var imageFile in imageFiles)
+        {
+            try
+            {
+                var resizedImageFile = await imageFile.RequestImageFileAsync(format, 800, 800);
+                using var ms = new MemoryStream();
+                await resizedImageFile.OpenReadStream().CopyToAsync(ms);
+                var buffer = ms.ToArray();
+
+                // Convert the image to a Base64 string and add it to the variant's Images list
+                var imageBase64 = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+                Images.Add(imageBase64);
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions here, log them, or take appropriate actions
+                Console.WriteLine($"An error occurred while processing an image: {ex.Message}");
+                await jSRuntime.InvokeVoidAsync("console.log", ex.Message);
+            }
+
+        }
+        uploadingImage = false;
+        StateHasChanged();
+    }
+
+    public async Task UplaodVideo(InputFileChangeEventArgs e)
+    {
+        // Set the maximum allowed file size in bytes (e.g., 15 MB)
+        long maxFileSizeBytes = 100 * 1024 * 1024; // 1000 MB
+
+        var videoFiles = e.GetMultipleFiles();
+        var format = "video/mp4"; // Update this based on your video format
+
+        uploadingVideo = true;
+        StateHasChanged();
+
+        foreach (var videoFile in videoFiles)
+        {
+            try
+            {
+                // Check if the video file size exceeds the maximum allowed size
+                if (videoFile.Size > maxFileSizeBytes)
+                {
+                    await jSRuntime.InvokeVoidAsync("alert", $"Video file '{videoFile.Name}' exceeds the maximum allowed size.");
+                    continue; // Skip processing this file and move to the next one
+                }
+
+                using var ms = new MemoryStream();
+                await videoFile.OpenReadStream(maxFileSizeBytes).CopyToAsync(ms);
+                var buffer = ms.ToArray();
+
+                // Convert the video to a Base64 string and add it to the variant's Videos list
+                var videoBase64 = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+                Videos = videoBase64;
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                await jSRuntime.InvokeVoidAsync($"An error occurred while processing a video: {ex.Message}");
+            }
+        }
+
+        uploadingVideo = false;
+        StateHasChanged();
+    }
+    private void Puplishpost()
+    {
+        PostDTO newpost = new PostDTO()
+        {
+             Text = this.Text,
+             Video = this.Videos,
+             Image = Images
+        };
+        postDto.Add(newpost);
+        //postService.AddPost(newpost);
+        this.Text = "";
+        this.Videos = "";
+        this.Images = new List<string>();
+    }
+}

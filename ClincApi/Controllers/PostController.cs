@@ -12,6 +12,7 @@ namespace ClincApi.Controllers
     public class PostController : ControllerBase
     {
         private readonly IPostsRepo _PostRepo;
+
         public PostController(IPostsRepo PostRepo)
         {
             _PostRepo = PostRepo;
@@ -35,7 +36,6 @@ namespace ClincApi.Controllers
                     {
                         Id = post.Id,
                         Text = post.Text,
-                        //Image = post.Image,
                         Video = post.Video,
                         AppUserId = post.AppUserId
                     };
@@ -57,7 +57,6 @@ namespace ClincApi.Controllers
             {
                 Id = post.Id,
                 Text = post.Text,
-                //Image = post.Image,
                 Video = post.Video,
                 AppUserId = post.AppUserId
             };
@@ -78,7 +77,6 @@ namespace ClincApi.Controllers
                 {
                     Id = postDTO.Id,
                     Text = postDTO.Text,
-                    //Image = postDTO.Image,
                     Video = postDTO.Video,
                     AppUserId = postDTO.AppUserId
                 };
@@ -91,6 +89,7 @@ namespace ClincApi.Controllers
             }
 
         }
+       
         [HttpPost]
         public ActionResult AddPost(PostDTO postDTO)
         {
@@ -103,14 +102,29 @@ namespace ClincApi.Controllers
             {
                 Post post = new Post()
                 {
-                    Id = postDTO.Id,
                     Text = postDTO.Text,
-                    //Image= postDTO.Image,
                     Video= postDTO.Video,
                     AppUserId = postDTO.AppUserId
                 };
-                _PostRepo.addPost(post);
-                return NoContent();
+               
+               if(postDTO.Image != null)
+               {
+                    List<PostImage> postImages = new List<PostImage>();
+                    foreach (var image in postDTO.Image)
+                    {
+                        PostImage img = new PostImage()
+                        {
+                            Image = image,
+                            postId = post.Id
+                            
+                        };
+                        postImages.Add(img);
+                    }
+                    post.PostImages.AddRange(postImages);
+                    _PostRepo.addPost(post);
+
+                }
+                return Ok(postDTO);
             }
             catch (Exception ex)
             {

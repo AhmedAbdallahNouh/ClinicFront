@@ -1,0 +1,120 @@
+﻿h1{
+    text-align: center;
+    margin: 3rem auto;
+    font-size: -webkit-xxx-large;
+}
+.content {
+    flex: 1;
+    margin-top: 20px;
+    margin-block-end: 20px;
+}
+
+.header {
+    text-align: left;
+}
+
+.description {
+    text-align: left;
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    direction: rtl;
+}
+.card {
+    position: relative;
+    width: 80%;
+    height: 17rem;
+    margin-left: 32px;
+    margin-bottom: 32px;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 1px 1px 4px 0 rgba(0, 0, 0, 0.05), 2px 4px 32px 0 rgba(0, 0, 0, 0.1), 0 0 64px 0 rgba(0, 0, 0, 0.2);
+    font-family: 'Open Sans', Helvetica, sans-serif;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: transform 300ms ease;
+    stroke-width: inherit;
+    border-radius: 1rem;
+}
+.card .image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 70px;
+    left: 0;
+    background-position: center;
+    background-size: cover;
+    transition: bottom 300ms ease;
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card .content {
+    position: absolute;
+    z-index: 10;
+    padding: .5rem;
+    height: 100%;
+    background: white;
+    transform: translateY(314px);
+    transition: transform 200ms ease;
+    margin-block-end: 2rem;
+}
+.card .content .header {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.card .content .meta {
+    font-size: 0.8rem;
+    color: #888;
+    margin-bottom: 0.5rem;
+}
+
+.card .content .description {
+    opacity: 0;
+    transition: opacity 500ms ease 100ms;
+}
+    /*.card:hover {
+    transform: translateY(-30px);
+}*/
+.card:hover .image {
+    bottom: 280px;
+}
+
+.card:hover .content {
+    transform: translateY(0px);
+    overflow-y: auto;
+}
+
+.card:hover .content::-webkit-scrollbar, .post::-webkit-scrollbar {
+    background-color: #ddd;
+    border-radius: 16px;
+    width: 11px;
+}
+
+.card:hover .content::-webkit-scrollbar-thumb, .post::-webkit-scrollbar-thumb {
+    background-color: #03206D;
+    border-radius: 5px;
+}
+
+.card:hover .content .description {
+    opacity: 1;
+}
+@media (max-width: 650px) {
+    .divOfUploadserviceImage {
+        width: 11rem;
+    }
+}
+@media (max-width: 1310px) {
+    .card {
+        width: 88%;
+    }
+}

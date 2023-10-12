@@ -1,135 +1,176 @@
-﻿@page "/addNewDoctor"
+﻿@page "/AddNewDoctor"
 @inject IAdminService _adminService
 @inject ICategoryService _categoryService
 @layout MainLayoutAdmin
+@inject IJSRuntime jsRunTime
 @using Microsoft.JSInterop
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 
-<h1 class="h3 mb-0 fw-bold text-center color-text form-title">
-    SignUp
-</h1>
-<div class="container-signup">
-    @* <div class="row"> *@
-        <EditForm Model="@doctorRegisterationByAmdinDTO" class="add-doctor-form row" style="direction:rtl">
-            <DataAnnotationsValidator />                                 
-            <div class="col-6">
+
+
+<div class="main-container" >
+    @if (authenticationState.User.Identity.IsAuthenticated)
+    {
+        <p>Welcome, @authenticationState.User.Identity.Name!</p>
+        <img src="@authenticationState.User.FindFirst("Image").Value" />
+        <p>
+            Image: @authenticationState.User.FindFirst("Image")?.Value
+        </p>
+        <p>Claims:</p>
+        <ul>
+            @foreach (var claim in authenticationState.User.Claims)
+            {
+                <li>@claim.Type: @claim.Value</li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>You are not authenticated.</p>
+    }
+
+    <h1 class="h3 mb-0 fw-bold text-center color-text form-title">
+        إضافة طبيب جديد
+    </h1>
+    <div class="container-signup">
+        @* <div class="row"> *@
+        <EditForm Model="@doctorRegisterationByAmdinDTO" class="add-doctor-form row" style="direction:rtl" OnValidSubmit="RegisterNewDoctor" OnInvalidSubmit="ShowInvalidModal">
+            <DataAnnotationsValidator />
+            <div class="col-lg-6 col-sm-12 form-first-col">
                 <div class="mb-2 input-container">
-                <label class="fw-bold"> إسم الطبيب</label>
-                <i class="fas fa-user icon"></i>
-                    <InputText id="fname"
-                    @bind-Value="@doctorRegisterationByAmdinDTO.UserName"
-                               style="padding-left:3rem;"
-                               class="form-control input_i"
-                               placeholder="أدخل الأسم الأول" />
-                </div>
-                <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.UserName)" style="text-align:center" />
-
-                <div class="mb-3 input-container">
-                <label for="inputPassword" class="fw-bold">كلمة المرور</label>
-                    <InputText type="password" id="inputPassword"
-                    @bind-Value="@doctorRegisterationByAmdinDTO.Password"
-                               style="padding-left:3rem;"
-                               class="form-control input_i"
-                           placeholder="أدخل كلمة المرور" />
-                    <i class="fas fa-lock icon"></i>
-                    @*<span class="span-eye">
-                    <i class="fas fa-eye"></i>
-                    </span>*@
-                </div>
-                <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.Password)" style="text-align:center" />
-
-                <div class="mb-4 input-container">
-                <label for="inputPassword" class="fw-bold"> تأكيد كلمة المرور </label>
-                    <InputText type="password" id="ConPassword"
-                    @bind-Value="@doctorRegisterationByAmdinDTO.ConfirmPassword"
-                               style="padding-left:3rem;"
-                               class="form-control input_i"
-                           placeholder="دخل تأكيد كلمة المرور" />
-                    <i class="fas fa-lock icon"></i>                  
-                </div>
-                <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.ConfirmPassword)" style="text-align:center" />
-                   
-                <div class="mb-4 input-container" style="position: relative; max-height: 150px; overflow-y: auto;">
-                <label for="inputPassword" class="fw-bold"> التخصص </label>
-                    <InputSelect @bind-Value="doctorRegisterationByAmdinDTO.CategoryId" class="form-control" style="padding-left: 3rem" size="6">
-                        <option>إختر تخصص</option>
-                        @foreach (var categoryDTO in categoryDTOs)
-                        {
-                            <option value="@categoryDTO.Id">@categoryDTO.Name</option>
-                        }
-                    </InputSelect>
-                </div>
-                <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.CategoryId)" style="text-align:center" />
-
-            </div>
-
-        <div class="col-6 form-second-col ">
-            <h3>أدخل تاريخ بداية ونهاية الإشتراك</h3>        
-            @* <div class="d-flex"> *@
-                <div>
-                    <div class="mb-4 input-container sub-input-container">
-                    <label for="start-sub" class="fw-bold sub-label">تاريخ بداية الإشتراك</label>
-                        <InputDate id="start-sub"
-                        @bind-Value="@doctorRegisterationByAmdinDTO.StartSubscriptionDate"
+                    <div class="d-flex">
+                        <label class="fw-bold"> إسم المستخدم </label>
+                        <i class="fas fa-user icon"></i>
+                        <InputText id="fname"
+                        @bind-Value="@doctorRegisterationByAmdinDTO.UserName"
                                    style="padding-left:3rem;"
                                    class="form-control input_i"
-                                   placeholder="Enter your password" />
-                        <i class="fas fa-lock icon"></i>
-                        @* <span class="span-eye-confirm">
-                        <i class="fas fa-eye"></i>
-                        </span>*@
+                                   placeholder="أدخل اسم المستخدم للطبيب " />
                     </div>
-                    <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.StartSubscriptionDate)" style="text-align:center" />
+                    <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.UserName)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
                 </div>
-                <div>
-                <div class="mb-4 input-container sub-input-container">
-                    <label for="end-sub" class="fw-bold sub-label z">تاريخ نهاية الإشتراك</label>
-                        <InputDate id="end-sub"
-                        @bind-Value="@doctorRegisterationByAmdinDTO.EndSubscriptionDate"
+                <div class="mb-3 input-container">
+                    <div class="d-flex">
+                        <label for="inputPassword" class="fw-bold">كلمة المرور</label>
+                        <InputText type="password" id="inputPassword"
+                        @bind-Value="@doctorRegisterationByAmdinDTO.Password"
                                    style="padding-left:3rem;"
-                                   class="form-control input_i" />
+                                   class="form-control input_i"
+                                   placeholder="أدخل كلمة المرور" />
                         <i class="fas fa-lock icon"></i>
-                       
                     </div>
-                    <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.EndSubscriptionDate)" style="text-align:center" />
+                    <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.Password)" style=" text-align: start ; padding-right: 7rem; padding-top: 0.8rem ;" />
                 </div>
-                <div><button type="submit"class="mb-2 btn btn-lg btn-block fw-bold button"@onclick="RegisterNewDoctor">Finish</button></div>
-            @*</div>*@
-        </div>
 
-           
+                <div class="mb-4 input-container">
+                    <div class="d-flex">
+                        <label for="inputPassword" class="fw-bold"> تأكيد كلمة المرور </label>
+                        <InputText type="password" id="ConPassword"
+                        @bind-Value="@doctorRegisterationByAmdinDTO.ConfirmPassword"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل تأكيد كلمة المرور" />
+                        <i class="fas fa-lock icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.ConfirmPassword)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
+                </div>
+
+
+                <div class="mb-4 input-container" style="position: relative; max-height: 150px; ">
+                    <div class="d-flex">
+                        <label for="inputPassword" class="fw-bold"> التخصص </label>
+                        <InputSelect @bind-Value="doctorRegisterationByAmdinDTO.CategoryId" class="form-control" style="padding-left: 3rem" size="6">
+                            <option value="-1">إختر تخصص</option>
+                            @foreach (var categoryDTO in categoryDTOs)
+                            {
+                                <option value="@categoryDTO.Id">@categoryDTO.Name</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    @if (doctorRegisterationByAmdinDTO.CategoryId == -1)
+                    {
+                        <div style=" color:red; text-align: start !important; padding-right: 7rem ; padding-top: 0.8rem;">يجب إختيار تخصص</div>
+                    }
+                    <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.CategoryId)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                </div>
+            </div>
+
+            <div class="col-lg-6  col-sm-12 form-second-col  ">
+                <h3>أدخل تاريخ بداية ونهاية الإشتراك</h3>
+                <div class="sub-container">
+                    <div class="mb-4 input-container sub-input-container">
+                        <div class="d-flex">
+                            <label for="start-sub" class="fw-bold sub-label">تاريخ بداية الإشتراك</label>
+                            <InputDate id="start-sub"
+                            @bind-Value="@doctorRegisterationByAmdinDTO.StartSubscriptionDate"
+                                       style="padding-left:3rem;"
+                                       class="form-control input_i"
+                                       placeholder="Enter your password" />
+                            <i class="fas fa-lock icon"></i>
+                        </div>
+                        <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.StartSubscriptionDate)" style=" text-align: start; padding-right: 10.2rem ; padding-top: 0.8rem ;" />
+                    </div>
+                        
+                    <div class="mb-4 input-container sub-input-container">
+                        <div class="d-flex">
+                            <label for="end-sub" class="fw-bold sub-label z">تاريخ نهاية الإشتراك</label>
+                            <InputDate id="end-sub"
+                            @bind-Value="@doctorRegisterationByAmdinDTO.EndSubscriptionDate"
+                                       style="padding-left:3rem;"
+                                       class="form-control input_i" />
+                            <i class="fas fa-lock icon"></i>
+                        </div>
+                        <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.EndSubscriptionDate)" style=" text-align: start; padding-right: 10.2rem; padding-top: 0.8rem;" />
+                    </div>
+                </div>
+                <div class="submit-btn-container"><button type="submit" class="mb-2 btn btn-lg btn-block fw-bold button  ">Finish</button></div>
+            </div>
+
+
         </EditForm>
 
-    @* </div>*@
+    </div>
 </div>
+
+@* <InvaildSubmitModal/> *@
 @code {
-    
-    public NavigationManager navigat { get; set; }
+    [Inject]
+    public NavigationManager navigat { get; set; } 
 
     public List<CategoryDTO> categoryDTOs { get; set; } = new List<CategoryDTO>();
     public DoctorRegisterationByAmdinDTO doctorRegisterationByAmdinDTO { get; set; } = new DoctorRegisterationByAmdinDTO();
-
+    private AuthenticationState authenticationState;
     public int MyProperty { get; set; }
 
-    protected override async void OnInitialized()
+
+    protected override async Task OnInitializedAsync()
     {
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         categoryDTOs = await _categoryService.getallcategory();
         StateHasChanged();
         base.OnInitialized();
     }
 
-    // protected override async void OnAfterRender(bool firstRender)
-    // {
-    //     if (firstRender)
-    //     {
-    //         categoryDTOs = await _categoryService.getallcategory();
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+          // await  jsRunTime.InvokeVoidAsync("showModal");
 
-    //     }
-    //     //await navjs.InvokeVoidAsync("hidenave");
-    // }
+        }
+        //await navjs.InvokeVoidAsync("hidenave");
+    }
     public async void RegisterNewDoctor()
     {
         var response = _adminService.AddDoctor(doctorRegisterationByAmdinDTO);
         navigat.NavigateTo("/mainpageadmin");
+    }
+    // @onclick="RegisterNewDoctor"
+
+    public async void ShowInvalidModal()
+    {
+        // await jsRunTime.InvokeVoidAsync("showModal");
+        navigat.NavigateTo("/addNewDoctor");
     }
 }
