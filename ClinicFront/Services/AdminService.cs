@@ -18,7 +18,7 @@ namespace ClinicFront.Services
         public async Task<List<AdminRegiterationDTO>> getallAdmins()
         {
             return await JsonSerializer.DeserializeAsync<List<AdminRegiterationDTO>>
-                (await _http.GetStreamAsync("/api/User"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                (await _http.GetStreamAsync("/api/getalladmins"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
         public async Task<List<DoctorDTO>> getallDoctors()
@@ -26,11 +26,21 @@ namespace ClinicFront.Services
             return await JsonSerializer.DeserializeAsync<List<DoctorDTO>>
                 (await _http.GetStreamAsync("/api/getalldoctors"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
+        public async Task<List<int>> getdoctorsflags()
+        {
+            return await JsonSerializer.DeserializeAsync<List<int>>
+                (await _http.GetStreamAsync("/api/getdoctorsflags"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
 
         public async Task<DoctorDTO> getDoctorbyid(string id)
         {
             return await JsonSerializer.DeserializeAsync<DoctorDTO>
-                (await _http.GetStreamAsync("/api/getdoctorbyid" + id), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                (await _http.GetStreamAsync("/api/getdoctorbyid/" + id), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
+        public async Task<AdminRegiterationDTO> GetAdminByIdAsync(string id)
+        {
+            return await JsonSerializer.DeserializeAsync<AdminRegiterationDTO>
+                (await _http.GetStreamAsync("/api/getadminbyid/" + id), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
         public async Task<HttpResponseMessage> AddDoctor(DoctorRegisterationByAmdinDTO doctorRegisterationByAmdin)
@@ -40,17 +50,23 @@ namespace ClinicFront.Services
             return response;
         }
 
-        public async void UpdateDoctor_AsDelete(string id)
+        public async Task<HttpResponseMessage> UpdateDoctor_AsDelete(string id)
         {
             var serialize_id = new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json");
-            await _http.PutAsync("/api/deletedoctor", serialize_id);
+            var response =   await _http.PutAsync("/api/deletedoctor", serialize_id);
+            return response;
         }
-        public async void UpdateDoctor(DoctorDTO doctorDTO)
+        public async Task<HttpResponseMessage> UpdateDoctor(DoctorDTO doctorDTO)
         {
             var serialize_doctordto = new StringContent(JsonSerializer.Serialize(doctorDTO), Encoding.UTF8, "application/json");
-            await _http.PutAsync("/api/EndSubscriptionDate", serialize_doctordto);
+          return  await _http.PutAsync("/api/EndSubscriptionDate", serialize_doctordto);
         }
-
+        public async Task<HttpResponseMessage> UpdateAdminAsync(AdminUpdatingProfileDTO adminUpdatingProfileDTO)
+        {
+            var AdminToUpdateProfile = new StringContent(JsonSerializer.Serialize(adminUpdatingProfileDTO), Encoding.UTF8, "application/json");
+            var response = await _http.PutAsync("/api/AppUser", AdminToUpdateProfile);
+            return response;
+        }
         public async Task<HttpResponseMessage> AddAdmin(AdminRegiterationDTO adminRegiterationDTO)
         {
             var newAdminToAdd = new StringContent(JsonSerializer.Serialize(adminRegiterationDTO), Encoding.UTF8, "application/json");

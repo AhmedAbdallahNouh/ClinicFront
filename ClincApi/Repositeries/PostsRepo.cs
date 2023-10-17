@@ -14,9 +14,9 @@ namespace ClincApi.Repositeries
         {
             _CategoryDbContext = CategoryDbContext;
         }
-        public List<Post> GetAllPosts()
+        public List<Post> GetAllPosts(string id)
         {
-            return _CategoryDbContext.Posts.Include(x => x.AppUser).ToList();
+            return _CategoryDbContext.Posts.Where(p => p.AppUserId == id).Include(x => x.AppUser).ToList();
         }
 
         public Post GetPostById(int id)

@@ -1,60 +1,100 @@
-﻿@inject IJSRuntime jsruntime
+﻿@using System.Text.Json;
+@inject IJSRuntime jsruntime
 <PageTitle>Index</PageTitle>
-<table>
-    <tr>
-        <td>
-            Name :  <select id="name" @onchange=@((ChangeEventArgs args)=> NameChanged(args.Value.ToString()))>
-                <option value="">Select</option>
-                <option value="Alibaug">Alibaug</option>
-                <option value="Mumbai">Mumbai</option>
-                <option value="Pune">Pune</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Description :  <select id="description" @onchange=@((ChangeEventArgs args)=> DescriptionChanged(args.Value.ToString()))>
-                <option>Select</option>
-                <option value="Alibaug">Alibaug</option>
-                <option value="Mumbai">Mumbai</option>
-                <option value="Pune">Pune</option>
-            </select>
-        </td>
-    </tr>
-</table>
-<button @onclick="GetUserLocation">Get My Location</button>
-<hr />
-<div id="map" style="width: 400px; height: 400px;"></div>
+<input type="text" @bind="enteredUrl" placeholder="Enter URL">
+<button @onclick="GetLocationFromUrl">Get Location</button>
+
+<div class="MapParent">
+    <div id="map" style="height: 400px;margin-top: 3rem;width: 100%;position: relative;outline: none;"></div>
+    <button @onclick="GetUserLocation"><i class="fas fa-street-view"></i></button>
+</div>
 
 @code {
+    private bool GetUserLocationSuccess = false;
+    private double UserLatitude = 0.0;
+    private double UserLongitude = 0.0;
+    private string GetUserLocationError = null;
     public string? name;
     public string? description;
     public List<MapModel>? mapData;
 
+
+
+
+    private string enteredUrl;
+
+    private async Task GetLocationFromUrl()
+    {
+        GetUserLocationSuccess = false;
+        GetUserLocationError = null;
+
+        try
+        {
+            // You need to implement a method to extract location data from the entered URL.
+            var location = await jsruntime.InvokeAsync<object>("getCurrentLocationByUrl", enteredUrl);
+
+
+            if (location != null)
+            {
+                var lat = ((JsonElement)location).GetProperty("lat").GetDouble();
+                var lon = ((JsonElement)location).GetProperty("lon").GetDouble();
+
+                UserLatitude = lat;
+                UserLongitude = lon;
+
+                GetUserLocationSuccess = true;
+                // FilterMarkers(); // You may want to filter markers based on the new location.
+            }
+            else
+            {
+                GetUserLocationError = "Invalid URL or no location data found.";
+            }
+        }
+        catch (Exception ex)
+        {
+            GetUserLocationError = ex.Message;
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        InitializeMap();
+    }
+    private async Task GetUserLocation()
+    {
+        GetUserLocationSuccess = false;
+        GetUserLocationError = null;
+
+        try
+        {
+            var location = await jsruntime.InvokeAsync<object>("getCurrentLocation");
+            var lat = ((JsonElement)location).GetProperty("lat").GetDouble();
+            var lon = ((JsonElement)location).GetProperty("lon").GetDouble();
+
+            UserLatitude = lat;
+            UserLongitude = lon;
+
+            GetUserLocationSuccess = true;
+            //FilterMarkers();
+        }
+        catch (Exception ex)
+        {
+            GetUserLocationError = ex.Message;
+        }
+    }
     public List<MapModel> GetData()
     {
         mapData = new List<MapModel>();
+
         mapData.Add(new MapModel
             {
                 Name = "Alibaug",
-                Latitude = 18.641400m,
-                Longitude = 72.872200m,
+                Latitude = UserLatitude,
+                Longitude = UserLongitude,
                 Description = "Alibaug is a coastal town and a municipal council in Raigad District in the Konkan region of Maharashtra, India."
-            });
-        mapData.Add(new MapModel
-            {
-                Name = "Mumbai",
-                Latitude = 18.964700m,
-                Longitude = 72.825800m,
-                Description = "Mumbai formerly Bombay, is the capital city of the Indian state of Maharashtra."
-            });
-        mapData.Add(new MapModel
-            {
-                Name = "Pune",
-                Latitude = 18.523600m,
-                Longitude = 73.847800m,
-                Description = "Pune is the seventh largest metropolis in India, the second largest in the state of Maharashtra after Mumbai."
-            });
+            }
+
+        );
 
         return mapData;
     }
@@ -80,7 +120,7 @@
     }
 
     private void FilterMarkers()
-    {        
+    {
         InitializeMap();
         if (!string.IsNullOrEmpty(this.name))
         {
@@ -97,36 +137,8 @@
     public class MapModel
     {
         public string? Name { get; set; }
-        public decimal Latitude { get; set; }
-        public decimal Longitude { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
         public string? Description { get; set; }
     }
-
-    private async Task GetUserLocation()
-    {
-        GetUserLocationSuccess = false;
-        GetUserLocationError = null;
-
-        try
-        {
-            // Use two separate variables to store latitude and longitude
-            var latitude = await jsruntime.InvokeAsync<double>("getUserLocation");
-            var longitude = await jsruntime.InvokeAsync<double>("getUserLocation");
-
-            UserLatitude = latitude;
-            UserLongitude = longitude;
-
-            GetUserLocationSuccess = true;
-            FilterMarkers();
-        }
-        catch (Exception ex)
-        {
-            GetUserLocationError = ex.Message;
-        }
-    }
-
-    private bool GetUserLocationSuccess = false;
-    private double UserLatitude = 0.0;
-    private double UserLongitude = 0.0;
-    private string GetUserLocationError = null;
 }

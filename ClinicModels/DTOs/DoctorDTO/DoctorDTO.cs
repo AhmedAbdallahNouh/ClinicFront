@@ -15,12 +15,14 @@ namespace ClinicModels.DTOs.DoctorDTO
         public DateTime? EndSubscriptionDate { get; set; }
         public string? CoverImage { get; set; }
         public int Delete_Doctor { get; set; }
+        public int? AdvertisementFlag { get; set; }
+
         public DoctorDTO()
         {
 
         }
         public DoctorDTO(string id, string? firstName, string? lastName, int? age, string? phoneNumber, string? address, int? locationLate, int? LocationLong,
-                        string? facebook, string? instgram, string? whatsUpNumber, DateTime? StartSubscriptionDate, DateTime? EndSubscriptionDate, int Delete_Doctor, string? Image, string? CoverImage)
+                        string? facebook, string? instgram, string? whatsUpNumber, DateTime? StartSubscriptionDate, DateTime? EndSubscriptionDate, int Delete_Doctor, string? Image, string? CoverImage, int? advertisementFlag)
         {
             this.Id = id;
             this.FirstName = firstName;
@@ -38,6 +40,7 @@ namespace ClinicModels.DTOs.DoctorDTO
             this.Delete_Doctor = Delete_Doctor;
             this.Image = Image;
             this.CoverImage = CoverImage;
+            this.AdvertisementFlag = advertisementFlag;
         }
         public CategoryDTO categoryDTO { get; set; } = new CategoryDTO();
         public List<DoctorServiceDTO.DoctorServiceDTO> doctorServiceDTOs { get; set; } = new List<DoctorServiceDTO.DoctorServiceDTO>();

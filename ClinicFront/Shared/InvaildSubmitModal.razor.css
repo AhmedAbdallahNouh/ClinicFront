@@ -104,3 +104,23 @@
 #e_button {
     background: #ff3636;
 }
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Adjust the opacity (0.5) as needed */
+    display: none;
+    z-index: 999; /* Set it to appear above the content but below the modals */
+}
+
+.popup-container {
+    position: fixed;
+    z-index: 1000; /* Set it higher than the overlay but lower than the modals */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

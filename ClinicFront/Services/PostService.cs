@@ -13,10 +13,10 @@ namespace ClinicFront.Services
             this.http = http;
         }
 
-        public async Task<List<PostDTO>> getallPosts()
+        public async Task<List<PostDTO>> getallPosts(string id)
         {
             return await JsonSerializer.DeserializeAsync<List<PostDTO>>
-                (await http.GetStreamAsync("/api/Post"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                (await http.GetStreamAsync("/api/getallpostsbyid/" + id), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
         public async Task<PostDTO> getbyid(int id)

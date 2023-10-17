@@ -1,4 +1,5 @@
 ﻿@layout MainLayoutDoctor
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -78,7 +79,7 @@
     </div>
 </div>
 
-@foreach(var post in postDto)
+@foreach (var post in postDtoS)
 {
     <div class="post">
         <div class="posttitel">
@@ -136,7 +137,8 @@
     public bool uploadingImage { get; set; }
     public bool uploadingVideo { get; set; }
     public bool ShowimageInModel { get; set; } = false;
-    public List<PostDTO> postDto { get; set; } = new List<PostDTO>();
+    public List<PostDTO> postDtoS { get; set; } = new List<PostDTO>();
+    public PostDTO postDto { get; set; } = new PostDTO();
     public string AppuserId { get; set; } = "";
     public string AppuserImage { get; set; } = "";
     public string Text { get; set; } = "";
@@ -146,11 +148,16 @@
     public IJSRuntime jSRuntime { get; set; }
     [Inject]
     public IPostService postService { get; set; }
+    private AuthenticationState authenticationState;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var doctorId = (authenticationState.User.Claims.ToList())[0].Value;
+        postDtoS = await postService.getallPosts(doctorId);
 
-        return base.OnInitializedAsync();
+        StateHasChanged();
+        base.OnInitialized();
     }
 
     public async Task UplaodImage(InputFileChangeEventArgs e)
@@ -238,7 +245,7 @@
              Video = this.Videos,
              Image = Images
         };
-        postDto.Add(newpost);
+        // postDto.Add(newpost);
         //postService.AddPost(newpost);
         this.Text = "";
         this.Videos = "";

@@ -1,34 +1,35 @@
 ﻿@page "/doctorservice"
 @using ClinicModels.DTOs.DoctorServiceDTO;
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @layout MainLayoutDoctor
-<div class="container-lg" style="margin-top: -1.1rem; width: 70%;position: relative;right: 6%;">
+<div class="container-lg main-container">
     <div class="containerofcntent">
-        <div class="row" style="padding-right: 2rem;">
-            <h1><b>الخدمات اللتى نقدمها</b></h1>
-            @for(var i = 0; i < 7; i++)
+        <h1><b>الخدمات اللتى نقدمها</b></h1>
+        <div class="row div_of_card">
+            @foreach (var doctorServiceDTO in doctorServiceDTOs)
             {
                 <div class="card-container col-lg-4 col-md-6 col-sm-6">
                     <div class="card">
                         <div class="image">
-                            @if (string.IsNullOrEmpty(Image))
+                            @if (string.IsNullOrEmpty(doctorServiceDTO.Image))
                             {
                                 <i class="bi bi-image" style="color:#03206C;font-size: 1000%;"></i>
                             }
                             else
                             {
-                                <img src="@Image" />
+                                <img src="@doctorServiceDTO.Image" />
                             }
                         </div>
                         <div class="content">
-                            <div class="header">Orthodontics.</div>
+                            <div class="header">@doctorServiceDTO.Title</div>
                             <div class="description">
-                                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis maiores expedita exercitationem rerum, voluptate laudantium nostrum ratione aliquam adipisci, vitae soluta repellat cupiditate, inventore ipsa distinctio quidem assumenda voluptates eligendi.
+                                @doctorServiceDTO.Discription
                             </div>
                             <div style="display:flex">
-                                <button type="submit" class="btn btn-lg btn-block fw-bold button" style="padding: .2rem 0rem;width:40%">
+                                <button type="submit" @onclick="() => DeleteService(doctorServiceDTO)" class="btn btn-lg fw-bold button" style="padding: .2rem 0rem;width:40%">
                                     حذف
                                 </button>
-                                <button type="submit" class="btn btn-lg btn-block fw-bold button" style="padding: .2rem 0rem;width:40%">
+                                <button type="submit" @onclick="() => UpdateService(doctorServiceDTO)" class="btn btn-lg fw-bold button" style="padding: .2rem 0rem;width:40%">
                                     تعديل
                                 </button>
                             </div>
@@ -47,17 +48,17 @@
                 <div class="col-lg-5 col-md-12">
                     <div style="margin-bottom: 2rem;">
                         <label for="adderss"><b>العنوان:</b></label>
-                        <InputText id="adderss" @bind-Value="@Adderss" style="padding-right:3rem;"
-                                   class="form-control input_i ss" placeholder="اكتب العنوان" />
+                        <InputText id="adderss" @bind-Value="@Title"
+                                   class="form-control input_i ss input" placeholder="اكتب العنوان" />
                     </div> 
                     <div>
                         <label for="discription"><b>الوصف:</b></label>
-                        <InputText @bind-Value="@Discription" id="discription"
-                                   style="padding-right:3rem;" class="form-control input_i ss" placeholder="اكتب العنوان" />
+                        <InputText @bind-Value="@Dscription" id="discription"
+                                   class="form-control input_i ss input" placeholder="اكتب العنوان" />
                     </div>
 
                 </div>
-                <div class="col-lg-5 col-md-12">
+                <div class="col-lg-5 col-md-12 divOfUploadImage">
                     <InputFile id="image" type="file" OnChange="@UploadImage" style="display:none;" />
                     <div class="divOfUploadserviceImage">
                         @if(string.IsNullOrEmpty(Image)){
@@ -69,16 +70,25 @@
                         }
                     </div>
                     <label for="image">
-                        <button type="submit" class="btn btn-lg btn-block fw-bold button" style="padding: .2rem 0rem;">
+                        <button type="submit" class="btn btn-lg btn-block fw-bold button labelofupload" style="padding: .2rem 0rem;">
                             إضغط لتحميل صورة
                         </button>
                     </label>
                 </div>
             </div>
             <div>
-                <button type="submit" class="btn btn-lg btn-block fw-bold button AddButton" style="padding: .2rem 0rem;">
-                    إضافة
-                </button>
+                @if(Add_UpdateButton){
+                    <button type="submit" @onclick="() => UpdateServiceInDataBase()" class="btn btn-lg btn-block fw-bold button AddButton" style="padding: .2rem 0rem;">
+                        تعديل
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" @onclick="() => ADDService()" class="btn btn-lg btn-block fw-bold button AddButton" style="padding: .2rem 0rem;">
+                        إضافة
+                    </button>
+                }
+               
             </div>
         </div>
     </div>
@@ -88,9 +98,80 @@
 
 
     public List<DoctorServiceDTO> doctorServiceDTOs { get; set; } = new List<DoctorServiceDTO>();
+    [Inject]
+    public IDoctorService doctorServicesService { get; set; }
+    private AuthenticationState authenticationState;
+
     public string Image { get; set; }
-    public string Adderss { get; set; }
-    public string Discription { get; set; }
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Dscription { get; set; }
+    public bool Add_UpdateButton { get; set; } = false;
+
+    protected override async void OnInitialized()
+    {
+        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var doctorId = (authenticationState.User.Claims.ToList())[0].Value;
+        doctorServiceDTOs = await doctorServicesService.GetAllService(doctorId);
+        StateHasChanged();
+        base.OnInitialized();
+    }
+    private async void ADDService()
+    {
+        DoctorServiceDTO doctorServiceDTO = new DoctorServiceDTO()
+        {
+            Image = this.Image,
+            Title = this.Title,
+            Discription = this.Dscription
+        };
+        var response = await doctorServicesService.AddService(doctorServiceDTO);
+        if (response.StatusCode.ToString() == "Ok")
+        {
+            doctorServiceDTOs.Add(doctorServiceDTO);
+            StateHasChanged();
+        }
+    }
+    private async void DeleteService(DoctorServiceDTO doctorServiceDTO)
+    {
+        var response = await doctorServicesService.DeleteService(doctorServiceDTO.Id);
+        if (response.StatusCode.ToString() == "Ok")
+        {
+            var doctorServiceDTODTOindex = doctorServiceDTOs.FindIndex(a => a.Id == doctorServiceDTO.Id);
+            doctorServiceDTOs.RemoveAt(doctorServiceDTODTOindex);
+        }
+        StateHasChanged();
+    }
+    private async void UpdateService(DoctorServiceDTO doctorServiceDTO)
+    {
+        Id = doctorServiceDTO.Id;
+        Image = doctorServiceDTO.Image;
+        Title = doctorServiceDTO.Title;
+        Dscription = doctorServiceDTO.Discription;
+        Add_UpdateButton = true;
+    }
+    private async void UpdateServiceInDataBase( )
+    {
+        DoctorServiceDTO doctorServiceDTO = new DoctorServiceDTO()
+        {
+            Id = Id,
+            Image = Image,
+            Title = Title,
+            Discription = Dscription
+        };
+
+        var response = await doctorServicesService.UpdateService(doctorServiceDTO);
+        if (response.StatusCode.ToString() == "Ok")
+        {
+            var updatedCategoryDTOindex = doctorServiceDTOs.FindIndex(a => a.Id == doctorServiceDTO.Id);
+            if (updatedCategoryDTOindex != -1)
+            {
+                doctorServiceDTOs[updatedCategoryDTOindex].Image = doctorServiceDTO.Image;
+                doctorServiceDTOs[updatedCategoryDTOindex].Title = doctorServiceDTO.Title;
+                doctorServiceDTOs[updatedCategoryDTOindex].Discription = doctorServiceDTO.Discription;
+            }       
+        }      
+        Add_UpdateButton = true;
+    }
 
     private async void UploadImage(InputFileChangeEventArgs e)
     {

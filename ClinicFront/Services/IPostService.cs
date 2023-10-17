@@ -6,7 +6,7 @@ namespace ClinicFront.Services
     {
         Task<HttpResponseMessage> AddPost(PostDTO postDTO);
         Task DeletePost(int id);
-        Task<List<PostDTO>> getallPosts();
+        Task<List<PostDTO>> getallPosts(string id);
         Task<PostDTO> getbyid(int id);
         void UpdatePost(PostDTO postDTO);
     }

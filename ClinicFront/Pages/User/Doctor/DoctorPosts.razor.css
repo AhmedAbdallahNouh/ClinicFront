@@ -26,6 +26,9 @@ h3 {
 }
 .doctorimgInPost {
     background-color: white;
+    position: absolute;
+    top: 3%;
+    right: 8%;
     width: 5rem;
     height: 5rem;
     border-radius: 50%;
@@ -46,6 +49,12 @@ h3 {
     right: 16%;
     top: 6%;
     line-height: 9px;
+}
+.posttitel {
+    margin-bottom: 8rem;
+}
+.postimage{
+    height:33rem;
 }
 .postvideo {
     width: 80%;
@@ -155,4 +164,82 @@ textarea::-webkit-scrollbar-thumb {
 .video_img::-webkit-scrollbar-thumb, .post::-webkit-scrollbar-thumb {
     background-color: #03206D;
     border-radius: 5px;
+}
+@media (max-width: 1800px) {
+    .doctornameInPost {
+        right: 23%;
+    }
+}
+@media (max-width: 1530px) {
+    .postvideo {
+        height: 16rem;
+    }
+}
+@media (max-width: 1300px) {
+    .doctornameInPost {
+        right: 27%;
+    }
+}@media (max-width: 915px) {
+    .addpost {
+        width: 90%;
+    }
+}@media (max-width: 780px) {
+    .postvideo{
+        height:10rem;
+    }
+    .postimage{
+        height:25rem;
+    }
+    .doctornameInPost {
+        right: 30%;
+    }
+}
+@media (max-width: 600px) {
+    .post {
+        width: 90%;
+        width: 100%;
+        height: 23rem;
+    }
+}
+@media (max-width: 500px) {
+    .doctorimgInPost {
+        width: 4rem;
+        height: 4rem;
+    }
+    .postimage {
+        height: 25rem;
+    }
+    .doctorimgInPost i {
+        font-size: 4.3rem;
+    }
+}
+@media (max-width: 410px) {
+    .doctorimgInPost {
+        width: 4rem;
+        height: 4rem;
+    }
+    .postimage {
+        height: 10rem;
+    }
+    .doctorimgInPost i {
+        font-size: 4.3rem;
+    }
+}
+@media (max-width: 280px) {
+    .doctornameInPost{
+        right: 42%;
+    }
+    .post{
+        height:21rem;
+    }
+    .postimage {
+        height: 8rem;
+    }
+    .postvideo{
+        width:100%;
+        height:9rem;
+    }
+    .postbody {
+        max-height: 9rem;
+    }
 }

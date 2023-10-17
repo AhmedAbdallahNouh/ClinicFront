@@ -44,10 +44,22 @@ namespace ClincApi.Controllers
                     DoctorDTO doctorDTO = new DoctorDTO(doctor.Id, doctor.FirstName, doctor.LastName, doctor.Age, doctor.PhoneNumber, doctor.Address
                                              , doctor.LocationLat, doctor.LocationLong, doctor.FaceBook, doctor.Instgram, doctor.WhatsUpNumber,
                                              doctor.StartSubscriptionDate, doctor.EndSubscriptionDate, doctor.Delete_Doctor,
-                                             doctor.Image, doctor.CoverImage);
+                                             doctor.Image, doctor.CoverImage,doctor.AdvertisementFlag);
                     doctorDTOs.Add(doctorDTO);
                 }
                 return Ok(doctorDTOs);
+            }
+            else return NotFound();
+        }
+        [HttpGet("/api/getdoctorsflags")]
+        public async Task<ActionResult> GetDoctorsFlags()
+        {
+            List<AppUser> users = (List<AppUser>) await _userManager.GetUsersInRoleAsync("Doctor");
+            if (users.Count != 0)
+            {
+                var doctorsAdvertisementFlag =   users.Where(u => u.AdvertisementFlag != 0).Select(u => u.AdvertisementFlag).ToList();
+                if (doctorsAdvertisementFlag.Count != 0) return Ok(doctorsAdvertisementFlag);
+              return NotFound();
             }
             else return NotFound();
         }
@@ -55,7 +67,26 @@ namespace ClincApi.Controllers
         public async Task<ActionResult> GetAllAdmins()
         {
             List<AppUser> users = (List<AppUser>)await _userManager.GetUsersInRoleAsync("Admin");
-            if (users.Count != 0) return Ok(users);
+            if (users.Count != 0)
+            {
+                List<AdminRegiterationDTO> adminsDTOs = new List<AdminRegiterationDTO>();
+
+                foreach (var admin in users)
+                {
+                    AdminRegiterationDTO adminDTO = new AdminRegiterationDTO();
+                    adminDTO.FirstName = admin.FirstName;
+                    adminDTO.LastName = admin.LastName;
+                    adminDTO.Address = admin.Address;
+                    adminDTO.Age = admin.Age;
+                    adminDTO.UserName = admin.UserName;
+                    adminDTO.Email = admin.Email;
+                    adminDTO.Image = admin.Image;
+                    adminDTO.Id = admin.Id;
+                    adminDTO.PhoneNumber = admin.PhoneNumber;
+                    adminsDTOs.Add(adminDTO);
+                }
+                return Ok(adminsDTOs);
+            }
             else return NotFound();
         }
 
@@ -68,7 +99,7 @@ namespace ClincApi.Controllers
         }
 
 
-        [HttpGet("/api/getdoctorbyid")]
+        [HttpGet("/api/getdoctorbyid/{id}")]
         public async Task<IActionResult> GetDoctorbyIdAsync(string id)
         {
             if (!string.IsNullOrWhiteSpace(id))
@@ -82,28 +113,33 @@ namespace ClincApi.Controllers
                 {
                     DoctorDTO doctorDTO = new DoctorDTO(id, doctor.FirstName, doctor.LastName, doctor.Age, doctor.PhoneNumber, doctor.Address
                       , doctor.LocationLat, doctor.LocationLong, doctor.FaceBook, doctor.Instgram, doctor.WhatsUpNumber, doctor.StartSubscriptionDate, doctor.EndSubscriptionDate,
-                      doctor.Delete_Doctor, doctor.Image, doctor.CoverImage);
-
-                    CategoryDTO categoryDTO = new CategoryDTO()
+                      doctor.Delete_Doctor, doctor.Image, doctor.CoverImage,doctor.AdvertisementFlag);
+                    if(doctor.Category != null)
                     {
-                        Id = (int)doctor.CategoryId,
-                        Name = doctor.Category.Name,
-
-                    };
-                    doctorDTO.categoryDTO = categoryDTO;
-
-                    foreach (var doctorService in doctor.Services)
-                    {
-                        DoctorServiceDTO doctorServiceDTO = new DoctorServiceDTO()
+                        CategoryDTO categoryDTO = new CategoryDTO()
                         {
-                            Id = doctorService.Id,
-                            Title = doctorService.Title,
-                            Discription = doctorService.Discription,
-                            Image = doctorService.Image,
+                            Id = (int)doctor.CategoryId,
+                            Name = doctor.Category.Name,
+
                         };
-                        doctorDTO.doctorServiceDTOs.Add(doctorServiceDTO);
+                        doctorDTO.categoryDTO = categoryDTO;
 
                     }
+                    if(doctor.Services != null)
+                    {
+                        foreach (var doctorService in doctor.Services)
+                        {
+                            DoctorServiceDTO doctorServiceDTO = new DoctorServiceDTO()
+                            {
+                                Id = doctorService.Id,
+                                Title = doctorService.Title,
+                                Discription = doctorService.Discription,
+                                Image = doctorService.Image,
+                            };
+                            doctorDTO.doctorServiceDTOs.Add(doctorServiceDTO);
+
+                        }
+                    }               
                     return Ok(doctorDTO);
                 }
                 return NotFound("not found");
@@ -111,8 +147,31 @@ namespace ClincApi.Controllers
             return BadRequest("id is null or empty");
         }
 
+        [HttpGet("/api/getadminbyid/{id}")]
+        public async Task<IActionResult> GetAdminbyIdAsync(string id)
+        {
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                var admin = await _userManager.Users.SingleOrDefaultAsync(u => u.Id == id );
 
-
+                if (admin != null)
+                {
+                    AdminRegiterationDTO adminDto = new AdminRegiterationDTO();
+                    adminDto.Id = admin.Id;
+                    adminDto.FirstName = admin.FirstName;
+                    adminDto.LastName = admin.LastName;
+                    adminDto.UserName = admin.UserName;
+                    adminDto.PhoneNumber = admin.PhoneNumber;
+                    adminDto.Address = admin.Address;
+                    adminDto.Age = admin.Age;
+                    adminDto.Email = admin.Email;
+                    adminDto.Image = admin.Image;               
+                    return Ok(adminDto);
+                }
+                return NotFound("not found");
+            }
+            return BadRequest("id is null");
+        }
         [HttpPost]
         public async Task<ActionResult> AdminRegistration(AdminRegiterationDTO adminRegiterationDTO)
         {
@@ -243,28 +302,28 @@ namespace ClincApi.Controllers
 
         }
 
-        [HttpPut("/api/editadminprofile")]
-        public async Task<ActionResult> EditAdminProfile(AdminRegiterationDTO adminRegiterationDTO)
+        [HttpPut]
+        public async Task<ActionResult> EditAdminProfile(AdminUpdatingProfileDTO adminUpdatingProfileDTO)
         {
 
             try
             {
                 if (ModelState.IsValid)
                 {
-                    AppUser? adminToUpdateProfile = await GetUserbyIdAsync(adminRegiterationDTO.Id);
+                    AppUser? adminToUpdateProfile = await GetUserbyIdAsync(adminUpdatingProfileDTO.Id);
                     if (adminToUpdateProfile != null)
                     {
 
-                        adminToUpdateProfile.FirstName = adminToUpdateProfile.FirstName;
-                        adminToUpdateProfile.LastName = adminToUpdateProfile.LastName;
-                        adminToUpdateProfile.Email = adminToUpdateProfile.Email;
-                        adminToUpdateProfile.PhoneNumber = adminToUpdateProfile.PhoneNumber;
-                        adminToUpdateProfile.Address = adminToUpdateProfile.Address;
-                        adminToUpdateProfile.Age = adminToUpdateProfile.Age;
-                        adminToUpdateProfile.UserName = adminToUpdateProfile.UserName;
+                        adminToUpdateProfile.FirstName = adminUpdatingProfileDTO.FirstName;
+                        adminToUpdateProfile.LastName = adminUpdatingProfileDTO.LastName;
+                        adminToUpdateProfile.Email = adminUpdatingProfileDTO.Email;
+                        adminToUpdateProfile.PhoneNumber = adminUpdatingProfileDTO.PhoneNumber;
+                        adminToUpdateProfile.Address = adminUpdatingProfileDTO.Address;
+                        adminToUpdateProfile.Age = adminUpdatingProfileDTO.Age;
+                        adminToUpdateProfile.UserName = adminUpdatingProfileDTO.UserName;
 
                         IdentityResult updateAdminProfileResult = await _userManager.UpdateAsync(adminToUpdateProfile);
-                        return updateAdminProfileResult.Succeeded ? Ok(adminToUpdateProfile) : BadRequest("faild to save changes");
+                        return updateAdminProfileResult.Succeeded ? Ok(adminUpdatingProfileDTO) : BadRequest("faild to save changes");
 
                     }
                     else return NotFound("user is null");

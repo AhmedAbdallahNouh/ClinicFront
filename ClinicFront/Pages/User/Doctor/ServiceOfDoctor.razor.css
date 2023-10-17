@@ -3,6 +3,9 @@
     margin: 3rem auto;
     font-size: -webkit-xxx-large;
 }
+.maincontainer {
+    padding-right: 2rem;
+}
 .content {
     flex: 1;
     margin-top: 20px;
@@ -57,16 +60,17 @@
     justify-content: center;
     align-items: center;
 }
-.card .content {
-    position: absolute;
-    z-index: 10;
-    padding: .5rem;
-    height: 100%;
-    background: white;
-    transform: translateY(314px);
-    transition: transform 200ms ease;
-    margin-block-end: 2rem;
-}
+    .card .content {
+        position: absolute;
+        z-index: 10;
+        padding: .5rem;
+        width: 100%;
+        height: 100%;
+        background: white;
+        transform: translateY(314px);
+        transition: transform 200ms ease;
+        margin-block-end: 2rem;
+    }
 .card .content .header {
     font-size: 1.5rem;
     font-weight: 700;
@@ -116,5 +120,19 @@
 @media (max-width: 1310px) {
     .card {
         width: 88%;
+    }
+}
+@media (max-width: 280px) {
+    h1 {
+        font-size: x-large;
+    }
+    .maincontainer {
+        width: 18rem;
+        position: relative;
+        right: -9%;
+    }
+    .card-container {
+        height: 13rem;
+        margin-bottom: 5rem;
     }
 }

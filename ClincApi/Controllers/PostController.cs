@@ -19,10 +19,10 @@ namespace ClincApi.Controllers
         }
 
 
-        [HttpGet]
-        public ActionResult GetAllPosts()
+        [HttpGet("/api/getallpostsbyid/{id}")]
+        public ActionResult GetAllPosts(string id)
         {
-            List<Post> posts = _PostRepo.GetAllPosts();
+            List<Post> posts = _PostRepo.GetAllPosts(id);
             if (posts == null)
             {
                 return NotFound();

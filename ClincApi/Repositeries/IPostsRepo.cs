@@ -6,7 +6,7 @@ namespace ClincApi.Repositeries
     {
         Post addPost(Post post);
         void deletePost(int id);
-        List<Post> GetAllPosts();
+        List<Post> GetAllPosts(string id);
         Post GetPostById(int id);
         void UpdatePost(Post post);
     }

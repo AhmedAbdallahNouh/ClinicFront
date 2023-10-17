@@ -12,18 +12,18 @@ namespace ClincApi.Models
 
         [MaxLength(50)]
         public string? LastName { get; set; }
-        [MaxLength(10)]
         public int? Age { get; set; }
 
         [MaxLength(100)]
         public string? Address { get; set; }
+
         public string? Discription { get; set; }
 
-        [MaxLength(20)]
         public int? LocationLat { get; set; }
 
-        [MaxLength(20)]
         public int? LocationLong { get; set; }
+
+        public int? AdvertisementFlag { get; set; }
 
         [MaxLength(100)]
         public string? FaceBook { get; set; }

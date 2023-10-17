@@ -1,26 +1,27 @@
 ﻿@page "/serviceofdoctor"
+@inject IAdminService _adminService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-
-<div class="row" style="padding-right: 2rem;">
+<div class="row maincontainer">
     <h1><b>الخدمات اللتى نقدمها</b></h1>
-    @for (var i = 0; i < 7; i++)
+    @foreach (var doctorServiceDTO in doctorServiceDTOs)
     {
         <div class="card-container col-lg-4 col-md-6 col-sm-6">
             <div class="card">
                 <div class="image">
-                    @if (string.IsNullOrEmpty(Image))
+                    @if (!string.IsNullOrEmpty(doctorServiceDTO.Image))
                     {
                         <i class="bi bi-image" style="color:#03206C;font-size: 1000%;"></i>
                     }
                     else
                     {
-                        <img src="@Image" />
+                        <img src="@doctorServiceDTO.Image" />
                     }
                 </div>
                 <div class="content">
-                    <div class="header">Orthodontics.</div>
+                    <div class="header">@doctorServiceDTO.Title</div>
                     <div class="description">
-                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Corporis maiores expedita exercitationem rerum, voluptate laudantium nostrum ratione aliquam adipisci, vitae soluta repellat cupiditate, inventore ipsa distinctio quidem assumenda voluptates eligendi.
+                        @doctorServiceDTO.Discription
                     </div>
                 </div>
             </div>
@@ -28,9 +29,6 @@
     }
 </div>
 @code {
-
+    [Parameter]
     public List<DoctorServiceDTO> doctorServiceDTOs { get; set; } = new List<DoctorServiceDTO>();
-    public string Image { get; set; }
-    public string Adderss { get; set; }
-    public string Discription { get; set; }
 }

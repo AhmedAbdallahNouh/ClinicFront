@@ -1,6 +1,8 @@
 ﻿@page "/adminHome"
 @layout MainLayoutAdmin
 @inject ICategoryService _categorySrevice
+@inject IAdminService _adminService
+@inject IJSRuntime JSRuntime
 <div class="bodybackground"></div>
     <div class="main-container">
         <div class="row justify-content-evenly all-time-statistics-row">
@@ -65,32 +67,27 @@
             </div>
         </div>
 
-        <div class="row justify-content-evenly admins-row">
-            <div class=" col-lg-3 col-md-4 col-sm-12 admin-row-div ">
+
+    <div class="row justify-content-evenly admins-row">
+        @foreach(var admin in adminsDTOs)
+        {
+            <div class=" col-lg-3 col-md-4 ">
                 <div class="admin-img-container">
-                    <img src="/assets/Images/doc.jpeg" />
+                    @if (!string.IsNullOrEmpty(admin.Image))
+                    {
+                        <img src="@admin.Image" />
+                    }
+                    else
+                    {
+                        <img src="/assets/Images/Untitled.jpeg" />
+                    }
                 </div>
-                <h4 class="card-subtitle mb-2 mt-3 text-body-secondary">محمد على</h4>
+                <h4 class="card-subtitle mb-2 mt-3 text-body-secondary">@admin.FirstName @admin.LastName</h4>
             </div>
-        <div class=" col-lg-3 col-md-4 ">
-                <div class="admin-img-container">
-                    <img src="/assets/Images/doc.jpeg" />
-                </div>
-                <h4 class="card-subtitle mb-2 mt-3 text-body-secondary">أحمد جمال</h4>
-            </div>
-        <div class=" col-lg-3 col-md-4 ">
-                <div class="admin-img-container">
-                    <img src="/assets/Images/doc.jpeg" />
-                </div>
-                <h4 class="card-subtitle mb-2 mt-3 text-body-secondary">عبدالله نوح</h4>
-            </div>
-        <div class=" col-lg-3 col-md-4 ">
-                <div class="admin-img-container">
-                    <img src="/assets/Images/doc.jpeg" />
-                </div>
-                <h4 class="card-subtitle mb-2 mt-3 text-body-secondary">مروة السيد</h4>
-            </div>
-        </div>
+        }      
+    </div>
+
+      
         <div class="row  specialties-container-div">
             @foreach(var categoryDTO in CategoryDTOs)
             {
@@ -114,16 +111,32 @@
                     <button class="modify-btn-enable" @onclick="SetAddCategoryFunction" data-bs-toggle="modal" data-bs-target="#exampleModal">إضافة جديد</button>
                 </div>
                 <div>
-                    <button class="@DeleteAddBtnClass" @onclick="SetUpdateCategoryFunction" disabled="@DeleteAddBtnDisabled" data-bs-toggle="modal" data-bs-target="#exampleModal">تعديل</button>
-                    <button class="@DeleteAddBtnClass" @onclick="SetDeleteFunction" disabled="@DeleteAddBtnDisabled" data-bs-toggle="modal" data-bs-target="#exampleModal">حذف</button>
+                    @if (DeleteAddBtnDisabled)
+                    {
+                        <sapn class="d-inline-block update-btn-span" tabindex="0" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover focus" data-bs-content="يجب اختيار فئة للتعديل">
+                            <button id="update-category-btn" class="@DeleteAddBtnClass pop-update-btn" @onclick="SetUpdateCategoryFunction" disabled="@DeleteAddBtnDisabled" data-bs-toggle="modal" data-bs-target="#exampleModal">تعديل</button>
+                        </sapn>
+
+                        <span class="d-inline-block delete-btn-span" tabindex="0" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover focus" data-bs-content="يجب اختيار فئة لحذفها">
+                            <button id="delete-category-btn" class="@DeleteAddBtnClass pop-delete-btn" @onclick="SetDeleteFunction" disabled="@DeleteAddBtnDisabled" data-bs-toggle="modal" data-bs-target="#exampleModal">حذف</button>
+                        </span>
+                    }
+                    else
+                    {
+                        <button id="update-category-btn" class="@DeleteAddBtnClass pop-update-btn" @onclick="SetUpdateCategoryFunction" disabled="@DeleteAddBtnDisabled" data-bs-toggle="modal" data-bs-target="#exampleModal">تعديل</button>
+                        <button id="delete-category-btn" class="@DeleteAddBtnClass pop-delete-btn" @onclick="SetDeleteFunction" disabled="@DeleteAddBtnDisabled" data-bs-toggle="modal" data-bs-target="#exampleModal">حذف</button>
+
+                    }
+
                 </div>
-              
+               
             </div>
         </EditForm>
         </div>
         
     </div>
 
+@* <InvaildSubmitModal></InvaildSubmitModal> *@
 
 <ConfirmDeleteModal categoryDelegate="@categoryDelegate" OnConfirmDelete="@ActionStatusFunction" ActionStatus="@ActionStatus" />
 
@@ -134,7 +147,10 @@
     LineChart<double> lineChart2;
     public CategoryDTO CategoryDTO { get; set; } = new CategoryDTO();
     public List<CategoryDTO> CategoryDTOs { get; set; } = new List<CategoryDTO>();
+    public List<AdminRegiterationDTO> adminsDTOs { get; set; } = new List<AdminRegiterationDTO>();
     public string ActionStatus { get; set; }
+    public bool InavalidModal { get; set; } = false;
+
     public string DeleteAddBtnClass { get; set; } = "modify-btn-disable";
     public bool DeleteAddBtnDisabled { get; set; } = true;
     public Action ActionStatusFunction { get; set; } 
@@ -144,6 +160,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        adminsDTOs = await _adminService.getallAdmins();
         CategoryDTOs = await _categorySrevice.getallcategory();
 
     }
@@ -153,6 +170,9 @@
         {
 
             await HandleRedraw();
+            // Call the JavaScript function to initialize the popover
+            await JSRuntime.InvokeVoidAsync("initPopover");
+            // await JSRuntime.InvokeVoidAsync("deletePopover");
             StateHasChanged();
         }
 
@@ -199,6 +219,8 @@
             {
                 CategoryDTOs[updatedCategoryDTOindex].Name = newCategoryNameToUpdate;
             }
+            // await JSRuntime.InvokeVoidAsync("showSuccessModal");
+            InavalidModal = true;
         }
         StateHasChanged();
     }
@@ -214,7 +236,8 @@
         }
         StateHasChanged();
     }
-    private void SetUpdateValue2(CategoryDTO C)
+    
+    private  async void SetUpdateValue2(CategoryDTO C)
     {
         CategoryDTO.Name = C.Name;
         CategoryDTO.Id = C.Id;
@@ -222,10 +245,12 @@
         {
             DeleteAddBtnClass = "modify-btn-enable";
             DeleteAddBtnDisabled = false;
-        }
-       
 
-    }
+        }
+        // await JSRuntime.InvokeVoidAsync("updatePopover");
+
+
+    }   
 
     private void Save()
     {

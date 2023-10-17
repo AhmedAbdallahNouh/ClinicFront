@@ -1,4 +1,4 @@
-﻿@page "/addNewAdmin"
+﻿@page "/editAdmin/{id}"
 @inject IAdminService _adminService
 @layout MainLayoutAdmin
 
@@ -9,16 +9,16 @@
 
 <div class="main-container">
     <h1 class="h3 mb-0 fw-bold text-center color-text form-title">
-        إضافة أدمن جديد
+        تعديل بيانات أدمن 
     </h1>
     <div class="container-signup">
         @* <div class="row"> *@
-        <EditForm Model="@adminRegiterationDTO" class="add-doctor-form row" style="direction:rtl" OnValidSubmit="RegisterNewAdmin" OnInvalidSubmit="ShowInvalidModal">
+        <EditForm Model="@adminRegiterationDTO" class="add-doctor-form row" style="direction:rtl" OnValidSubmit="UpdateAdminProfile" OnInvalidSubmit="ShowInvalidModal">
             <DataAnnotationsValidator />
             <div class="col-lg-6 col-sm-12 form-first-col">
                 <div class="mb-2 input-container">
                     <div class="d-flex">
-                        <label class="fw-bold"> الإسم الأول  </label>
+                        <label class="fw-bold" for="fname"> الإسم الأول  </label>
                         <InputText id="fname"
                         @bind-Value="@adminRegiterationDTO.FirstName"
                                    style="padding-left:3rem;"
@@ -31,7 +31,7 @@
                 </div> 
                 <div class="mb-2 input-container">
                     <div class="d-flex">
-                        <label class="fw-bold"> الإسم الأخير  </label>
+                        <label class="fw-bold" for="lname"> الإسم الأخير  </label>
                         <InputText id="lname"
                         @bind-Value="@adminRegiterationDTO.LastName"
                                    style="padding-left:3rem;"
@@ -43,7 +43,7 @@
                 </div>
                 <div class="mb-2 input-container">
                     <div class="d-flex">
-                        <label class="fw-bold"> إسم المستخدم</label>
+                        <label class="fw-bold" for="user-name"> إسم المستخدم</label>
                         <InputText id="user-name"
                         @bind-Value="@adminRegiterationDTO.UserName"
                                    style="padding-left:3rem;"
@@ -56,7 +56,7 @@
                 </div>
                 <div class="mb-2 input-container">
                     <div class="d-flex">
-                        <label class="fw-bold"> الإيميل</label>
+                        <label class="fw-bold" for="email"> الإيميل</label>
                         <InputText id="email"
                         @bind-Value="@adminRegiterationDTO.Email"
                                    style="padding-left:3rem;"
@@ -65,12 +65,14 @@
                         <i class="fas fa-envelope icon"></i>
                     </div>
                     <ValidationMessage For="@(() => adminRegiterationDTO.Email)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
-                </div>
+                </div>              
+            </div> 
+
+            <div class="col-lg-6 col-sm-12 form-first-col">
                 <div class="mb-4 input-container">
                     <div class="d-flex">
-                        <label for="inputPassword" class="fw-bold"> رقم الهاتف </label>
-                        <InputText type="password" id="ConPassword"
-                        @bind-Value="@adminRegiterationDTO.PhoneNumber"
+                        <label for="phone" class="fw-bold"> رقم الهاتف </label>
+                        <InputText id="phone" @bind-Value="@adminRegiterationDTO.PhoneNumber"
                                    style="padding-left:3rem;"
                                    class="form-control input_i"
                                    placeholder="أدخل رقم الهاتف" />
@@ -78,39 +80,10 @@
                     </div>
                     <ValidationMessage For="@(() => adminRegiterationDTO.PhoneNumber)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
                 </div>
-            </div> 
-
-            <div class="col-lg-6 col-sm-12 form-first-col">                                                       
-                <div class="mb-3 input-container">
-                    <div class="d-flex">
-                        <label for="inputPassword" class="fw-bold">كلمة المرور</label>
-                        <InputText type="password" id="inputPassword"
-                        @bind-Value="@adminRegiterationDTO.Password"
-                                   style="padding-left:3rem;"
-                                   class="form-control input_i"
-                                   placeholder="أدخل كلمة المرور" />
-                        <i class="fas fa-lock icon"></i>
-                    </div>
-                    <ValidationMessage For="@(() => adminRegiterationDTO.Password)" style=" text-align: start ; padding-right: 7rem; padding-top: 0.8rem ;" />
-                </div>
-
                 <div class="mb-4 input-container">
                     <div class="d-flex">
-                        <label for="inputPassword" class="fw-bold"> تأكيد كلمة المرور </label>
-                        <InputText type="password" id="ConPassword"
-                        @bind-Value="@adminRegiterationDTO.ConfirmPassword"
-                                   style="padding-left:3rem;"
-                                   class="form-control input_i"
-                                   placeholder="أدخل تأكيد كلمة المرور" />
-                        <i class="fas fa-lock icon"></i>
-                    </div>
-                    <ValidationMessage For="@(() => adminRegiterationDTO.ConfirmPassword)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
-                </div>
-                
-                <div class="mb-4 input-container">
-                    <div class="d-flex">
-                        <label for="inputPassword" class="fw-bold">العمر </label>
-                        <InputNumber type="password" id="ConPassword"
+                        <label for="age" class="fw-bold">العمر </label>
+                        <InputNumber id="age"
                         @bind-Value="@adminRegiterationDTO.Age"
                                    style="padding-left:3rem;"
                                    class="form-control input_i"
@@ -122,8 +95,8 @@
               
                 <div class="mb-4 input-container">
                     <div class="d-flex">
-                        <label for="inputPassword" class="fw-bold"> العنوان </label>
-                        <InputText type="password" id="ConPassword"
+                        <label for="address" class="fw-bold"> العنوان </label>
+                        <InputText  id="address"
                         @bind-Value="@adminRegiterationDTO.Address"
                                    style="padding-left:3rem;"
                                    class="form-control input_i"
@@ -131,20 +104,6 @@
                         <i class="fas fa-lock icon"></i>
                     </div>
                     <ValidationMessage For="@(() => adminRegiterationDTO.Address)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
-                </div>
-                <div class="mb-4 input-container profileimage">
-                    @if (!string.IsNullOrEmpty(adminRegiterationDTO.Image))
-                    {
-                        <img src="@adminRegiterationDTO.Image" class="img" style="border-radius: 50%;" />
-                    }
-                    else
-                    {
-                        <i class="bi bi-person-circle" style="color: #03206C;"></i>
-                    }
-                    <label class="profilechange">
-                        <InputFile id="ProfileName" type="file" OnChange="@HandleFileSelected" class="input_i" style="display:none;"/>
-                        <i class="fas fa-camera profileicon" style="font-size:1rem;"></i>
-                    </label>
                 </div>
                 <div class="submit-btn-container"><button type="submit" class="mb-2 btn btn-lg btn-block fw-bold button  ">Finish</button></div>
             </div>
@@ -156,44 +115,49 @@
 </div>
 
 @code {
+
+    [Parameter]
+    public string Id { get; set; }
     [Inject]
     public NavigationManager navigat { get; set; }
 
     public ClaimsPrincipal claimsPrincipal { get; set; } = new ClaimsPrincipal();
     public AdminRegiterationDTO adminRegiterationDTO { get; set; } = new AdminRegiterationDTO();
 
+
     public int MyProperty { get; set; }
+
+    protected override  async Task OnInitializedAsync()
+    {
+        adminRegiterationDTO = await _adminService.GetAdminByIdAsync(Id);
+
+    }
 
     protected override async void OnAfterRender(bool firstRender)
     {
         //await navjs.InvokeVoidAsync("hidenave");
     }
-    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    public async void UpdateAdminProfile()
     {
-        var file = e.File;
-        if (file != null)
-        {
-            var format = "image/png";
-            var resizedImageFile = await file.RequestImageFileAsync(format, 400, 400);
+        AdminUpdatingProfileDTO adminUpdatingProfileDTO = new AdminUpdatingProfileDTO()
+            {
+                Id = adminRegiterationDTO.Id,
+                FirstName = adminRegiterationDTO.FirstName,
+                LastName = adminRegiterationDTO.LastName,
+                UserName = adminRegiterationDTO.UserName,
+                Email = adminRegiterationDTO.Email,
+                PhoneNumber = adminRegiterationDTO.PhoneNumber,
+                Address = adminRegiterationDTO.Address,
+                Age = adminRegiterationDTO.Age,
 
-            using var ms = new MemoryStream();
-            await resizedImageFile.OpenReadStream().CopyToAsync(ms);
-            var buffer = ms.ToArray();
-
-            var imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-           
-            adminRegiterationDTO.Image = imageDataUrl;
-        }
-    }
-    public async void RegisterNewAdmin()
-    {
-        var response = await _adminService.AddAdmin(adminRegiterationDTO);
+            };
+        var response = await _adminService.UpdateAdminAsync(adminUpdatingProfileDTO);
+        navigat.NavigateTo("/mainpageadmin");
     } 
     public async void ShowInvalidModal()
     {
         // var response = _adminService.AddAdmin(adminRegiterationDTO);
         // navigat.NavigateTo("/mainpageadmin");
     }
-
 
 }

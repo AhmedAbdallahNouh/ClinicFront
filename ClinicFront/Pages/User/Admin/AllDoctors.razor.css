@@ -6,8 +6,18 @@
     font-family: 'jomhuria-regular';
     src: url('fonts/jomhuria-regular.ttf') format('truetype');
 }
-.modal-content{
-    height:21rem;
+.backgroundimgOfPage {
+    background-image: url('assets/images/blurdoctor.jpeg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    margin: -1rem;
+    z-index: -1;
+}
+.modal-content {
+    height: 21rem;
 }
 .search{
     width:50%;
@@ -21,12 +31,37 @@
 }
 .cardd {
     box-shadow: rgb(15 23 112) 8px 8px;
+    background-color: white;
     margin-bottom: 2rem;
-    width:48%;
+    width: 48%;
+}
+.dropdown {
+    position: absolute;
+    transform: translate3d(5px, 5px, 30em);
+    top: 0.5rem;
+    right: 95%;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    z-index: 1;
+    display: none;
+    transition: all .5s ease;
+
+}
+.dropdown > button {
+    background: transparent;
+    border: none;
+    font-size: x-large;
+}
+ul {
+    text-align: right !important;
 }
 .cardd:hover {
     box-shadow: 2px 1px 0px 2px rgb(15 23 112);
     transform: translate3d(5px, 5px, 30em);
+}
+.cardd:hover .dropdown {
+    display:block;
 }
 .Cart_button {
     background-color: #03206C;
@@ -52,7 +87,7 @@
     direction:rtl
 }
 img {
-    height: 11rem;
+    height: 9rem;
     border-radius: 1rem;
 }
 a{
@@ -82,6 +117,8 @@ h4 {
 }
 .div_img {
     width: 111%;
+    position: relative;
+    bottom: 5%;
 }
 .direction_rtl{
     direction:rtl;
@@ -103,7 +140,8 @@ input[type = "date"] {
     }
 }@media (max-width: 1237px) {
     .main_container {
-        width: 100%;
+        width: 80%;
+        margin: auto;
     }
 }@media (max-width: 990px) {
     .div_img {
@@ -115,5 +153,28 @@ input[type = "date"] {
     }
     .cardd {
         width: 100%;
+    }
+}
+@media (max-width: 500px) {
+    h1 {
+        font-size: -webkit-xxx-large;
+    }
+
+    .search {
+        width: 80%;
+    }
+}
+@media (max-width: 500px) {
+    h1 {
+        font-size: xx-large;
+        margin-bottom: 2rem;
+    }
+    .search {
+        width: 80%;
+    }
+}
+@media (max-width: 280px) {
+    h4 {
+        font-size: small;
     }
 }

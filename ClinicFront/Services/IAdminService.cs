@@ -10,8 +10,11 @@ namespace ClinicFront.Services
         Task DeleteUser(string id);
         Task<List<AdminRegiterationDTO>> getallAdmins();
         Task<List<DoctorDTO>> getallDoctors();
+        Task<List<int>> getdoctorsflags();
         Task<DoctorDTO> getDoctorbyid(string id);
-        void UpdateDoctor(DoctorDTO doctorDTO);
-        void UpdateDoctor_AsDelete(string id);
+        Task<AdminRegiterationDTO> GetAdminByIdAsync(string id);
+        Task<HttpResponseMessage> UpdateDoctor(DoctorDTO doctorDTO);
+        Task<HttpResponseMessage> UpdateAdminAsync(AdminUpdatingProfileDTO adminUpdatingProfileDTO);
+        Task<HttpResponseMessage> UpdateDoctor_AsDelete(string id);
     }
 }

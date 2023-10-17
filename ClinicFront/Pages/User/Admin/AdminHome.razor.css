@@ -171,6 +171,7 @@
     width: 37%;
     margin-left: 7%;
 }
+
 .modify-btn-enable {
     width: 32%;
     height: 132%;
@@ -185,8 +186,20 @@
     font-size: large;
     font-weight: bolder;
 }
+
+.update-btn-span {
+    width: 29%;
+    height: 102%;
+    margin-left: 2%;
+    margin-right: 3%;
+}
+
+.delete-btn-span {
+    width: 29%;
+    height: 102%;
+}
 .modify-btn-disable {
-    width: 32%;
+    width: 100%;
     height: 132%;
     justify-content: center;
     margin-left: auto;
@@ -262,7 +275,7 @@
         width: 46% !important;
         margin-left: -14% !important;
     }
-
+   
     .category-modify-btns-div div:nth-child(2) {
         width: 54% !important;
         margin-left: 20% !important;
@@ -339,5 +352,8 @@
     }
     .category-modify-btns-div div:nth-child(1)[b-5taenws3ci] {
         margin-left: -12%!important;
+    }
+    .admins-row {
+        margin-left: 22%;
     }
 }

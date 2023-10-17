@@ -1,18 +1,27 @@
-﻿<a  class="trigger_popup" id="success_trigger">Success</a>
+﻿@inject IJSRuntime JSRuntime
+@* <div class="overlay" id="overlay"></div>
+
+ *@
 <div class="popup" id="success">
-    <div class="popup-content">
-        <div class="imgbox">
-            <img src="/assets/Images/checked.png" alt="" class="img">
+    <!-- Modal content here -->
+    <div class="popup" id="success">
+        <div class="popup-content">
+            <div class="imgbox">
+                <img src="/assets/Images/checked.png" alt="" class="img">
+            </div>
+            <div class="title">
+                <h3>Success!</h3>
+            </div>
+            <p class="para">Your account has been created successfully</p>
+            <form action="">
+                <a class="button" id="s_button">OKAY</a>
+            </form>
         </div>
-        <div class="title">
-            <h3>Success!</h3>
-        </div>
-        <p class="para">Your account has been created successfully</p>
-        <form action="">
-            <a  class="button" id="s_button">OKAY</a>
-        </form>
     </div>
 </div>
+ <a  class="trigger_popup" id="success_trigger">Success</a>
+   
+
 <a class="trigger_popup" id="error_trigger">Error</a>
 <div class="popup" id="error">
     <div class="popup-content">
@@ -29,5 +38,9 @@
     </div>
 </div>
 @code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeVoidAsync("successErorrModal");
 
+    }
 }

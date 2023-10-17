@@ -6,6 +6,7 @@ using ClinicFront.Data;
 using ClinicFront.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddSyncfusionBlazor();
 
 // Register Blazorise services
 builder.Services
@@ -39,6 +41,9 @@ builder.Services.AddHttpClient<IDoctorService, ClinicFront.Services.DoctorServic
     client => client.BaseAddress = apiUri);
 
 builder.Services.AddHttpClient<ICategoryService, CategoryService>(
+    client => client.BaseAddress = apiUri);
+
+builder.Services.AddHttpClient<IPostService, PostService>(
     client => client.BaseAddress = apiUri);
 
 
