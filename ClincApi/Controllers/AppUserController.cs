@@ -321,6 +321,7 @@ namespace ClincApi.Controllers
                         adminToUpdateProfile.Address = adminUpdatingProfileDTO.Address;
                         adminToUpdateProfile.Age = adminUpdatingProfileDTO.Age;
                         adminToUpdateProfile.UserName = adminUpdatingProfileDTO.UserName;
+                        adminToUpdateProfile.Image = adminUpdatingProfileDTO.Image;
 
                         IdentityResult updateAdminProfileResult = await _userManager.UpdateAsync(adminToUpdateProfile);
                         return updateAdminProfileResult.Succeeded ? Ok(adminUpdatingProfileDTO) : BadRequest("faild to save changes");

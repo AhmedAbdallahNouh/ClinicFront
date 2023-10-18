@@ -1,4 +1,5 @@
 ﻿using ClincApi.Models;
+using ClinicModels;
 
 namespace ClincApi.Repositeries
 {
@@ -9,5 +10,7 @@ namespace ClincApi.Repositeries
         List<Post> GetAllPosts(string id);
         Post GetPostById(int id);
         void UpdatePost(Post post);
+        List<PostDTO> GetPostsPagination(string id, int page);
+
     }
 }

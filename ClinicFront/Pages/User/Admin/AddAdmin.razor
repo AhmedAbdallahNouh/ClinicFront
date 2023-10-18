@@ -132,7 +132,8 @@
                     </div>
                     <ValidationMessage For="@(() => adminRegiterationDTO.Address)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
                 </div>
-                <div class="mb-4 input-container profileimage">
+                <div class="mb-4  profileimage">
+                  
                     @if (!string.IsNullOrEmpty(adminRegiterationDTO.Image))
                     {
                         <img src="@adminRegiterationDTO.Image" class="img" style="border-radius: 50%;" />
@@ -141,6 +142,8 @@
                     {
                         <i class="bi bi-person-circle" style="color: #03206C;"></i>
                     }
+                    
+                  
                     <label class="profilechange">
                         <InputFile id="ProfileName" type="file" OnChange="@HandleFileSelected" class="input_i" style="display:none;"/>
                         <i class="fas fa-camera profileicon" style="font-size:1rem;"></i>

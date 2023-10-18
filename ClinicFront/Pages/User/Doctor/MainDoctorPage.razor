@@ -119,7 +119,7 @@
 </div>
 @code {
     [Inject]
-    public IJSRuntime navjs { get; set; }
+    public IJSRuntime jSRuntime { get; set; }
     [Inject]
     public IAdminService adminService { get; set; }
     [Inject]
@@ -132,9 +132,18 @@
 
     protected override async void OnInitialized()
     {
-        doctorDTO = await _adminservice.getDoctorbyid(Id);        
+        doctorDTO = await _adminservice.getDoctorbyid(Id);
+        
         StateHasChanged();
         base.OnInitialized();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await jSRuntime.InvokeVoidAsync("checkEndOfContainer");
+        }
     }
 
     private void Switch(bool switchposts_service)

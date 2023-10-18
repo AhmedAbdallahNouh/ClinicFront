@@ -234,45 +234,26 @@
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var doctorId = (authenticationState.User.Claims.ToList())[0].Value;
         doctorDTO = await _adminService.getDoctorbyid(doctorId);
-        if (string.IsNullOrEmpty(doctorDTO.FirstName))
-        {
-            Fname = "p_focus";
-        }
-        else if (string.IsNullOrEmpty(doctorDTO.LastName))
-        {
-            Lname = "p_focus";
-        }
-        else if (string.IsNullOrEmpty(doctorDTO.PhoneNumber))
-        {
-            PhoneNumber = "p_focus";
+        if (!string.IsNullOrEmpty(doctorDTO.FirstName)) Fname = "p_focus";
 
-        }else if (string.IsNullOrEmpty(doctorDTO.Age.ToString()))
-        {
-            Age = "p_focus";
-        }
-        else if (string.IsNullOrEmpty(doctorDTO.Address))
-        {
-            adderss = "p_focus";
-        }
-        else if (string.IsNullOrEmpty(doctorDTO.Discription))
-        {
-            Discription = "p_focus";
-        }
-        else if (string.IsNullOrEmpty(doctorDTO.FaceBook))
-        {
-            Facebook = "p_focus";
-        }
-        else if (string.IsNullOrEmpty(doctorDTO.Email))
-        {
-            Gmail = "p_focus";
-        }else if (string.IsNullOrEmpty(doctorDTO.WhatsUpNumber))
-        {
-            Whatsapp = "p_focus";
-
-        }else if (string.IsNullOrEmpty(doctorDTO.Instgram))
-        {
-            Instagram = "p_focus";
-        }
+        if (!string.IsNullOrEmpty(doctorDTO.LastName)) Lname = "p_focus";
+       
+        if (!string.IsNullOrEmpty(doctorDTO.PhoneNumber)) PhoneNumber = "p_focus";
+       
+        if (!string.IsNullOrEmpty(doctorDTO.Age.ToString())) Age = "p_focus";
+        
+        if (!string.IsNullOrEmpty(doctorDTO.Address)) adderss = "p_focus";
+      
+        if (!string.IsNullOrEmpty(doctorDTO.Discription)) Discription = "p_focus";
+       
+        if (!string.IsNullOrEmpty(doctorDTO.FaceBook)) Facebook = "p_focus";
+     
+        if (!string.IsNullOrEmpty(doctorDTO.Email)) Gmail = "p_focus";
+       
+        if (!string.IsNullOrEmpty(doctorDTO.WhatsUpNumber)) Whatsapp = "p_focus";
+        
+        if (!string.IsNullOrEmpty(doctorDTO.Instgram)) Instagram = "p_focus";
+     
         StateHasChanged();
         base.OnInitialized();
     }

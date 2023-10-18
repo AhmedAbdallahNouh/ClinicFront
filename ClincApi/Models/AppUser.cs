@@ -49,9 +49,9 @@ namespace ClincApi.Models
 
         //relation between category and appUser 
         public virtual List<Post>? Posts { get; set; }
-
-
         //Relation between Doctorservice and Appuser
-        public virtual List<DoctorService>? Services { get; set; }
+        public virtual List<DoctorService>? Services { get; set; } 
+        //Relation between Articles and Appuser
+        public virtual List<Article>? Articles { get; set; }
     }
 }

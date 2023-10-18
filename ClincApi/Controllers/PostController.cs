@@ -20,29 +20,21 @@ namespace ClincApi.Controllers
 
 
         [HttpGet("/api/getallpostsbyid/{id}")]
-        public ActionResult GetAllPosts(string id)
+        public ActionResult GetPostsPagination(string id, int page)
         {
-            List<Post> posts = _PostRepo.GetAllPosts(id);
-            if (posts == null)
+            if (!string.IsNullOrEmpty(id) && page !=0)
             {
-                return NotFound();
-            }
-            else
-            {
-                List<PostDTO> postDTOs = new List<PostDTO>();
-                foreach (Post post in posts)
+                List<PostDTO> posts = _PostRepo.GetPostsPagination(id, page);
+                if (posts == null)
                 {
-                    PostDTO postDTO = new PostDTO()
-                    {
-                        Id = post.Id,
-                        Text = post.Text,
-                        Video = post.Video,
-                        AppUserId = post.AppUserId
-                    };
-                    postDTOs.Add(postDTO);
+                    return NotFound();
                 }
-                return Ok(postDTOs);
+                else
+                {
+                    return Ok(posts);
+                }
             }
+            return BadRequest();        
         }
 
         [HttpGet("{id:int}")]
@@ -107,16 +99,15 @@ namespace ClincApi.Controllers
                     AppUserId = postDTO.AppUserId
                 };
                
-               if(postDTO.Image != null)
+               if(postDTO.Images != null)
                {
                     List<PostImage> postImages = new List<PostImage>();
-                    foreach (var image in postDTO.Image)
+                    foreach (var image in postDTO.Images)
                     {
                         PostImage img = new PostImage()
                         {
-                            Image = image,
+                            Image = image.Image,
                             postId = post.Id
-                            
                         };
                         postImages.Add(img);
                     }

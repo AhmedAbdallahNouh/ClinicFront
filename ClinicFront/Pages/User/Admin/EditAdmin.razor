@@ -105,6 +105,23 @@
                     </div>
                     <ValidationMessage For="@(() => adminRegiterationDTO.Address)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
                 </div>
+                <div class="mb-4  profileimage">
+
+                    @if (!string.IsNullOrEmpty(adminRegiterationDTO.Image))
+                    {
+                        <img src="@adminRegiterationDTO.Image" class="img" style="border-radius: 50%;" />
+                    }
+                    else
+                    {
+                        <i class="bi bi-person-circle" style="color: #03206C;"></i>
+                    }
+
+
+                    <label class="profilechange">
+                        <InputFile id="ProfileName" type="file" OnChange="@HandleFileSelected" class="input_i" style="display:none;" />
+                        <i class="fas fa-camera profileicon" style="font-size:1rem;"></i>
+                    </label>
+                </div>
                 <div class="submit-btn-container"><button type="submit" class="mb-2 btn btn-lg btn-block fw-bold button  ">Finish</button></div>
             </div>
 
@@ -137,6 +154,25 @@
     {
         //await navjs.InvokeVoidAsync("hidenave");
     }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            var format = "image/png";
+            var resizedImageFile = await file.RequestImageFileAsync(format, 400, 400);
+
+            using var ms = new MemoryStream();
+            await resizedImageFile.OpenReadStream().CopyToAsync(ms);
+            var buffer = ms.ToArray();
+
+            var imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+
+            adminRegiterationDTO.Image = imageDataUrl;
+        }
+    }
+
     public async void UpdateAdminProfile()
     {
         AdminUpdatingProfileDTO adminUpdatingProfileDTO = new AdminUpdatingProfileDTO()
@@ -149,11 +185,14 @@
                 PhoneNumber = adminRegiterationDTO.PhoneNumber,
                 Address = adminRegiterationDTO.Address,
                 Age = adminRegiterationDTO.Age,
+                Image = adminRegiterationDTO.Image,
+
 
             };
         var response = await _adminService.UpdateAdminAsync(adminUpdatingProfileDTO);
         navigat.NavigateTo("/mainpageadmin");
     } 
+
     public async void ShowInvalidModal()
     {
         // var response = _adminService.AddAdmin(adminRegiterationDTO);

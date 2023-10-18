@@ -5,9 +5,9 @@ namespace ClinicFront.Services
     public interface IPostService
     {
         Task<HttpResponseMessage> AddPost(PostDTO postDTO);
-        Task DeletePost(int id);
-        Task<List<PostDTO>> getallPosts(string id);
+        Task<HttpResponseMessage> DeletePost(int id);
+        Task<List<PostDTO>> getallPosts(string id,int page);
         Task<PostDTO> getbyid(int id);
-        void UpdatePost(PostDTO postDTO);
+        Task<HttpResponseMessage> UpdatePost(PostDTO postDTO);
     }
 }

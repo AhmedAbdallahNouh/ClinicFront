@@ -37,7 +37,7 @@
 
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
-<body>
+<body id="main_container">
    
     <component type="typeof(App)" render-mode="ServerPrerendered" />
 
@@ -173,6 +173,18 @@
         }
 
     </script>
+
+    // <script>
+    //     window.checkEndOfContainer = () => {
+    //         const container = document.getElementById("main_container");
+    //         container.addEventListener("scroll", function () {
+    //             if (container.scrollHeight - container.scrollTop === container.clientHeight) {
+    //                 // Scrolled to the end of the container, trigger a callback to load more data
+    //                 DotNet.invokeMethodAsync("ClinicFront.Pages.User.Doctor", "GetPostPagination");
+    //             }
+    //         });
+    //     };
+    // </script>
 
     <!-- JavaScript -->
     <script src="/js/jss.js"></script>

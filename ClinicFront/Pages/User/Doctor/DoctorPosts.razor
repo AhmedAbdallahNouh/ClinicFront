@@ -8,40 +8,47 @@
             <div class="flex_row" style="padding: 16px 12px 0px;justify-content:space-between;">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="divOfModal_Title">
-                    <h5 class="modal-title" id="exampleModalLabel"><b>احمد جمال</b></h5>
+                    <h5 class="modal-title" id="exampleModalLabel"><b>@AppuserName</b></h5>
                     <div class="doctorimIngmodal">
-                        <img src="" />
-                        <i class="bi bi-person-circle" style="color: #03206C;font-size: 3.1rem;"></i>
+                        @if (!string.IsNullOrEmpty(AppuserImage))
+                        {
+                            <img src="@AppuserImage" />
+                        }
+                        else
+                        {
+                            <i class="bi bi-person-circle" style="color: #03206C;font-size: 3.1rem;"></i>
+                        }
                     </div>
                 </div>
             </div>
             <div class="modal-body direction_rtl">
-               <textarea @bind-Value="Text" @bind-Value:event="onchange" class="contentEditableDiv" />
-               <div class="video_img">
-                    @if (!string.IsNullOrEmpty(Videos))
+                <textarea @bind-Value="postDto.Text" @bind-Value:event="onchange" class="contentEditableDiv" />
+                <div class="video_img">
+                    @if (!string.IsNullOrEmpty(postDto.Video))
                     {
-                        <video src="@Videos" style="width:100%;height:100%" controls></video>
+                        <video src="@postDto.Video" style="width:100%;height:100%" controls></video>
                     }
-                    @if(Images.Count != 0)
+                    @if (postDto.Images.Count != 0)
                     {
                         <div class="row divofuplaodphoto_Photo" style="width:100%;">
-                            @foreach(var image in Images)
+                            @foreach (var image in postDto.Images)
                             {
-                                @if(Images.Count == 1){
-                                    <img src="@image" class="col-12 imagess" />
-                                }
-                                else if (Images.Count >= 2 || Images.Count <= 4)
+                                @if (postDto.Images.Count == 1)
                                 {
-                                    <img src="@image" class="col-6 imagess" />
+                                    <img src="@image.Image" class="col-12 imagess" />
                                 }
-                                else if (Images.Count == 5 || Images.Count == 6)
+                                else if (postDto.Images.Count >= 2 || postDto.Images.Count <= 4)
                                 {
-                                    <img src="@image" class="col-4 imagess" />
+                                    <img src="@image.Image" class="col-6 imagess" />
+                                }
+                                else if (postDto.Images.Count == 5 || postDto.Images.Count == 6)
+                                {
+                                    <img src="@image.Image" class="col-4 imagess" />
                                 }
                             }
                         </div>
                     }
-               </div>
+                </div>
 
             </div>
 
@@ -61,9 +68,19 @@
                     </div>
                 </div>
                 <div class="divofpuplish">
-                    <button class="modalButton puplish" @onclick="Puplishpost" style="text-align: center;" data-bs-dismiss="modal" aria-label="Close">
-                        <b>نشر</b>
-                    </button>
+                    @if (Add_UpdateButton)
+                    {
+                        <button class="modalButton puplish" @onclick="UpdatePostInDataBase" style="text-align: center;" data-bs-dismiss="modal" aria-label="Close">
+                            <b>تعديل</b>
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="modalButton puplish" @onclick="Puplishpost" style="text-align: center;" data-bs-dismiss="modal" aria-label="Close">
+                            <b>نشر</b>
+                        </button>
+                    }
+
                 </div>
             </div>
         </div>
@@ -82,45 +99,70 @@
 @foreach (var post in postDtoS)
 {
     <div class="post">
+        <div class="btn-group dropdown">
+            <button class="bi bi-three-dots-vertical" data-bs-toggle="dropdown" aria-expanded="false"></button>
+
+            <ul class="dropdown-menu">
+                <li>
+                    <button class="dropdown-item" @onclick="() => UpdatePost(post)" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <h5>تعديل</h5>
+                    </button>
+                </li>
+                <li>
+                    <button class="dropdown-item" @onclick="() => DeletePost(post.Id)">
+                        <h5>حذف</h5>
+                    </button>
+                </li>
+            </ul>
+        </div>
+
         <div class="posttitel">
             <div class="doctorimgInPost">
-                
-                    <img src="@AppuserImage"/>
-                
+                @if (!string.IsNullOrEmpty(AppuserImage))
+                {
+                    <img src="@AppuserImage" /> 
+                }
+                else
+                {
                     <i class="bi bi-person-circle" style="color: #03206C;"></i>
-                
+                }
+
+
             </div>
 
             <div class="doctornameInPost">
-                <h2 class="doctorname"><b>احمد جمال</b></h2>
-                <p class="postdate"><b>2011/10/10</b></p>
+                <h2 class="doctorname"><b>@AppuserName</b></h2>
+                <p class="postdate"><b>@post.Date</b></p>
             </div>
         </div>
         @if (!string.IsNullOrEmpty(post.Text))
         {
             <div class="postbody">
-                <p><b>
-                     @post.Text  
-                </b></p>
+                <p>
+                    <b>
+                        @post.Text
+                    </b>
+                </p>
             </div>
         }
-        @if(post.Image.Count != 0){
+        @if (post.Images.Count != 0)
+        {
             <div class="row postimage" style="justify-content:space-evenly">
-                    @foreach (var image in post.Image)
+                @foreach (var image in post.Images)
+                {
+                    @if (post.Images.Count == 1)
                     {
-                        @if (post.Image.Count == 1)
-                        {
-                            <img src="@image" class="col-12 imagess" />
-                        }
-                        else if (post.Image.Count >= 2 || post.Image.Count <= 4)
-                        {
-                            <img src="@image" class="col-6 imagess" />
-                        }
-                        else if (post.Image.Count == 5 || post.Image.Count == 6)
-                        {
-                            <img src="@image" class="col-4 imagess" />
-                        }
+                        <img src="@image.Image" class="col-12 imagess" />
                     }
+                    else if (post.Images.Count >= 2 || post.Images.Count <= 4)
+                    {
+                        <img src="@image.Image" class="col-6 imagess" />
+                    }
+                    else if (post.Images.Count == 5 || post.Images.Count == 6)
+                    {
+                        <img src="@image.Image" class="col-4 imagess" />
+                    }
+                }
             </div>
         }
         @if (!string.IsNullOrEmpty(post.Video))
@@ -137,13 +179,16 @@
     public bool uploadingImage { get; set; }
     public bool uploadingVideo { get; set; }
     public bool ShowimageInModel { get; set; } = false;
+
     public List<PostDTO> postDtoS { get; set; } = new List<PostDTO>();
     public PostDTO postDto { get; set; } = new PostDTO();
+
     public string AppuserId { get; set; } = "";
     public string AppuserImage { get; set; } = "";
-    public string Text { get; set; } = "";
-    public List<string>? Images { get; set; } = new List<string>();
-    public string Videos { get; set; } = "";
+    public string AppuserName { get; set; } = "";
+    public bool Add_UpdateButton { get; set; } = false;
+    public int Counter { get; set; } = 1;
+
     [Inject]
     public IJSRuntime jSRuntime { get; set; }
     [Inject]
@@ -154,10 +199,59 @@
     {
         authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var doctorId = (authenticationState.User.Claims.ToList())[0].Value;
-        postDtoS = await postService.getallPosts(doctorId);
-
+        AppuserId = doctorId;
+        AppuserImage = authenticationState.User.FindFirst("Image").Value;
+        var Name = authenticationState.User.FindFirst("Name").Value;
+        postDtoS = await postService.getallPosts(doctorId, Counter);
+        if (!string.IsNullOrEmpty(Name))
+        {
+            AppuserName = Name;
+        }
         StateHasChanged();
         base.OnInitialized();
+    }
+    [JSInvokable]
+    private async void GetPostPagination()
+    {
+        Counter++;
+        postDtoS = await postService.getallPosts(AppuserId, Counter);
+        StateHasChanged();
+    }
+
+    private async void DeletePost(int id)
+    {
+        var response = await postService.DeletePost(id);
+        if (response.StatusCode.ToString() == "NoContent")
+        {
+            var doctorPostDTOindex = postDtoS.FindIndex(a => a.Id == id);
+            postDtoS.RemoveAt(doctorPostDTOindex);
+        }
+        StateHasChanged();
+    }
+    private void UpdatePost(PostDTO postDTO)
+    {
+        postDto.Id = postDTO.Id;
+        postDto.Images = postDTO.Images;
+        postDto.Text = postDTO.Text;
+        postDto.Video = postDTO.Video;
+
+        Add_UpdateButton = true;
+    }
+    private async void UpdatePostInDataBase()
+    {
+
+        var response = await postService.UpdatePost(postDto);
+        if (response.StatusCode.ToString() == "NoContent")
+        {
+            var updatedPostDTOindex = postDtoS.FindIndex(a => a.Id == postDto.Id);
+            if (updatedPostDTOindex != -1)
+            {
+                postDtoS[updatedPostDTOindex].Images = postDto.Images;
+                postDtoS[updatedPostDTOindex].Video = postDto.Video;
+                postDtoS[updatedPostDTOindex].Text = postDto.Text;
+            }
+        }
+        Add_UpdateButton = false;
     }
 
     public async Task UplaodImage(InputFileChangeEventArgs e)
@@ -180,7 +274,12 @@
 
                 // Convert the image to a Base64 string and add it to the variant's Images list
                 var imageBase64 = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-                Images.Add(imageBase64);
+                foreach (var postImageDto in postDto.Images)
+                {
+                    postImageDto.PostId = postDto.Id;
+                    postImageDto.Image = imageBase64;
+                }
+                // postDto.Images.Add(imageBase64);
                 await Task.Delay(TimeSpan.FromSeconds(1));
                 StateHasChanged();
             }
@@ -224,7 +323,7 @@
 
                 // Convert the video to a Base64 string and add it to the variant's Videos list
                 var videoBase64 = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-                Videos = videoBase64;
+                postDto.Video = videoBase64;
                 await Task.Delay(TimeSpan.FromSeconds(1));
                 StateHasChanged();
             }
@@ -237,18 +336,22 @@
         uploadingVideo = false;
         StateHasChanged();
     }
-    private void Puplishpost()
+    private async void Puplishpost()
     {
         PostDTO newpost = new PostDTO()
         {
-             Text = this.Text,
-             Video = this.Videos,
-             Image = Images
+            Text = postDto.Text,
+            Video = postDto.Video,
+            Images = postDto.Images,
+            Date = DateTime.Now
         };
-        // postDto.Add(newpost);
-        //postService.AddPost(newpost);
-        this.Text = "";
-        this.Videos = "";
-        this.Images = new List<string>();
+
+        var response = await postService.AddPost(newpost);
+        if (response.StatusCode.ToString() == "Ok")
+        {
+            postDtoS.Add(newpost);
+            StateHasChanged();
+        }
+        postDto = new PostDTO();
     }
 }

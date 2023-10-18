@@ -11,6 +11,11 @@
 h3 {
     margin-top: 5px;
 }
+img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
 .post {
     background-color: white;
     width: 70%;
@@ -164,6 +169,34 @@ textarea::-webkit-scrollbar-thumb {
 .video_img::-webkit-scrollbar-thumb, .post::-webkit-scrollbar-thumb {
     background-color: #03206D;
     border-radius: 5px;
+}
+
+/*/dropdown/*/
+.dropdown {
+    position: absolute;
+    transform: translate3d(5px, 5px, 30em);
+    top: 0.5rem;
+    right: 95%;
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    z-index: 1;
+    display: none;
+    transition: all .5s ease;
+}
+
+.dropdown > button {
+    background: transparent;
+    border: none;
+    font-size: x-large;
+}
+
+ul {
+    text-align: right !important;
+}
+
+.post:hover .dropdown {
+    display: block;
 }
 @media (max-width: 1800px) {
     .doctornameInPost {

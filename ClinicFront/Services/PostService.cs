@@ -13,10 +13,10 @@ namespace ClinicFront.Services
             this.http = http;
         }
 
-        public async Task<List<PostDTO>> getallPosts(string id)
+        public async Task<List<PostDTO>> getallPosts(string id,int page)
         {
             return await JsonSerializer.DeserializeAsync<List<PostDTO>>
-                (await http.GetStreamAsync("/api/getallpostsbyid/" + id), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                (await http.GetStreamAsync($"/api/getallpostsbyid/{id}/?page={page}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
         public async Task<PostDTO> getbyid(int id)
@@ -32,15 +32,15 @@ namespace ClinicFront.Services
             return response;
         }
 
-        public async void UpdatePost(PostDTO postDTO)
+        public async Task<HttpResponseMessage> UpdatePost(PostDTO postDTO)
         {
             var newuser = new StringContent(JsonSerializer.Serialize(postDTO), Encoding.UTF8, "application/json");
-            await http.PutAsync("/api/Post" + postDTO.Id, newuser);
+           return await http.PutAsync("/api/Post" + postDTO.Id, newuser);
         }
 
-        public async Task DeletePost(int id)
+        public async Task<HttpResponseMessage> DeletePost(int id)
         {
-            await http.DeleteAsync("/api/Post/" + id);
+           return await http.DeleteAsync("/api/Post/" + id);
         }
     }
 }

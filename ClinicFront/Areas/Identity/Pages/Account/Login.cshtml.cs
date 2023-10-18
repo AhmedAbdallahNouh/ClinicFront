@@ -60,6 +60,9 @@ namespace ClinicFront.Areas.Identity.Pages.Account
                         claims.Add(new Claim(ClaimTypes.Name, user.UserName));
 
                         if (user.Email != null) claims.Add(new Claim(ClaimTypes.Email, user.Email));
+                        if (!string.IsNullOrEmpty(user.FirstName) || !string.IsNullOrEmpty(user.LastName) ) 
+                            claims.Add(new Claim("Name", $"{(user.FirstName != null ? user.FirstName : string.Empty)} {(user.LastName != null ? user.LastName : string.Empty )} "));
+
                         if (!string.IsNullOrEmpty(user.Image))
                         {
                             claims.Add(new Claim("Image", user.Image));

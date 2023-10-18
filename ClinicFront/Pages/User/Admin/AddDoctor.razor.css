@@ -18,12 +18,13 @@ h1 {
 .container-signup {
     padding-top: 40px;
     padding-bottom: 40px;
-    border: red solid;
     width: 80%;
     background-color: #0017515c;
     margin-left: 3rem;
     border-radius: 2rem;
 }
+
+
 
 
 @media (min-width: 1238px) and (max-width: 1616px) {
