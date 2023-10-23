@@ -1,9 +1,8 @@
 ﻿using ClincApi.Models;
 using ClincApi.Repositeries;
 using ClinicModels.DTOs.DoctorServiceDTO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace ClincApi.Controllers
 {
@@ -11,61 +10,28 @@ namespace ClincApi.Controllers
     [ApiController]
     public class DoctorServiceController : ControllerBase
     {
-        private readonly IDoctorServiceRepo _doctorServiceRepo;
+        private readonly IDoctorServiceRepo _doctorServiceDTORepo;
 
-        public DoctorServiceController(IDoctorServiceRepo doctorServiceRepo)
+        public DoctorServiceController(IDoctorServiceRepo doctorServiceRepoDTO)
         {
-            this._doctorServiceRepo = doctorServiceRepo;
-        }
-        // GET: api/<DoctorServiceController>
-        [HttpGet]
-        public async Task<IActionResult> GetAllDoctorServices(string doctorId)
-        {
-            try
-            {
-              List<DoctorService> doctorServices =  await _doctorServiceRepo.GetAllDoctorServices(doctorId);
-              if(doctorServices.Count == 0) return NotFound();
-              return Ok(doctorServices);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        // GET api/<DoctorServiceController>/5
-        [HttpGet("/api/getdoctorservice")]
-        public async Task<IActionResult> GetDoctorServiceById(string doctorId, int serviceId)
-        {
-            if (!string.IsNullOrWhiteSpace(doctorId) && serviceId != 0)
-            {
-                try
-                {
-                    DoctorService doctorService = await _doctorServiceRepo.GetDoctorServiceById(doctorId, serviceId);
-                    return Ok(doctorService);
-
-                }
-                catch (Exception ex)
-                {
-
-                    return BadRequest(ex.Message);
-                    
-                }
-            }
-
-            return BadRequest("Null DoctorId Or serviceId ");
-           
+            this._doctorServiceDTORepo = doctorServiceRepoDTO;
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddDoctorService(DoctorServiceDTO doctorServiceDTO)
+        public async Task<IActionResult> AddDoctorService(DoctorServiceDto doctorServiceDto)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
-                  DoctorServiceDTO doctorServiceToAddDTO = await _doctorServiceRepo.AddDoctorService(doctorServiceDTO);
-                  return Ok(doctorServiceToAddDTO);
+                    DoctorService doctorService = new DoctorService()
+                    {
+                        Doctor_Id = doctorServiceDto.DoctorServiceId,
+                        Service_Id = doctorServiceDto.ServiceId,
+                    };
+                    DoctorService response = await _doctorServiceDTORepo.AddServiceToDoctor(doctorService);
+                    if (response != null) return Ok(response);
+                    return BadRequest("there is error In server");
                 }
                 catch (Exception ex)
                 {
@@ -80,46 +46,23 @@ namespace ClincApi.Controllers
             }
         }
 
-        // POST api/<DoctorServiceController>
-
-
-        [HttpPut]
-        public async Task<IActionResult> UpdateService(DoctorServiceDTO doctorServiceDTO)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    DoctorServiceDTO doctorServiceToUpdateDTO = await _doctorServiceRepo.UpdateService(doctorServiceDTO);
-                    return Ok(doctorServiceToUpdateDTO);
-                }
-                catch (Exception ex)
-                {
-
-                    return BadRequest(ex.Message);
-                }
-            }
-            return BadRequest(ModelState.Values.ToString());
-        }
-
-
         [HttpDelete]
-        public async Task<IActionResult> DeleteService(string doctorId, int serviceId)
+        public IActionResult DeleteService(string doctorId, int serviceId)
         {
-            if (ModelState.IsValid)
+            DoctorService doctorService = _doctorServiceDTORepo.GetDoctorServiceById(doctorId,serviceId);
+            if (doctorService == null)
             {
-                try
-                {
-                    DoctorServiceDTO doctorServiceToDeleteDTO = await _doctorServiceRepo.DeleteService(doctorId, serviceId);
-                    return Ok(doctorServiceToDeleteDTO);
-                }
-                catch (Exception ex)
-                {
-
-                    return BadRequest(ex.Message);
-                }
+                return NotFound();
             }
-            return BadRequest(ModelState.Values.ToString());
-        }     
+            else
+            {
+                var response = _doctorServiceDTORepo.DeleteServiceFromDoctor(doctorService);
+                if (response == true)
+                {
+                    return NoContent();
+                }
+                return BadRequest("There Is Error In Server");
+            }
+        }
     }
 }

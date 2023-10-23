@@ -5,24 +5,25 @@
 namespace ClincApi.Migrations
 {
     /// <inheritdoc />
-    public partial class addAdFlag : Migration
+    public partial class v4addDescriptionColumntoConsultationTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
-                name: "AdvertisementFlag",
-                table: "AspNetUsers",
-                type: "int",
-                nullable: true);
+            migrationBuilder.AddColumn<string>(
+                name: "Description",
+                table: "Consultations",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "AdvertisementFlag",
-                table: "AspNetUsers");
+                name: "Description",
+                table: "Consultations");
         }
     }
 }

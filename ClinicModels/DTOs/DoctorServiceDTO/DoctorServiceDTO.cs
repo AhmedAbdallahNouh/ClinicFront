@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace ClinicModels.DTOs.DoctorServiceDTO
 {
-    public class DoctorServiceDTO
+    public class DoctorServiceDto
     {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string? Discription { get; set; }
-        public string? Image { get; set; }
-        public string? DoctorId { get; set; }
+        public string DoctorServiceId { get; set; }
+        public int ServiceId { get; set; }
     }
 }

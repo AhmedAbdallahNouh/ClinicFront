@@ -1,0 +1,47 @@
+﻿@page "/showonearticle/{id}"
+
+<div class="backgroundimgOfPage"></div>
+
+
+<div class="container-lg row main_container">
+    <header>
+        <h1><b>@articleDto.Title</b></h1>
+        <img src="@articleDto.ArticleImage" class="img" />
+        <div style="position:relative;">
+            <div class="flex flexRowCenter">
+                <img src="@articleDto.AppUserImage"/>
+                <p><b>د/ @articleDto.AppUserNmae</b></p>
+            </div>
+            <p><b>@articleDto.ArticleDate.ToString("MMMM dd yyyy")</b></p>
+        </div>
+        <hr />
+    </header>
+
+    <article>
+        @foreach(var sections in articleDto.Sections)
+        {
+            <h4>@sections.Title</h4>
+            <p>@sections.Content</p>
+            <img src="@sections.SectionImage"/>
+        }
+    </article>
+</div>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    public ArticleDto articleDto { get; set; } = new ArticleDto();
+    public IArticleService articleService { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        var article = await articleService.getArticlebyid(Id);
+        if (article != null)
+        {
+            articleDto = article;
+        }
+
+        StateHasChanged();
+        base.OnInitialized();
+    }
+}

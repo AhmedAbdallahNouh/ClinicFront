@@ -4,9 +4,9 @@ namespace ClinicFront.Services
 {
     public interface IDoctorService
     {
-        Task<HttpResponseMessage> AddService(DoctorServiceDTO doctorServiceDTO);
+        Task<HttpResponseMessage> AddService(ServiceDTO doctorServiceDTO);
         Task<HttpResponseMessage> DeleteService(int id);
-        Task<List<DoctorServiceDTO>> GetAllService(string id);
-        Task<HttpResponseMessage> UpdateService(DoctorServiceDTO doctorServiceDTO);
+        Task<List<ServiceDTO>> GetAllService(string id);
+        Task<HttpResponseMessage> UpdateService(ServiceDTO doctorServiceDTO);
     }
 }

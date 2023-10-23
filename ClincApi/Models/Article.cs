@@ -9,6 +9,7 @@ namespace ClincApi.Models
         public  string Title { get; set; }
         public  string SubTitle { get; set; }
         public  string ArticleImage { get; set; }
+        public  DateTime ArticleDate { get; set; }
 
         [ForeignKey("AppUser")]
         public string AppUserId { get; set; }

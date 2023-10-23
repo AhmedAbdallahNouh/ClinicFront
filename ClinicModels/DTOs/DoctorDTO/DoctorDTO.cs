@@ -42,7 +42,8 @@ namespace ClinicModels.DTOs.DoctorDTO
             this.CoverImage = CoverImage;
             this.AdvertisementFlag = advertisementFlag;
         }
+        public int? CategoryId { get; set; }
         public CategoryDTO categoryDTO { get; set; } = new CategoryDTO();
-        public List<DoctorServiceDTO.DoctorServiceDTO> doctorServiceDTOs { get; set; } = new List<DoctorServiceDTO.DoctorServiceDTO>();
+        public List<ServiceDTO> doctorServiceDTOs { get; set; } = new List<ServiceDTO>();
     }
 }

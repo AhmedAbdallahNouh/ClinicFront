@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ClincApi.Migrations
 {
     /// <inheritdoc />
-    public partial class v1 : Migration
+    public partial class v3 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,18 +64,23 @@ namespace ClincApi.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    firstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Age = table.Column<int>(type: "int", maxLength: 10, nullable: false),
+                    Age = table.Column<int>(type: "int", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    LocationLat = table.Column<int>(type: "int", maxLength: 20, nullable: false),
-                    LocationLong = table.Column<int>(type: "int", maxLength: 20, nullable: false),
+                    Discription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LocationLat = table.Column<int>(type: "int", nullable: true),
+                    LocationLong = table.Column<int>(type: "int", nullable: true),
+                    AdvertisementFlag = table.Column<int>(type: "int", nullable: true),
                     FaceBook = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     Instgram = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
-                    WhatsUpNumber = table.Column<int>(type: "int", maxLength: 50, nullable: false),
+                    WhatsUpNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     StartSubscriptionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     EndSubscriptionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CoverImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Delete_Doctor = table.Column<int>(type: "int", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -98,6 +103,48 @@ namespace ClincApi.Migrations
                         name: "FK_AspNetUsers_Categories_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "Categories",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Consultations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Answer = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Consultations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Consultations_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Articles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SubTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArticleImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Articles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Articles_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -196,7 +243,8 @@ namespace ClincApi.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Discription = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AppUser_Id = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    AppUser_Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -207,6 +255,11 @@ namespace ClincApi.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DoctorServices_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -216,8 +269,8 @@ namespace ClincApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Video = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: true),
                     AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -230,6 +283,73 @@ namespace ClincApi.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "ConsultationImages",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConsultationId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConsultationImages", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConsultationImages_Consultations_ConsultationId",
+                        column: x => x.ConsultationId,
+                        principalTable: "Consultations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Sections",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SectionImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ArticleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sections", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sections_Articles_ArticleId",
+                        column: x => x.ArticleId,
+                        principalTable: "Articles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostImage",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    postId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostImage", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PostImage_Posts_postId",
+                        column: x => x.postId,
+                        principalTable: "Posts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Articles_AppUserId",
+                table: "Articles",
+                column: "AppUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -267,7 +387,8 @@ namespace ClincApi.Migrations
                 name: "IX_AspNetUsers_CategoryId",
                 table: "AspNetUsers",
                 column: "CategoryId",
-                unique: true);
+                unique: true,
+                filter: "[CategoryId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -277,14 +398,39 @@ namespace ClincApi.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConsultationImages_ConsultationId",
+                table: "ConsultationImages",
+                column: "ConsultationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Consultations_CategoryId",
+                table: "Consultations",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DoctorServices_AppUser_Id",
                 table: "DoctorServices",
                 column: "AppUser_Id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DoctorServices_CategoryId",
+                table: "DoctorServices",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostImage_postId",
+                table: "PostImage",
+                column: "postId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Posts_AppUserId",
                 table: "Posts",
                 column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sections_ArticleId",
+                table: "Sections",
+                column: "ArticleId");
         }
 
         /// <inheritdoc />
@@ -306,13 +452,28 @@ namespace ClincApi.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "ConsultationImages");
+
+            migrationBuilder.DropTable(
                 name: "DoctorServices");
+
+            migrationBuilder.DropTable(
+                name: "PostImage");
+
+            migrationBuilder.DropTable(
+                name: "Sections");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Consultations");
 
             migrationBuilder.DropTable(
                 name: "Posts");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "Articles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

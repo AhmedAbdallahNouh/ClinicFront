@@ -97,7 +97,7 @@
 @code {
 
 
-    public List<DoctorServiceDTO> doctorServiceDTOs { get; set; } = new List<DoctorServiceDTO>();
+    public List<ServiceDTO> doctorServiceDTOs { get; set; } = new List<ServiceDTO>();
     [Inject]
     public IDoctorService doctorServicesService { get; set; }
     private AuthenticationState authenticationState;
@@ -118,7 +118,7 @@
     }
     private async void ADDService()
     {
-        DoctorServiceDTO doctorServiceDTO = new DoctorServiceDTO()
+        ServiceDTO doctorServiceDTO = new ServiceDTO()
         {
             Image = this.Image,
             Title = this.Title,
@@ -131,7 +131,7 @@
             StateHasChanged();
         }
     }
-    private async void DeleteService(DoctorServiceDTO doctorServiceDTO)
+    private async void DeleteService(ServiceDTO doctorServiceDTO)
     {
         var response = await doctorServicesService.DeleteService(doctorServiceDTO.Id);
         if (response.StatusCode.ToString() == "Ok")
@@ -141,7 +141,7 @@
         }
         StateHasChanged();
     }
-    private async void UpdateService(DoctorServiceDTO doctorServiceDTO)
+    private async void UpdateService(ServiceDTO doctorServiceDTO)
     {
         Id = doctorServiceDTO.Id;
         Image = doctorServiceDTO.Image;
@@ -151,7 +151,7 @@
     }
     private async void UpdateServiceInDataBase( )
     {
-        DoctorServiceDTO doctorServiceDTO = new DoctorServiceDTO()
+        ServiceDTO doctorServiceDTO = new ServiceDTO()
         {
             Id = Id,
             Image = Image,

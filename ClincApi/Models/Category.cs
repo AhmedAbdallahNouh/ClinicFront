@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string? Name { get; set; }
         public AppUser AppUser { get; set; }
-        List<ConsultationImage>? ConsultationImages { get; }
+        public List<DoctorService> doctorServices { get; set;} = new List<DoctorService>();
+        public List<Consultation>? Consultations { get; set; } 
     }
 }

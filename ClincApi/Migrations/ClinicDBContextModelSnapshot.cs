@@ -209,6 +209,10 @@ namespace ClincApi.Migrations
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Question")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -254,6 +258,9 @@ namespace ClincApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Discription")
                         .HasColumnType("nvarchar(max)");
 
@@ -267,6 +274,8 @@ namespace ClincApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppUser_Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("DoctorServices");
                 });
@@ -336,7 +345,6 @@ namespace ClincApi.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SectionImage")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
@@ -506,7 +514,7 @@ namespace ClincApi.Migrations
             modelBuilder.Entity("ClincApi.Models.Consultation", b =>
                 {
                     b.HasOne("ClincApi.Models.Category", "Category")
-                        .WithMany()
+                        .WithMany("Consultations")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -517,7 +525,7 @@ namespace ClincApi.Migrations
             modelBuilder.Entity("ClincApi.Models.ConsultationImage", b =>
                 {
                     b.HasOne("ClincApi.Models.Consultation", "Consultation")
-                        .WithMany()
+                        .WithMany("ConsultationImages")
                         .HasForeignKey("ConsultationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -532,6 +540,10 @@ namespace ClincApi.Migrations
                         .HasForeignKey("AppUser_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ClincApi.Models.Category", null)
+                        .WithMany("doctorServices")
+                        .HasForeignKey("CategoryId");
 
                     b.Navigation("AppUser");
                 });
@@ -638,6 +650,15 @@ namespace ClincApi.Migrations
                 {
                     b.Navigation("AppUser")
                         .IsRequired();
+
+                    b.Navigation("Consultations");
+
+                    b.Navigation("doctorServices");
+                });
+
+            modelBuilder.Entity("ClincApi.Models.Consultation", b =>
+                {
+                    b.Navigation("ConsultationImages");
                 });
 
             modelBuilder.Entity("ClincApi.Models.Post", b =>

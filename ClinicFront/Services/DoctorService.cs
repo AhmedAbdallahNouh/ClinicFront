@@ -16,30 +16,30 @@ namespace ClinicFront.Services
         {
             this._http = http;
         }
-        public async Task<List<DoctorServiceDTO>> GetAllService(string id)
+        public async Task<List<ServiceDTO>> GetAllService(string id)
         {
             //var doctorId = new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json");
             var response = await _http.GetAsync("/api/DoctorService" + id);
             var stream = await response.Content.ReadAsStreamAsync();
-            var t = await JsonSerializer.DeserializeAsync<List<DoctorServiceDTO>>(stream, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+            var t = await JsonSerializer.DeserializeAsync<List<ServiceDTO>>(stream, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             return t;
         }
-        public async Task<HttpResponseMessage> AddService(DoctorServiceDTO doctorServiceDTO)
+        public async Task<HttpResponseMessage> AddService(ServiceDTO doctorServiceDTO)
         {
             var doctorService = new StringContent(JsonSerializer.Serialize(doctorServiceDTO), Encoding.UTF8, "application/json");
             var response = await _http.PostAsync("/api/DoctorService", doctorService);
             return response;
         }
 
-        public async Task<HttpResponseMessage> UpdateService(DoctorServiceDTO doctorServiceDTO)
+        public async Task<HttpResponseMessage> UpdateService(ServiceDTO doctorServiceDTO)
         {
             var doctorService = new StringContent(JsonSerializer.Serialize(doctorServiceDTO), Encoding.UTF8, "application/json");
-           return await _http.PutAsync("/api/DoctorService", doctorService);
+            return await _http.PutAsync("/api/DoctorService", doctorService);
         }
 
         public async Task<HttpResponseMessage> DeleteService(int id)
         {
-          return  await _http.DeleteAsync("/api/DoctorService/" + id);
+            return await _http.DeleteAsync("/api/DoctorService/" + id);
         }
     }
 }

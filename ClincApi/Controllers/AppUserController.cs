@@ -105,7 +105,6 @@ namespace ClincApi.Controllers
             if (!string.IsNullOrWhiteSpace(id))
             {
                 var doctor = await _userManager.Users
-               .Include(d => d.Services)
                .Include(d => d.Category)
                .SingleOrDefaultAsync(u => u.Id == id);
 
@@ -120,26 +119,11 @@ namespace ClincApi.Controllers
                         {
                             Id = (int)doctor.CategoryId,
                             Name = doctor.Category.Name,
-
                         };
                         doctorDTO.categoryDTO = categoryDTO;
 
                     }
-                    if(doctor.Services != null)
-                    {
-                        foreach (var doctorService in doctor.Services)
-                        {
-                            DoctorServiceDTO doctorServiceDTO = new DoctorServiceDTO()
-                            {
-                                Id = doctorService.Id,
-                                Title = doctorService.Title,
-                                Discription = doctorService.Discription,
-                                Image = doctorService.Image,
-                            };
-                            doctorDTO.doctorServiceDTOs.Add(doctorServiceDTO);
-
-                        }
-                    }               
+                      
                     return Ok(doctorDTO);
                 }
                 return NotFound("not found");

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClincApi.Migrations
 {
     [DbContext(typeof(ClinicDBContext))]
-    [Migration("20231016103646_addAdFlag")]
-    partial class addAdFlag
+    [Migration("20231019134018_v3")]
+    partial class v3
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -151,6 +151,37 @@ namespace ClincApi.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ClincApi.Models.Article", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AppUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ArticleImage")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SubTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Articles");
+                });
+
             modelBuilder.Entity("ClincApi.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -167,6 +198,53 @@ namespace ClincApi.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("ClincApi.Models.Consultation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Answer")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Question")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Consultations");
+                });
+
+            modelBuilder.Entity("ClincApi.Models.ConsultationImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ConsultationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Image")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConsultationId");
+
+                    b.ToTable("ConsultationImages");
+                });
+
             modelBuilder.Entity("ClincApi.Models.DoctorService", b =>
                 {
                     b.Property<int>("Id")
@@ -178,6 +256,9 @@ namespace ClincApi.Migrations
                     b.Property<string>("AppUser_Id")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Discription")
                         .HasColumnType("nvarchar(max)");
@@ -192,6 +273,8 @@ namespace ClincApi.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppUser_Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("DoctorServices");
                 });
@@ -243,6 +326,35 @@ namespace ClincApi.Migrations
                     b.HasIndex("postId");
 
                     b.ToTable("PostImage");
+                });
+
+            modelBuilder.Entity("ClincApi.Models.Section", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ArticleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SectionImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ArticleId");
+
+                    b.ToTable("Sections");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -387,6 +499,39 @@ namespace ClincApi.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("ClincApi.Models.Article", b =>
+                {
+                    b.HasOne("ClincApi.Models.AppUser", "AppUser")
+                        .WithMany("Articles")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("ClincApi.Models.Consultation", b =>
+                {
+                    b.HasOne("ClincApi.Models.Category", "Category")
+                        .WithMany("Consultations")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("ClincApi.Models.ConsultationImage", b =>
+                {
+                    b.HasOne("ClincApi.Models.Consultation", "Consultation")
+                        .WithMany("ConsultationImages")
+                        .HasForeignKey("ConsultationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Consultation");
+                });
+
             modelBuilder.Entity("ClincApi.Models.DoctorService", b =>
                 {
                     b.HasOne("ClincApi.Models.AppUser", "AppUser")
@@ -394,6 +539,10 @@ namespace ClincApi.Migrations
                         .HasForeignKey("AppUser_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("ClincApi.Models.Category", null)
+                        .WithMany("doctorServices")
+                        .HasForeignKey("CategoryId");
 
                     b.Navigation("AppUser");
                 });
@@ -418,6 +567,17 @@ namespace ClincApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("ClincApi.Models.Section", b =>
+                {
+                    b.HasOne("ClincApi.Models.Article", "Article")
+                        .WithMany("Sections")
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Article");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -473,15 +633,31 @@ namespace ClincApi.Migrations
 
             modelBuilder.Entity("ClincApi.Models.AppUser", b =>
                 {
+                    b.Navigation("Articles");
+
                     b.Navigation("Posts");
 
                     b.Navigation("Services");
+                });
+
+            modelBuilder.Entity("ClincApi.Models.Article", b =>
+                {
+                    b.Navigation("Sections");
                 });
 
             modelBuilder.Entity("ClincApi.Models.Category", b =>
                 {
                     b.Navigation("AppUser")
                         .IsRequired();
+
+                    b.Navigation("Consultations");
+
+                    b.Navigation("doctorServices");
+                });
+
+            modelBuilder.Entity("ClincApi.Models.Consultation", b =>
+                {
+                    b.Navigation("ConsultationImages");
                 });
 
             modelBuilder.Entity("ClincApi.Models.Post", b =>
