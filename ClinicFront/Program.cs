@@ -49,6 +49,10 @@ builder.Services.AddHttpClient<IPostService, PostService>(
 builder.Services.AddHttpClient<IArticleService, ArticleService>(
     client => client.BaseAddress = apiUri);
 
+builder.Services.AddHttpClient<IConsultationService, ConsultationService>(
+    client => client.BaseAddress = apiUri);
+
+
 
 
 builder.Services.AddDbContext<ClinicDBContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("default")));

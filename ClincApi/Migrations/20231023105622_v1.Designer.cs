@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ClincApi.Migrations
 {
     [DbContext(typeof(ClinicDBContext))]
-    [Migration("20231021083034_v4-add-DescriptionColumn-to-ConsultationTable")]
-    partial class v4addDescriptionColumntoConsultationTable
+    [Migration("20231023105622_v1")]
+    partial class v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -163,6 +163,9 @@ namespace ClincApi.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("ArticleDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ArticleImage")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -251,34 +254,20 @@ namespace ClincApi.Migrations
 
             modelBuilder.Entity("ClincApi.Models.DoctorService", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Service_Id")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AppUser_Id")
-                        .IsRequired()
+                    b.Property<string>("Doctor_Id")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Discription")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Image")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUser_Id");
+                    b.HasKey("Service_Id", "Doctor_Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("Doctor_Id");
 
                     b.ToTable("DoctorServices");
                 });
@@ -359,6 +348,34 @@ namespace ClincApi.Migrations
                     b.HasIndex("ArticleId");
 
                     b.ToTable("Sections");
+                });
+
+            modelBuilder.Entity("ClincApi.Models.Service", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Category_Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Discription")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Category_Id");
+
+                    b.ToTable("Services");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -538,17 +555,25 @@ namespace ClincApi.Migrations
 
             modelBuilder.Entity("ClincApi.Models.DoctorService", b =>
                 {
-                    b.HasOne("ClincApi.Models.AppUser", "AppUser")
-                        .WithMany("Services")
-                        .HasForeignKey("AppUser_Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ClincApi.Models.Category", null)
                         .WithMany("doctorServices")
                         .HasForeignKey("CategoryId");
 
+                    b.HasOne("ClincApi.Models.AppUser", "AppUser")
+                        .WithMany("doctorService")
+                        .HasForeignKey("Doctor_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClincApi.Models.Service", "Service")
+                        .WithMany("doctorService")
+                        .HasForeignKey("Service_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("AppUser");
+
+                    b.Navigation("Service");
                 });
 
             modelBuilder.Entity("ClincApi.Models.Post", b =>
@@ -582,6 +607,17 @@ namespace ClincApi.Migrations
                         .IsRequired();
 
                     b.Navigation("Article");
+                });
+
+            modelBuilder.Entity("ClincApi.Models.Service", b =>
+                {
+                    b.HasOne("ClincApi.Models.Category", "category")
+                        .WithMany()
+                        .HasForeignKey("Category_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("category");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -641,7 +677,7 @@ namespace ClincApi.Migrations
 
                     b.Navigation("Posts");
 
-                    b.Navigation("Services");
+                    b.Navigation("doctorService");
                 });
 
             modelBuilder.Entity("ClincApi.Models.Article", b =>
@@ -667,6 +703,11 @@ namespace ClincApi.Migrations
             modelBuilder.Entity("ClincApi.Models.Post", b =>
                 {
                     b.Navigation("PostImages");
+                });
+
+            modelBuilder.Entity("ClincApi.Models.Service", b =>
+                {
+                    b.Navigation("doctorService");
                 });
 #pragma warning restore 612, 618
         }

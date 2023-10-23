@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ClinicFront.Areas.Identity.Pages.Account
 {
-    public class LodoutModel : PageModel
+    public class LooutModel : PageModel
     {
         public void OnGet()
         {

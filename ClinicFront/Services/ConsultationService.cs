@@ -7,7 +7,7 @@ using static System.Net.WebRequestMethods;
 
 namespace ClinicFront.Services
 {
-    public class ConsultationService
+    public class ConsultationService : IConsultationService
     {
         private readonly HttpClient _http;
 
@@ -22,7 +22,7 @@ namespace ClinicFront.Services
             var stream = await response.Content.ReadAsStreamAsync();
             var CnosultationDTOs = await JsonSerializer.DeserializeAsync<List<CnosultationDTO>>(stream, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             return CnosultationDTOs;
-        } 
+        }
         public async Task<List<CnosultationDTO>> GetAllForDoctorByCategoryId(int catergoryId)
         {
             var response = await _http.GetAsync($"/api/getall/{catergoryId}");
@@ -36,7 +36,7 @@ namespace ClinicFront.Services
                (await _http.GetStreamAsync($"/api/getbyid/{id}"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 
         }
-        public async Task<HttpResponseMessage> AddConsultation(CnosultationDTO consultationDto)
+        public async Task<HttpResponseMessage> AddConsultation(AddConsultationDTO consultationDto)
         {
             var consultationToAdd = new StringContent(JsonSerializer.Serialize(consultationDto), Encoding.UTF8, "application/json");
             var response = await _http.PostAsync("/api/Consultation", consultationToAdd);

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ClincApi.Migrations
 {
     /// <inheritdoc />
-    public partial class v3 : Migration
+    public partial class v1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -113,6 +113,7 @@ namespace ClincApi.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Answer = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -128,6 +129,28 @@ namespace ClincApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Services",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Discription = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Category_Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Services", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Services_Categories_Category_Id",
+                        column: x => x.Category_Id,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Articles",
                 columns: table => new
                 {
@@ -136,6 +159,7 @@ namespace ClincApi.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ArticleImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ArticleDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -235,34 +259,6 @@ namespace ClincApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DoctorServices",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Discription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AppUser_Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CategoryId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DoctorServices", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_DoctorServices_AspNetUsers_AppUser_Id",
-                        column: x => x.AppUser_Id,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_DoctorServices_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Posts",
                 columns: table => new
                 {
@@ -300,6 +296,36 @@ namespace ClincApi.Migrations
                         name: "FK_ConsultationImages_Consultations_ConsultationId",
                         column: x => x.ConsultationId,
                         principalTable: "Consultations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DoctorServices",
+                columns: table => new
+                {
+                    Service_Id = table.Column<int>(type: "int", nullable: false),
+                    Doctor_Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DoctorServices", x => new { x.Service_Id, x.Doctor_Id });
+                    table.ForeignKey(
+                        name: "FK_DoctorServices_AspNetUsers_Doctor_Id",
+                        column: x => x.Doctor_Id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DoctorServices_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_DoctorServices_Services_Service_Id",
+                        column: x => x.Service_Id,
+                        principalTable: "Services",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -408,14 +434,14 @@ namespace ClincApi.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DoctorServices_AppUser_Id",
-                table: "DoctorServices",
-                column: "AppUser_Id");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DoctorServices_CategoryId",
                 table: "DoctorServices",
                 column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DoctorServices_Doctor_Id",
+                table: "DoctorServices",
+                column: "Doctor_Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostImage_postId",
@@ -431,6 +457,11 @@ namespace ClincApi.Migrations
                 name: "IX_Sections_ArticleId",
                 table: "Sections",
                 column: "ArticleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Services_Category_Id",
+                table: "Services",
+                column: "Category_Id");
         }
 
         /// <inheritdoc />
@@ -468,6 +499,9 @@ namespace ClincApi.Migrations
 
             migrationBuilder.DropTable(
                 name: "Consultations");
+
+            migrationBuilder.DropTable(
+                name: "Services");
 
             migrationBuilder.DropTable(
                 name: "Posts");
