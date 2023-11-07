@@ -1,7 +1,7 @@
 ﻿@page "/alldoctors"
 @layout MainLayoutAdmin
 @inject IAdminService _adminservice
-
+<div class="bodyofall">
 <div class="backgroundimgOfPage"></div>
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -19,7 +19,7 @@
                 <h4 style="margin-bottom: 1rem;text-align: center;">
                     <b>أدخل تاريخ نهاية الأشتراك</b>
                 </h4>
-                <input type="date" @bind="NewEndSubscriptionDate"/>
+                <input type="date" @bind="@doctorDtoModal.EndSubscriptionDate"/>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn" style="background-color:rgba(240, 68, 68, 1);color:white" data-bs-dismiss="modal">إغلاق</button>
@@ -54,11 +54,11 @@
                         {
                             if(getdoctorsflags[getdoctorsflags.Count - 1] == doctorflag)
                             {
-                                <span>@doctorflag</span>
+                                <span>@doctorflag.AdvertisementFlag</span>
                             }
                             else
                             {
-                                <span>@doctorflag ,</span> 
+                                <span>@doctorflag.AdvertisementFlag ,</span> 
                             }
                         }
                     </p>
@@ -72,7 +72,7 @@
                 <h4 style="margin-bottom: 1rem;text-align: center;">
                     <b>قم بإدخال ترتيب الدكتور</b>
                 </h4>
-                <input type="number" @bind="AdvertisementFlag" />
+                <input type="number" @bind="doctorDtoModal.AdvertisementFlag" />
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn" style="background-color:rgba(240, 68, 68, 1);color:white" data-bs-dismiss="modal">إغلاق</button>
@@ -91,19 +91,38 @@
     <div class="row" style="justify-content:space-evenly;width:100%;">
         @foreach(var doctorDTO in doctorDTOs)
         {
-            <div class="cardd rounded-3 col-lg-5 col-md-12 col-sm-12">
+            @if (doctorDTO.Delete_Doctor != 0 || doctorDTO.EndSubscriptionDate < DateTime.Now)
+            {
+                DoctorDeleted = "cardd_boxshadow_red";
+            }
+            else
+            {
+                DoctorDeleted = "cardd_boxshadow_green";
+            }
+            <div class="cardd rounded-3 col-lg-5 col-md-12 col-sm-12 @DoctorDeleted">
                 <div class="card-body">
                     <div class="row" style="justify-content:flex-end">
-                        <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8 flex_column" style="justify-content:flex-start;">
+                        <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8 flex_column" style="justify-content:space-between;">
                             <div>
-                                <div class="flex">
-                                    <h4><b>:الأسم</b></h4>
-                                    <h5><b>@doctorDTO.FirstName</b></h5>
-                                </div>
-                                <div class="flex">
-                                    <h4><b>:التخصص</b></h4>
-                                    <h5><b>@doctorDTO.categoryDTO.Name</b></h5>
-                                </div>
+                                @if (!string.IsNullOrEmpty(doctorDTO.FirstName) && !string.IsNullOrEmpty(doctorDTO.LastName))
+                                {
+                                    <div class="flex">
+                                        <h4><b>:الأسم</b></h4>
+                                        <h5><b>@doctorDTO.FirstName @doctorDTO.LastName</b></h5>
+                                    </div>
+                                }else{
+                                        <div class="flex">
+                                            <h4><b>:الأيميل</b></h4>
+                                            <h5><b>@doctorDTO.UserName</b></h5>
+                                        </div>
+                                }
+                                @if (!string.IsNullOrEmpty(doctorDTO.categoryDTO.Name))
+                                {
+                                    <div class="flex">
+                                        <h4><b>:التخصص</b></h4>
+                                        <h5><b>@doctorDTO.categoryDTO.Name</b></h5>
+                                    </div>
+                                }
                                 <div class="flex">
                                     <h4><b>:تاريخ نهاية الأشتراك</b></h4>
                                     <h5><b>@doctorDTO.EndSubscriptionDate</b></h5>
@@ -129,12 +148,18 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <button class="dropdown-item" @onclick="() => DeleteDoctor(doctorDTO.Id)">
+                                        <button class="dropdown-item" @onclick="() => DeleteDoctor(doctorDTO)">
                                             <h5>حذف</h5>
                                         </button>
                                     </li>
                                 </ul>
                             </div>
+                            @if(doctorDTO.Delete_Doctor != 0 || doctorDTO.EndSubscriptionDate < DateTime.Now){
+                                <div class="divofredcircle">
+                                    <p><b>غير مفعل</b></p>
+                                    <div class="redcircle"></div>
+                                </div>
+                            }
                         </div>
 
                         <div class="col-sm-12 col-md-4 col-lg-3 col-xl-3 mb-1 mb-lg-0 border-start">
@@ -149,19 +174,16 @@
                     </div>
                 </div>
             </div>
-            
         }
     </div>
-
 </div>
 
-
-
-
+</div>
 @code {
     public List<DoctorDTO> doctorDTOs { get; set; } = new List<DoctorDTO>();
-    public List<int> getdoctorsflags { get; set; } = new List<int>();
+    public List<DoctorDTO> getdoctorsflags { get; set; } = new List<DoctorDTO>();
     public DoctorDTO doctorDtoModal { get; set; } = new DoctorDTO();
+    public string DoctorDeleted { get; set; } = "";
     public DateTime NewEndSubscriptionDate { get; set; } = new DateTime();
     public int AdvertisementFlag { get; set; } = 0;
     public string Search { get; set; } = "";
@@ -174,14 +196,17 @@
         base.OnInitialized();
     }
 
-    public async void DeleteDoctor(string id)
+    public async void DeleteDoctor(DoctorDTO doctorDTO)
     {
-        var response = await _adminservice.UpdateDoctor_AsDelete(id);
+        var response = await _adminservice.UpdateDoctor_AsDelete(doctorDTO.Id);
 
-        if (response.StatusCode.ToString() == "Ok")
+        if (response.StatusCode.ToString() == "OK")
         {
-            var doctorTodeleteIndex =  doctorDTOs.FindIndex(d => d.Id == id);
-            if (doctorTodeleteIndex != -1) doctorDTOs.RemoveAt(doctorTodeleteIndex);
+            var doctorTodeleteIndex =  doctorDTOs.FindIndex(d => d.Id == doctorDTO.Id);
+            if (doctorTodeleteIndex != -1)
+            {
+                doctorDTOs[doctorTodeleteIndex].Delete_Doctor = 1;
+            }
             StateHasChanged();
         }
     }
@@ -191,20 +216,29 @@
     }
     public async void ModalSaveChanges()
     {
-        doctorDtoModal.EndSubscriptionDate = NewEndSubscriptionDate;
-        doctorDtoModal.AdvertisementFlag = AdvertisementFlag;
-        var response = await _adminservice.UpdateDoctor(doctorDtoModal);
-        if (response.StatusCode.ToString() == "Ok")
+        UpdateDoctorAds updateDoctorAds = new UpdateDoctorAds()
         {
+            Id = doctorDtoModal.Id,
+            AdvertisementFlag = doctorDtoModal.AdvertisementFlag,
+            VisitedDoctorPage = doctorDtoModal.VisitedDoctorPage,
+            EndSubscriptionDate = doctorDtoModal.EndSubscriptionDate,
+        };
+        var response = await _adminservice.UpdateDoctorAds(updateDoctorAds);
+        if (response.StatusCode.ToString() == "OK")
+        {
+            getdoctorsflags.Add(doctorDtoModal);
             var doctorToUpdateIndex = doctorDTOs.FindIndex(d => d.Id == doctorDtoModal.Id);
-            if (doctorToUpdateIndex != -1) doctorDTOs[doctorToUpdateIndex].EndSubscriptionDate = doctorDtoModal.EndSubscriptionDate;
+            if (doctorToUpdateIndex != -1)
+            {
+                doctorDTOs[doctorToUpdateIndex].EndSubscriptionDate = doctorDtoModal.EndSubscriptionDate;
+                doctorDTOs[doctorToUpdateIndex].AdvertisementFlag = doctorDtoModal.AdvertisementFlag;
+            } 
             StateHasChanged();
-
         }
     }
 
     public void FilterDoctorBySearch()
     {
-        doctorDTOs = doctorDTOs.Where(d => d.FirstName.Contains(Search, StringComparison.OrdinalIgnoreCase)).ToList();
+        doctorDTOs = doctorDTOs.Where(d =>d.FirstName !=null && d.LastName != null && d.FirstName.Contains(Search, StringComparison.OrdinalIgnoreCase) || d.LastName.Contains(Search, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 }

@@ -1,4 +1,4 @@
-﻿@page "/profileofdoctor"
+﻿@page "/profileofdoctor/{id}"
 @layout MainLayoutDoctor
 @inject IAdminService _adminService
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -6,20 +6,30 @@
 
 <div class="container-lg main-container">
     <div class="containerofimage">
-        <img src="@CoverPhoto" class="img"/>
-
+        @if (string.IsNullOrEmpty(doctorDTO.CoverImage))
+        {
+            <div class="CPhoto">
+                <img src="@CoverPhoto" class="img" />
+            </div>
+        }
+        else
+        {
+            <div class="CPhoto">
+                <img src="@doctorDTO.CoverImage" class="img" />
+            </div>
+        }
         <label type="submit" class="btn btn-lg btn-block fw-bold button coverphoto_button">
             <InputFile id="ProfileName" type="file" @onclick="() => Handelcover_img('c')" OnChange="@HandleFileSelected" class="input_i" style="display:none;" multiple />
             <i class="fas fa-camera profileicon" style="font-size:1rem"><b style="margin-right:1rem">صورة الغلاف</b></i>
         </label>
 
         <div class="profileimage">
-            @if(!string.IsNullOrEmpty(image)){
-                <img src="@image" class="img" style="border-radius: 50%;" />
+            @if(!string.IsNullOrEmpty(doctorDTO.Image)){
+                <img src="@doctorDTO.Image" class="img" style="border-radius: 50%;" />
             }
             else
             {
-                <i class="bi bi-person-circle" style="color: #03206C;"></i>
+                <i class="bi bi-person-circle" style="color: #ff838a;"></i>
             }
             <label class="profilechange">
                 <InputFile id="ProfileName" type="file" @onclick="() => Handelcover_img('i')" OnChange="@HandleFileSelected" class="input_i" style="display:none;" multiple />
@@ -36,8 +46,7 @@
                     <h3><b>يجب إدخال هذه البيانات: </b></h3>
                 <div class="nessacrydata flexrow row">
                     <div class="col-lg-6 col-md-12">
-                        <label class="fw-bold label"><b>الأسم الأول</b></label>
-                        <div class="mb-2 input-container">
+                           <div class="mb-2 input-container">
                             <InputText id="fname"
                                        @bind-Value="doctorDTO.FirstName"
                                        @onblur=@(()=>HandleInput(doctorDTO.FirstName,"Fname"))
@@ -49,7 +58,6 @@
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.LastName)" style="text-align:center" />
 
-                        <label class="fw-bold label"><b>الأسم الأخير</b></label>
                         <div class="mb-2 input-container">
                             <InputText id="lname"
                                        @bind-Value="@doctorDTO.LastName"
@@ -62,7 +70,6 @@
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.LastName)" style="text-align:center" />
 
-                        <label class="fw-bold label"><b>رقم الهاتف</b></label>
                         <div class="mb-2 input-container">
                             <InputText id="Phone"
                                        @bind-Value="@doctorDTO.PhoneNumber"
@@ -79,7 +86,6 @@
 
 
                     <div class="col-lg-6 col-md-12">
-                        <label class="fw-bold label">العمـر</label>
                         <div class="mb-2 input-container">
                             <InputNumber id="age"
                                          @bind-Value="@doctorDTO.Age"
@@ -88,14 +94,10 @@
                                          style="padding-right:3rem;"
                                          class="form-control input_i"/>
                             <label class="p @Age" for="age"><b>العمـر</b></label>
-                            <svg width="24" height="24" class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8 10C7.44772 10 7 10.4477 7 11C7 11.5523 7.44772 12 8 12H16C16.5523 12 17 11.5523 17 11C17 10.4477 16.5523 10 16 10H8Z" fill="black" />
-                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6 3C4.34315 3 3 4.34315 3 6V18C3 19.6569 4.34315 21 6 21H18C19.6569 21 21 19.6569 21 18V6C21 4.34315 19.6569 3 18 3H6ZM5 18V8H19V18C19 18.5523 18.5523 19 18 19H6C5.44772 19 5 18.5523 5 18Z" fill="black" />
-                            </svg>
+                                <i class="fa-solid fa-calendar-days icon"></i>
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.Age)" style="text-align:center" />
 
-                        <label class="fw-bold label"><b>عنوان العيادة</b></label>
                         <div class="input-container mb-2">
                             <InputText id="address"
                                        @bind-Value="@doctorDTO.Address"
@@ -103,20 +105,10 @@
                                        style="padding-right:3rem;"
                                        class="form-control input_i"/>
                             <label class="p @adderss" for="address"><b>عنوان العيادة</b></label>
-                            <svg width="24" height="24" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_1427_1669)">
-                                    <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" fill-opacity="0.54" />
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_1427_1669">
-                                        <rect width="24" height="24"/>
-                                    </clipPath>
-                                </defs>
-                            </svg>
+                            <i class="fa-solid fa-location-dot icon"></i>
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.Address)" style="text-align:center" />
 
-                        <label class="fw-bold label"><b>الوصف</b></label>
                         <div class="mb-2 input-container">
                             <InputTextArea id="discription"
                                        @bind-Value="@doctorDTO.Discription"
@@ -124,10 +116,7 @@
                                        style="padding-right:3rem;min-height:10rem;"
                                        class="form-control input_i"/>
                             <label class="p @Discription" for="discription"><b>الوصف</b></label>
-                            <svg width="24" height="24" class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path clip-rule="evenodd" d="M21.2635 2.29289C20.873 1.90237 20.2398 1.90237 19.8493 2.29289L18.9769 3.16525C17.8618 2.63254 16.4857 2.82801 15.5621 3.75165L4.95549 14.3582L10.6123 20.0151L21.2189 9.4085C22.1426 8.48486 22.338 7.1088 21.8053 5.99367L22.6777 5.12132C23.0682 4.7308 23.0682 4.09763 22.6777 3.70711L21.2635 2.29289ZM16.9955 10.8035L10.6123 17.1867L7.78392 14.3582L14.1671 7.9751L16.9955 10.8035ZM18.8138 8.98525L19.8047 7.99429C20.1953 7.60376 20.1953 6.9706 19.8047 6.58007L18.3905 5.16586C18 4.77534 17.3668 4.77534 16.9763 5.16586L15.9853 6.15683L18.8138 8.98525Z" />
-                                <path d="M2 22.9502L4.12171 15.1717L9.77817 20.8289L2 22.9502Z" />
-                            </svg>
+                            <i class="fa-solid fa-pen-to-square icon"></i>
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.Discription)" style="text-align:center" />
                     </div>
@@ -136,7 +125,6 @@
                 <h3><b>هذه البيانات إختياريه:</b></h3>
                 <div class="flexrow row">
                     <div class="col-lg-6 col-md-12">
-                        <label class="fw-bold label"><b>حساب Facebook</b></label>
                         <div class="mb-2 input-container">
 
                             <InputText id="facebook"
@@ -150,7 +138,6 @@
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.FaceBook)" style="text-align:center" />
 
-                        <label class="fw-bold label"><b>حساب Gmail</b></label>
                         <div class="mb-2 input-container">
                             <InputText id="gmail"
                                        @bind-Value="@doctorDTO.Email"
@@ -166,7 +153,6 @@
                     
                     
                     <div class="col-lg-6 col-md-12">
-                        <label class="fw-bold label"><b>حساب Instagram</b></label>
                         <div class="mb-2 input-container">
                             <InputText id="instagram"
                                        @bind-Value="@doctorDTO.Instgram"
@@ -179,7 +165,6 @@
                         </div>
                         <ValidationMessage For="@(() => doctorDTO.Instgram)" style="text-align:center" />
 
-                        <label class="fw-bold label"><b>رقم Whatsapp</b></label>
                         <div class="mb-2 input-container">
                             <InputText id="whatsapp"
                                        @bind-Value="@doctorDTO.WhatsUpNumber"
@@ -203,17 +188,17 @@
     </div>
 </div>
 
-
 @code {
     [Inject]
     public IJSRuntime navjs { get; set; }
     [Inject]
     public IAdminService adminService { get; set; }
     [Inject]
-    public IDoctorService doctorService { get; set; }
+    public IServicesService servicesService { get; set; }
     public DoctorDTO doctorDTO { get; set; } = new DoctorDTO();
     private AuthenticationState authenticationState;
-
+    [Parameter]
+    public string id { get; set; }
     public string Fname { get; set; }
     public string Lname { get; set; }
     public string PhoneNumber { get; set; }
@@ -231,9 +216,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var doctorId = (authenticationState.User.Claims.ToList())[0].Value;
-        doctorDTO = await _adminService.getDoctorbyid(doctorId);
+        // authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        // var doctorId = (authenticationState.User.Claims.ToList())[0].Value;
+        doctorDTO = await _adminService.getDoctorbyid(id);
         if (!string.IsNullOrEmpty(doctorDTO.FirstName)) Fname = "p_focus";
 
         if (!string.IsNullOrEmpty(doctorDTO.LastName)) Lname = "p_focus";

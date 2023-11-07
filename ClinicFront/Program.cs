@@ -37,7 +37,10 @@ builder.Services.AddHttpClient<IUserService, UserService>(
 builder.Services.AddHttpClient<IAdminService, AdminService>(
     client => client.BaseAddress = apiUri);
 
-builder.Services.AddHttpClient<IDoctorService, ClinicFront.Services.DoctorService>(
+builder.Services.AddHttpClient<IServicesService, ClinicFront.Services.ServicesService>(
+    client => client.BaseAddress = apiUri);
+
+builder.Services.AddHttpClient<IDoctorServicesService, ClinicFront.Services.DoctorServicesService>(
     client => client.BaseAddress = apiUri);
 
 builder.Services.AddHttpClient<ICategoryService, CategoryService>(
@@ -75,6 +78,8 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options => //Identity
 
 
 var app = builder.Build();
+
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NHaF5cXmVCf1NpR2pGfV5yd0VAalhSTnVXUiweQnxTdEZiWX1ccHJRRWNUUERzWw==");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

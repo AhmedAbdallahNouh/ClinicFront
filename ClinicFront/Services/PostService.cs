@@ -27,20 +27,20 @@ namespace ClinicFront.Services
 
         public async Task<HttpResponseMessage> AddPost(PostDTO postDTO)
         {
-            var newuser = new StringContent(JsonSerializer.Serialize(postDTO), Encoding.UTF8, "application/json");
-            var response = await http.PostAsync("/api/Post", newuser);
+            var newpost = new StringContent(JsonSerializer.Serialize(postDTO), Encoding.UTF8, "application/json");
+            var response = await http.PostAsync("/api/Post", newpost);
             return response;
         }
 
         public async Task<HttpResponseMessage> UpdatePost(PostDTO postDTO)
         {
-            var newuser = new StringContent(JsonSerializer.Serialize(postDTO), Encoding.UTF8, "application/json");
-           return await http.PutAsync("/api/Post" + postDTO.Id, newuser);
+            var newpost = new StringContent(JsonSerializer.Serialize(postDTO), Encoding.UTF8, "application/json");
+            return await http.PutAsync("/api/Post", newpost);
         }
 
         public async Task<HttpResponseMessage> DeletePost(int id)
         {
-           return await http.DeleteAsync("/api/Post/" + id);
+            return await http.DeleteAsync($"/api/Post?id={id}");
         }
     }
 }

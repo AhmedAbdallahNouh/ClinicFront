@@ -15,6 +15,8 @@ namespace ClinicModels.DTOs.ConsultationDTO
         public string Question { get; set; }
         public string Description { get; set; }
         public int CategoryId { get; set; }
-        public List<ConsulationImageDTO> consultationImageDTOs { get; set; } = new List<ConsulationImageDTO>();
+        public List<ConsulationImageDTO>? consultationImageDTOs { get; set; } = new List<ConsulationImageDTO>();
+        public DoctorDTO.DoctorDTO? DoctorDTO { get; set; } 
+
     }
 }

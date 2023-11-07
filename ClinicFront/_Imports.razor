@@ -7,6 +7,10 @@
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 @using Microsoft.JSInterop
 @using ClinicFront
+@using ClinicFront.Shared.Model;
+@using ClinicFront.Shared.Doctor;
+@using ClinicFront.Shared.Admin;
+@using ClinicFront.Shared.User;
 @using ClinicFront.Shared
 @using ClinicModels.DTOs.MainDTO;
 @using ClinicFront.Services;
@@ -16,15 +20,15 @@
 @using System.Security.Claims;
 @using Blazorise.Charts
 @using ClinicModels.DTOs.DoctorServiceDTO;
+@using ClinicModels.DTOs.UserDTO;
 @using ClinicModels.DTOs.ConsultationDTO;
 @using ClinicModels.DTOs.ConsultationImageDTO;
 @using ClinicModels.DTOs.ArticleDto;
-
-
-
-
+@using Syncfusion.Blazor;
+@using Syncfusion.Blazor.RichTextEditor;
+@using Markdig;
+@using System.Text;
+@using System.Text.Json;
 @* @using Blazorise.Charts.Base
 @using ChartJs.Blazor.ChartJS
  *@
-
-

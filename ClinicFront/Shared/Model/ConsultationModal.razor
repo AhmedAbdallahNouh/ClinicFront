@@ -1,0 +1,162 @@
+﻿@inject ICategoryService _categoryService
+@inject IConsultationService _consulationService
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-light">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <EditForm Model="@AddConsultationDTO" class="add-doctor-form row" style="direction:rtl" OnValidSubmit="RegisterNewAdmin" OnInvalidSubmit="ShowInvalidModal">
+                <DataAnnotationsValidator />
+                <div class="modal-body">
+                    <div class="container-signup">             
+                        <div class="col-12 form-first-col">
+                            <div class="mb-2 input-container">
+                                <div class="position-relative">
+                                    <i class="fa-solid fa-question" style="color: #19b5bc;"></i>
+                                    <label class="fw-bold mb-2 px-2"> السؤال  </label>
+                                    <InputText id="fname"
+                                    @bind-Value="@AddConsultationDTO.Question"
+                                               style="padding-left:3rem;"
+                                               class="form-control input_i"
+                                               placeholder="أدخل  سؤالك" />
+                                </div>
+                                <ValidationMessage For="@(() =>AddConsultationDTO.Question)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                            </div>
+                            <div class="mb-4 input-container" style="position: relative; max-height: 150px; ">
+                                <div class="position-relative">
+                                    <i class="fa-solid fa-building" style="color: #19b5bc;"></i>
+                                    <label for="inputPassword " class="fw-bold mb-2 px-2"> التخصص </label>
+                                    <InputSelect @bind-Value="AddConsultationDTO.CategoryId" class="form-control" style="padding-left: 3rem" size="">
+                                        <option value="-1">إختر تخصص</option>
+                                        @foreach (var categoryDTO in categoryDTOs)
+                                        {
+                                            <option value="@categoryDTO.Id">@categoryDTO.Name</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                                @if (AddConsultationDTO.CategoryId == -1)
+                                {
+                                    <div style=" color:red; text-align: start !important; padding-right: 7rem ; padding-top: 0.8rem;">يجب إختيار تخصص</div>
+                                }
+                                <ValidationMessage For="@(() => AddConsultationDTO.CategoryId)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                            </div>
+                            <div class="mb-2 input-container">
+                                <div class="position-relative">
+                                    <i class="fa-solid fa-circle-info" style="color: #19b5bc;"></i>
+                                    <label class="fw-bold mb-4 px-2"> التفاصيل</label>
+                                    <InputTextArea id="user-name"
+                                    @bind-Value="@AddConsultationDTO.Description"
+                                                   style="padding-left:3rem;"
+                                                   class="form-control input_i"
+                                                   placeholder="أدخل تفاصيل سؤالك" />
+
+                                </div>
+                                <ValidationMessage For="@(() => AddConsultationDTO.Description)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                            </div>
+                            <div class="d-flex image-container">
+
+                                @for (int i = 0; i <= 3; i++)
+                                {
+                                    int index = i; // Capture the loop variable in a local variable
+                                    <div class="mb-4 mx-1 profileimage">
+                                        @if (AddConsultationDTO.consultationImageDTOs.Count > index)
+                                        {
+                                            <i class="fa-regular fa-circle-xmark" @onclick="() => RemoveSelectedImage(index)"></i>
+                                            <img src="@AddConsultationDTO.consultationImageDTOs[index].Image" class="img" style="" />
+                                        }
+                                        else
+                                        {
+                                            <label class="profilechange px-2 ">
+                                                <InputFile id="ProfileName" type="file" OnChange="(e) => HandleFileSelected(e, index)" class="input_i" style="display:none;" />
+                                                <i class="fas fa-camera profileicon fs-2" style="color: #19b5bc;"></i>
+                                            </label>
+                                        }
+                                    </div>
+                                }
+                            </div>                                                   
+                        </div>                    
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="submit-btn-container"><button type="submit" class="mb-2 btn btn-lg btn-block fw-bold button" >Finish</button></div>
+                    <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </EditForm>
+
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    public AddConsultationDTO AddConsultationDTO { get; set; } = new AddConsultationDTO();
+    public List<CategoryDTO> categoryDTOs { get; set; } = new List<CategoryDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        categoryDTOs = await _categoryService.getallcategory();
+        StateHasChanged();
+        base.OnInitialized();
+    }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e, int index)
+    {
+
+        var file = e.File;
+        if (file != null)
+        {
+            var format = "image/png";
+            var resizedImageFile = await file.RequestImageFileAsync(format, 400, 400);
+
+            using var ms = new MemoryStream();
+            await resizedImageFile.OpenReadStream().CopyToAsync(ms);
+            var buffer = ms.ToArray();
+
+            var imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+
+            if (index >= 0 && index < 4)
+            {
+                if (AddConsultationDTO.consultationImageDTOs.Count > index)
+                {
+                    AddConsultationDTO.consultationImageDTOs[index].Image = imageDataUrl;
+                }
+                else
+                {
+                    AddConsultationDTO.consultationImageDTOs.Add(new ConsulationImageDTO() { Image = imageDataUrl });
+                }
+            }
+        }
+        StateHasChanged();
+    }
+    public void RemoveSelectedImage(int index)
+    {
+        if (index >= 0 && index < AddConsultationDTO.consultationImageDTOs.Count)
+        {
+            // Remove the image at the specified index
+            AddConsultationDTO.consultationImageDTOs.RemoveAt(index);
+            StateHasChanged();
+        }
+    }
+
+    public void RegisterNewAdmin()
+    {
+        _consulationService.AddConsultation(AddConsultationDTO);
+        StateHasChanged();
+
+    } 
+    public void ShowInvalidModal()
+    {
+        
+    }
+}

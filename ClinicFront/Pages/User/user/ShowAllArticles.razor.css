@@ -4,7 +4,7 @@
 .backgroundimgOfPage {
     background-color: #dddddd61 !important;
     margin-top: -1.1rem;
-    margin-right: -1.5rem;
+    margin-left: -1.5rem;
     position: fixed;
     height: 100%;
     width: 100%;
@@ -12,20 +12,22 @@
 
 .main_container {
     margin-top: -1.1rem;
-    width: 70%;
-    position: relative;
-    right: 7%;
+    width: 80%;
+    height:100%;
 }
 .cardd {
-    box-shadow: rgb(15 23 112) 8px 8px;
+    text-decoration: none;
+    word-break: break-all;
+    color: black;
+    box-shadow: #FF838A 8px 8px;
     background-color: white;
     margin-bottom: 2rem;
     width: 48%;
 }
-.cardd:hover {
-    box-shadow: 2px 1px 0px 2px rgb(15 23 112);
-    transform: translate3d(5px, 5px, 30em);
-}
+    .cardd:hover {
+        box-shadow: 2px 1px 0px 2px #FF838A;
+        transform: translate3d(5px, 5px, 30em);
+    }
 .flex {
     display: flex;
     direction: rtl
@@ -33,10 +35,11 @@
 .div_img {
     width: 111%;
     position: relative;
-    bottom: 5%;
+    bottom: 1%;
 }
 img {
-    height: 9rem;
+    height: 8.5rem;
+    width: 92% !important;
     border-radius: 1rem;
 }
 h4 {
@@ -49,4 +52,29 @@ p {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+}
+@media (max-width: 1420px) {
+    .main_container {
+        width: 71%;
+        padding-left: 1rem;
+    }
+
+    .cardd {
+        width: 100%
+    }
+}
+
+@media (max-width: 1237px) {
+    .main_container {
+        width: 80%;
+        margin: auto;
+    }
+}@media (max-width: 767px) {
+    img {
+       height:17.5rem;
+    }
+}@media (max-width: 460px) {
+    img {
+        height:8.5rem;
+    }
 }

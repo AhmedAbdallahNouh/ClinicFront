@@ -129,29 +129,51 @@ namespace ClincApi.Controllers
         [HttpPut]
         public async Task<ActionResult?> Update(UpdateConsultationdto cnosultationDTO)
         {
-
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                Consultation consultationToUpdate = new Consultation()
-                {
-                    Id = cnosultationDTO.Id,
-                    Question = cnosultationDTO.Question,
-                    Description = cnosultationDTO.Description,
-                    Answer = cnosultationDTO.Answer,
-                    CategoryId = cnosultationDTO.CategoryId,
-                    ConsultationImages = cnosultationDTO.consultationImageDTOs.Select(c => new ConsultationImage() { Image = c.Image, ConsultationId = c.ConsultationId }).ToList(),
-                };
+                return BadRequest();
+            }
 
-                int NumberOfRowEffected = await _consultationRepo.Update(consultationToUpdate);
+            try
+            {
+                Consultation consultation = await _consultationRepo.GetByID(cnosultationDTO.Id);
+
+                if (consultation == null)
+                {
+                    return NotFound("Post not found");
+                }
+
+                // Update the existing post properties
+                consultation.Question = cnosultationDTO.Question;
+                consultation.Description = cnosultationDTO.Description;
+                consultation.Answer = cnosultationDTO.Answer;
+                consultation.CategoryId = cnosultationDTO.CategoryId;
+
+                consultation.ConsultationImages.Clear(); // Remove all existing images
+
+                if (cnosultationDTO.consultationImageDTOs != null && cnosultationDTO.consultationImageDTOs.Any())
+                {
+                    foreach (var imageDTO in cnosultationDTO.consultationImageDTOs)
+                    {
+                        consultation.ConsultationImages.Add(new ConsultationImage
+                        {
+                            Image = imageDTO.Image,
+                            ConsultationId = consultation.Id
+                        });
+                    }
+                }
+                int NumberOfRowEffected = await _consultationRepo.Update(consultation);
                 if (NumberOfRowEffected > 0)
                 {
-                    
+
                     return Ok(cnosultationDTO);
                 }
-                return BadRequest("faild to save changes");
+                return BadRequest("faild to save changes"); return NoContent();
             }
-            return BadRequest(string.Empty);
-
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
         [HttpDelete]
         public async Task<ActionResult?> Delete(int cnosultationId)

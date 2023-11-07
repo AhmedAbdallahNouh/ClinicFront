@@ -8,24 +8,29 @@
             <div class="flex_row" style="padding: 16px 12px 0px;justify-content:space-between;">
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="divOfModal_Title">
-                    <h5 class="modal-title" id="exampleModalLabel"><b>@AppuserName</b></h5>
+                    <h5 class="modal-title" id="exampleModalLabel"><b>@DoctorDTO.FirstName @DoctorDTO.LastName</b></h5>
                     <div class="doctorimIngmodal">
-                        @if (!string.IsNullOrEmpty(AppuserImage))
+
+                        @if (!string.IsNullOrEmpty(DoctorDTO.Image))
                         {
-                            <img src="@AppuserImage" />
+
+                            <img src="@DoctorDTO.Image" />
+
                         }
+
                         else
                         {
-                            <i class="bi bi-person-circle" style="color: #03206C;font-size: 3.1rem;"></i>
+                            <i class="bi bi-person-circle" style="color: #19b5bc;font-size: 3.1rem;"></i>
                         }
                     </div>
                 </div>
             </div>
             <div class="modal-body direction_rtl">
-                <textarea @bind-Value="postDto.Text" @bind-Value:event="onchange" class="contentEditableDiv" />
+                <InputTextArea @bind-Value="postDto.Text" class="contentEditableDiv" />
                 <div class="video_img">
                     @if (!string.IsNullOrEmpty(postDto.Video))
                     {
+                        <i class="fa-regular fa-circle-xmark" @onclick="() => RemoveVideo()"></i>
                         <video src="@postDto.Video" style="width:100%;height:100%" controls></video>
                     }
                     @if (postDto.Images.Count != 0)
@@ -33,6 +38,9 @@
                         <div class="row divofuplaodphoto_Photo" style="width:100%;">
                             @foreach (var image in postDto.Images)
                             {
+                                <div class="aa">
+                                    <i class="fa-regular fa-circle-xmark" @onclick="() => RemoveSelectedImage(image)"></i>
+                                </div>
                                 @if (postDto.Images.Count == 1)
                                 {
                                     <img src="@image.Image" class="col-12 imagess" />
@@ -57,13 +65,13 @@
                     <div class="modalButton" style="text-align: center;">
                         <InputFile type="file" id="inputvideo" style="display:none;" OnChange="@UplaodVideo" multiple />
                         <label for="inputvideo">
-                            <i class="bi bi-camera-video-fill" style="color:#03206C;"></i>
+                            <i class="bi bi-camera-video-fill" style="color:#19b5bc;"></i>
                         </label>
                     </div>
                     <div class="modalButton" style="text-align: center;">
                         <InputFile type="file" id="inputimage" style="display:none;" OnChange="@UplaodImage" multiple />
                         <label for="inputimage">
-                            <i class="bi bi-image" style="color:#03206C;"></i>
+                            <i class="bi bi-image" style="color :#19b5bc;"></i>
                         </label>
                     </div>
                 </div>
@@ -87,12 +95,12 @@
     </div>
 </div>
 
-<div class="addpost p-3 mb-5 bg-body-tertiary" data-bs-toggle="modal" data-bs-target="#exampleModal" type="button">
+<div class="addpost p-3 mb-5 bg-body-tertiary" @onclick="Add_UpdateButtonfalse" data-bs-toggle="modal" data-bs-target="#exampleModal" type="button">
     <h3><b>إضافة منشور</b></h3>
     <hr />
     <div class="divofuplaodphoto_video" style="width:100%;">
-        <button class="modalButton" style="width:25%;"><i class="bi bi-image" style="color:#03206C;"></i></button>
-        <button class="modalButton" style="width:25%;"><i class="bi bi-camera-video-fill" style="color:#03206C;"></i></button>
+        <button class="modalButton" style="width:25%;"><i class="bi bi-image" style="color:#19b5bc;"></i></button>
+        <button class="modalButton" style="width:25%;"><i class="bi bi-camera-video-fill" style="color:#19b5bc;"></i></button>
     </div>
 </div>
 
@@ -116,23 +124,23 @@
             </ul>
         </div>
 
-        <div class="posttitel">
+        <div class="posttitel row">
             <div class="doctorimgInPost">
-                @if (!string.IsNullOrEmpty(AppuserImage))
+                @if (!string.IsNullOrEmpty(DoctorDTO.Image))
                 {
-                    <img src="@AppuserImage" /> 
+                    <img src="@DoctorDTO.Image" />
                 }
                 else
                 {
-                    <i class="bi bi-person-circle" style="color: #03206C;"></i>
+                    <i class="bi bi-person-circle" style="color: #19b5bc;"></i>
                 }
 
 
             </div>
 
             <div class="doctornameInPost">
-                <h2 class="doctorname"><b>@AppuserName</b></h2>
-                <p class="postdate"><b>@post.Date</b></p>
+                <h4 class="doctorname"><b>@DoctorDTO.FirstName @DoctorDTO.LastName</b></h4>
+                <p class="postdate"><b>@post.Date.ToString("MMMM dd yyyy")</b></p>
             </div>
         </div>
         @if (!string.IsNullOrEmpty(post.Text))
@@ -182,10 +190,9 @@
 
     public List<PostDTO> postDtoS { get; set; } = new List<PostDTO>();
     public PostDTO postDto { get; set; } = new PostDTO();
+    [Parameter]
+    public DoctorDTO DoctorDTO { get; set; } = new DoctorDTO();
 
-    public string AppuserId { get; set; } = "";
-    public string AppuserImage { get; set; } = "";
-    public string AppuserName { get; set; } = "";
     public bool Add_UpdateButton { get; set; } = false;
     public int Counter { get; set; } = 1;
 
@@ -197,25 +204,44 @@
 
     protected override async Task OnInitializedAsync()
     {
-        authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var doctorId = (authenticationState.User.Claims.ToList())[0].Value;
-        AppuserId = doctorId;
-        AppuserImage = authenticationState.User.FindFirst("Image").Value;
-        var Name = authenticationState.User.FindFirst("Name").Value;
-        postDtoS = await postService.getallPosts(doctorId, Counter);
-        if (!string.IsNullOrEmpty(Name))
+        var posts = await postService.getallPosts("3a7caa7a-9089-45c3-ba24-29d3c1da3052", Counter);
+        if (posts != null)
         {
-            AppuserName = Name;
+            postDtoS = posts;
+        }
+        else
+        {
+            postDtoS = new List<PostDTO>();
         }
         StateHasChanged();
         base.OnInitialized();
     }
+
     [JSInvokable]
     private async void GetPostPagination()
     {
         Counter++;
-        postDtoS = await postService.getallPosts(AppuserId, Counter);
+        postDtoS = await postService.getallPosts(DoctorDTO.Id, Counter);
         StateHasChanged();
+    }
+    private async void Puplishpost()
+    {
+        PostDTO newpost = new PostDTO()
+            {
+                AppUserId = DoctorDTO.Id,
+                Text = postDto.Text,
+                Video = postDto.Video,
+                Images = postDto.Images,
+                Date = DateTime.Now
+            };
+
+        var response = await postService.AddPost(newpost);
+        if (response.StatusCode.ToString() == "OK")
+        {
+            postDtoS.Add(newpost);
+            StateHasChanged();
+        }
+        postDto = new PostDTO();
     }
 
     private async void DeletePost(int id)
@@ -234,6 +260,7 @@
         postDto.Images = postDTO.Images;
         postDto.Text = postDTO.Text;
         postDto.Video = postDTO.Video;
+        postDto.AppUserId = postDTO.AppUserId;
 
         Add_UpdateButton = true;
     }
@@ -250,8 +277,28 @@
                 postDtoS[updatedPostDTOindex].Video = postDto.Video;
                 postDtoS[updatedPostDTOindex].Text = postDto.Text;
             }
+            postDto = new PostDTO();
+            StateHasChanged();
         }
         Add_UpdateButton = false;
+    }
+
+    private void Add_UpdateButtonfalse()
+    {
+        postDto = new PostDTO();
+        Add_UpdateButton = false;
+    }
+
+    public void RemoveSelectedImage(PostImageDTO image)
+    {
+        postDto.Images.Remove(image);
+        StateHasChanged();
+    }
+
+    public void RemoveVideo()
+    {
+        postDto.Video = "";
+        StateHasChanged();
     }
 
     public async Task UplaodImage(InputFileChangeEventArgs e)
@@ -274,12 +321,17 @@
 
                 // Convert the image to a Base64 string and add it to the variant's Images list
                 var imageBase64 = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-                foreach (var postImageDto in postDto.Images)
-                {
-                    postImageDto.PostId = postDto.Id;
-                    postImageDto.Image = imageBase64;
-                }
-                // postDto.Images.Add(imageBase64);
+                PostImageDTO postImageDTO = new PostImageDTO()
+                    {
+                        Image = imageBase64
+                    };
+
+                postDto.Images.Add(postImageDTO);
+                //foreach (var postImageDto in postDto.Images)
+                //{
+                //    postImageDto.PostId = postDto.Id;
+                //    postImageDto.Image = imageBase64;
+                //}
                 await Task.Delay(TimeSpan.FromSeconds(1));
                 StateHasChanged();
             }
@@ -336,22 +388,5 @@
         uploadingVideo = false;
         StateHasChanged();
     }
-    private async void Puplishpost()
-    {
-        PostDTO newpost = new PostDTO()
-        {
-            Text = postDto.Text,
-            Video = postDto.Video,
-            Images = postDto.Images,
-            Date = DateTime.Now
-        };
 
-        var response = await postService.AddPost(newpost);
-        if (response.StatusCode.ToString() == "Ok")
-        {
-            postDtoS.Add(newpost);
-            StateHasChanged();
-        }
-        postDto = new PostDTO();
-    }
 }

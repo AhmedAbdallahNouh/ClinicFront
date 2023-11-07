@@ -20,12 +20,12 @@ namespace ClincApi.Controllers
             this._doctorServiceRepo = doctorServiceRepo;
         }
         // GET: api/<DoctorServiceController>
-        [HttpGet]
-        public async Task<IActionResult> GetAllServices(string doctorId)
+        [HttpGet("/api/getallservicesforonedoctor/{id}")]
+        public async Task<IActionResult> GetAllServicesForOneDoctor(string id)
         {
             try
             {
-                List<Service> Services = await _doctorServiceRepo.GetAllServicesToOneDoctor(doctorId);
+                List<Service> Services = await _doctorServiceRepo.GetAllServicesToOneDoctor(id);
                 if (Services == null)
                 {
                     return NotFound();
@@ -55,12 +55,42 @@ namespace ClincApi.Controllers
             }
         }
 
-        // GET api/<DoctorServiceController>/5
-        [HttpGet("/api/doctorid")]
-        public async Task<IActionResult> GetDoctorServiceById(string doctorId, int serviceId)
+        [HttpGet("{id:int}")]
+        public IActionResult GetServiceById(int serviceid)
         {
-            List<AppUser> appUsers = await _doctorServiceRepo.GetServiceByIdWithInclude(serviceId);
-            if (appUsers == null)
+            try
+            {
+                Service service = _doctorServiceRepo.GetServiceByIdWithOutclude(serviceid);
+                if (service == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    ServiceDTO serviceDTO = new ServiceDTO()
+                    {
+                        Id = service.Id,
+                        Title = service.Title,
+                        Discription = service.Discription,
+                        Image = service.Image,
+                        Category_Id = service.Category_Id,
+                        Category_Name = service.category.Name,
+                    };
+                    return Ok(serviceDTO);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        // GET api/<DoctorServiceController>/5
+        [HttpGet("/api/doctorid/{id:int}")]
+        public async Task<IActionResult> GetServiceByIdWithHisDoctors(int id)
+        {
+            Service service = await _doctorServiceRepo.GetServiceByIdWithInclude(id);
+            if (service == null)
             {
                 return NotFound();
             }
@@ -68,22 +98,17 @@ namespace ClincApi.Controllers
             {
                 try
                 {
-                    List<ServiceForSpecificDto> doctorDTOs = new List<ServiceForSpecificDto>();
-                    foreach (AppUser appUser in appUsers)
+                    ServiceDTO serviceDTO = new ServiceDTO()
                     {
-                        ServiceForSpecificDto doctorDTO = new ServiceForSpecificDto()
-                        {
-                            Id = appUser.Id,
-                            Image = appUser.Image,
-                            FirstName = appUser.FirstName,
-                            LastName = appUser.LastName,
-                            CategoryId = appUser.CategoryId,
-                            serviceDTO = appUser.doctorService.Select(s => new ServiceDTO {Id = s.Service.Id, Title = s.Service.Title, Discription = s.Service.Discription,Image = s.Service.Image, Category_Name = s.Service.category.Name }).ToList()
-                        };
-                        doctorDTOs.Add(doctorDTO);
-                    }
-                    return Ok(doctorDTOs);
-                }catch (Exception ex)
+                        Id= service.Id,
+                        Title = service.Title,
+                        Image = service.Image,
+                        Discription= service.Discription,
+                        Category_Id = service.Category_Id,
+                        doctorDTOs = service.doctorService.Select(s => new DoctorDTO { Id = s.AppUser.Id, FirstName = s.AppUser.FirstName, LastName = s.AppUser.LastName, Image = s.AppUser.Image, Discription = s.AppUser.Discription}).ToList()
+                    };
+                    return Ok(serviceDTO);
+                } catch (Exception ex)
                 {
                     return BadRequest(ex.Message);
                 }
@@ -93,7 +118,7 @@ namespace ClincApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddDoctorService(ServiceDTO serviceDTO)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -105,8 +130,8 @@ namespace ClincApi.Controllers
                         Category_Id = serviceDTO.Category_Id,
                     };
                     Service response = await _doctorServiceRepo.AddService(service);
-                   if(response != null) return Ok(response);
-                   return BadRequest("there is error In server");
+                    if (response != null) return Ok(response);
+                    return BadRequest("there is error In server");
                 }
                 catch (Exception ex)
                 {
@@ -149,10 +174,10 @@ namespace ClincApi.Controllers
         }
 
 
-        [HttpDelete]
-        public IActionResult DeleteService(string doctorId, int serviceId)
+    [HttpDelete]
+    public IActionResult DeleteService(int id)
         {
-            Service Service = _doctorServiceRepo.GetServiceByIdWithOutclude(serviceId);
+            Service Service = _doctorServiceRepo.GetServiceByIdWithOutclude(id);
             if (Service == null)
             {
                 return NotFound();

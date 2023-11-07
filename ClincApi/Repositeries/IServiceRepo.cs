@@ -7,7 +7,7 @@ namespace ClincApi.Repositeries
         Task<Service> AddService(Service service);
         bool DeleteService(Service service);
         Task<List<Service>> GetAllServicesToOneDoctor(string doctorId);
-        Task<List<AppUser>> GetServiceByIdWithInclude(int serviceId);
+        Task<Service> GetServiceByIdWithInclude(int serviceId);
         Service GetServiceByIdWithOutclude(int serviceId);
         bool UpdateService(Service service);
     }

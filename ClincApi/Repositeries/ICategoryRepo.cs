@@ -7,6 +7,8 @@ namespace ClincApi.Repositeries
         Category addCategory(Category category);
         void deleteCategory(int id);
         List<Category> GetAllCategories();
+        List<Category> GetCategoriespagination();
+        List<Category> GetAllCategoriesWithHisServices();
         Category GetCategoryById(int id);
         void UpdateCategory(Category category);
     }

@@ -10,11 +10,13 @@ namespace ClinicModels.DTOs.ArticleDto
     public class ArticleDto
     {
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "يرجى إدخال العنوان.")]
         public string Title { get; set; }
-        [Required]
+        [Required(ErrorMessage = "يرجى إدخال نبذه عن المقال.")]
         public string SubTitle { get; set; }
-        [Required]
+        [Required(ErrorMessage = "يرجى إدخال نص المقال.")]
+        public string Content { get; set; }
+        [Required(ErrorMessage = "يرجى إدخال صورة.")]
         public string ArticleImage { get; set; }
         public DateTime ArticleDate { get; set; }
         public string?AppUserId { get; set; }

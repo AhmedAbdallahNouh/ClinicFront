@@ -39,6 +39,9 @@ namespace ClincApi.Models
 
         [DataType(DataType.Date)]
         public DateTime? EndSubscriptionDate { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime? VisitedDoctorPage { get; set; }
         public string? Image { get; set; }
         public string? CoverImage { get; set; }
         public int Delete_Doctor { get; set; }
@@ -51,6 +54,9 @@ namespace ClincApi.Models
         public virtual List<Post>? Posts { get; set; }
         //Relation between Doctorservice and Appuser
         public List<DoctorService>? doctorService { get; set; } = new List<DoctorService>();
+        
+        //Relation between Consultation and Appuser
+        public List<Consultation>? Consultations { get; set; } = new List<Consultation>();
         //Relation between Articles and Appuser
         public virtual List<Article>? Articles { get; set; }
     }

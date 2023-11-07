@@ -1,12 +1,20 @@
-﻿body{
-    direction:rtl
+﻿body {
+    direction: rtl
 }
+
+.CPhoto {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
 .main-container {
     margin-top: -1.1rem;
     width: 70%;
     position: relative;
     right: 6%;
 }
+
 .coverphoto_button {
     position: absolute;
     bottom: -13%;
@@ -15,10 +23,12 @@
     height: 2.5rem;
     padding: .2rem 0rem;
 }
+
 .img {
     width: 100%;
     height: 100%;
 }
+
 .containerofcntent {
     width: 90%;
     margin: auto;
@@ -27,12 +37,14 @@
     margin: auto;
     margin-top: -1.5rem;
 }
+
 .containerofimage {
     width: 90%;
-    height:20rem;
+    height: 15rem;
     margin: auto;
-    position:relative;
+    position: relative;
 }
+
 .profileimage {
     position: relative;
     bottom: 12%;
@@ -44,33 +56,39 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    transition:all .5s ease;
-}
-.profileimage i {
-    font-size: 8.6rem;
     transition: all .5s ease;
 }
+
+    .profileimage i {
+        font-size: 8.6rem;
+        transition: all .5s ease;
+    }
+
 .subcontainerofcntent {
-    background-color: rgba(1, 14, 126, 0.2);
+    background-color: #f7f7f7;
     padding-top: 5rem;
     padding-bottom: 1rem;
     width: 100%;
     margin: auto;
     margin-bottom: -4rem;
 }
-.flexrow{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:5rem;
+
+.flexrow {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5rem;
 }
-.flexcolumn{
-    width:50%;
+
+.flexcolumn {
+    width: 50%;
 }
-h2{
-    text-align:center;
-    margin-bottom:3rem;
-    margin-top:-1.5rem;
+
+h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    margin-top: -1.5rem;
 }
+
 h3 {
     font-size: 1.5rem;
     margin-right: 5%;
@@ -158,9 +176,9 @@ h3 {
     font-size: 12px;
 }
 
-.form-signup .form-control:focus {
-    z-index: 2;
-}
+    .form-signup .form-control:focus {
+        z-index: 2;
+    }
 
 .input-container {
     display: -ms-flexbox;
@@ -253,26 +271,30 @@ h3 {
 }
 
 .input_i:focus + label + i {
-    color: #03206C;
+    color: #19B5BC;
 }
+
 .input_i:focus + label + svg {
     color: #03206C !important;
 }
-.input_i:not(:empty) + label{
-    display:none;
+
+.input_i:not(:empty) + label {
+    display: none;
 }
+
 .input_i:focus + label {
     position: absolute;
     font-size: 11px;
     margin-left: 3rem;
     top: -1rem;
     right: 2rem;
-    background-color: #051642;
+    background-color: #19B5BC;
     color: white;
     border-radius: 10px;
     padding: 4px 6px;
     transition: all .5s ease;
 }
+
 .color-button,
 .color-button:hover {
     background-color: #f7e3ac;
@@ -281,10 +303,10 @@ h3 {
 }
 
 .button {
-    width:40%;
+    width: 40%;
     margin: auto 30%;
-    margin-bottom:3.5rem !important;
-    background-color: #03206C;
+    margin-bottom: 3.5rem !important;
+    background-color: #ff838a;
     color: white
 }
 
@@ -343,30 +365,35 @@ h3 {
     top: 0.5rem;
     transition: all .5s ease;
 }
+
 .p_focus {
     position: absolute;
     font-size: 11px;
     margin-left: 3rem;
     top: -1rem;
     right: 2rem;
-    background-color: #051642;
+    background-color: #26b050;
     color: white;
     border-radius: 10px;
     padding: 4px 6px;
     transition: all .5s ease;
 }
+
 @media (max-width: 1200px) {
     .main-container {
         width: 100%;
         right: 0%;
     }
-    .containerofimage{
-        width:100%;
+
+    .containerofimage {
+        width: 100%;
     }
+
     .containerofcntent {
         width: 100%;
     }
 }
+
 @media (max-width: 790px) {
     .profileimage {
         position: relative;
@@ -375,49 +402,61 @@ h3 {
         width: 6rem;
         height: 6rem;
     }
-    .subcontainerofcntent{
-        padding-top:8rem;
+
+    .subcontainerofcntent {
+        padding-top: 8rem;
     }
-    .profileimage i{
-        font-size:6.5rem;
+
+    .profileimage i {
+        font-size: 6.5rem;
     }
 }
+
 @media (max-width: 560px) {
-    .p{
-        font-size:11px;
+    .p {
+        font-size: 11px;
     }
+
     .input_i:focus + label {
         font-size: 7px;
     }
+
     .profileimage {
         right: 64%;
     }
+
     .p_focus {
         font-size: 7px;
     }
 }
+
 @media (max-width: 375px) {
     .profileimage {
         right: 63%;
     }
 }
+
 @media (max-width: 280px) {
-    .main-container{
+    .main-container {
         width: 115%;
         right: -8%;
     }
+
     .coverphoto_button {
         width: 5rem !important;
     }
+
     .profileimage {
         bottom: 6%;
         right: 63%;
         width: 4rem;
         height: 4rem;
     }
-    .profileimage i {
-        font-size: 4.5rem;
-    }
+
+        .profileimage i {
+            font-size: 4.5rem;
+        }
+
     .profilechange {
         bottom: -0.5rem;
         right: -0.5rem;

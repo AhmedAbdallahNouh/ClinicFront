@@ -65,14 +65,32 @@ namespace ClincApi.Controllers
 
             try
             {
-                Post post = new Post()
+                Post Post = _PostRepo.GetPostById(postDTO.Id);
+
+                if (Post == null)
                 {
-                    Id = postDTO.Id,
-                    Text = postDTO.Text,
-                    Video = postDTO.Video,
-                    AppUserId = postDTO.AppUserId
-                };
-                _PostRepo.UpdatePost(post);
+                    return NotFound("Post not found");
+                }
+
+                // Update the existing post properties
+                Post.Text = postDTO.Text;
+                Post.Video = postDTO.Video;
+                Post.AppUserId = postDTO.AppUserId;
+
+                Post.PostImages.Clear(); // Remove all existing images
+
+                if (postDTO.Images != null && postDTO.Images.Any())
+                {
+                    foreach (var imageDTO in postDTO.Images)
+                    {
+                        Post.PostImages.Add(new PostImage
+                        {
+                            Image = imageDTO.Image,
+                            postId = Post.Id
+                        });
+                    }
+                }
+                _PostRepo.UpdatePost(Post);
                 return NoContent();
             }
             catch (Exception ex)

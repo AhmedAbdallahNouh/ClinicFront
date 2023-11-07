@@ -1,0 +1,111 @@
+﻿@font-face {
+    font-family: 'rubik-regular';
+    src: url('fonts/rubik-regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'jomhuria-regular';
+    src: url('fonts/jomhuria-regular.ttf') format('truetype');
+}
+
+.main_container {
+    width: 80%;
+    height: 100%;
+}
+.direction_rtl {
+    direction: rtl;
+}
+.cardd {
+    box-shadow: rgb(15 23 112) 8px 8px;
+    margin: 4rem 0 3rem;
+    width: 45%;
+    height: 10rem;
+}
+.cardd:hover
+{
+    box-shadow: 2px 1px 0px 2px rgb(15 23 112);
+    transform: translate3d(5px, 5px, 30em);
+}
+* {
+    box-sizing: border-box;
+}
+
+.flex {
+    display: flex;
+    direction: rtl
+}
+img {
+    height: 9rem;
+    border-radius: 1rem;
+}
+a {
+    text-decoration: none;
+    color: black
+}
+.flex_column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+.direction_rtl {
+    direction: rtl;
+}
+.div_img {
+    width: 111%;
+    position: relative;
+    bottom: -6%;
+    right: 6%;
+}
+
+@media (max-width: 1420px) {
+    .main_container {
+        width: 71%;
+        padding-left: 1rem;
+    }
+
+    .cardd {
+        width: 100%
+    }
+}
+
+@media (max-width: 1237px) {
+    .main_container {
+        width: 80%;
+        margin: auto;
+    }
+}
+
+@media (max-width: 990px) {
+    .div_img {
+        width: 100%;
+    }
+}
+
+@media (max-width: 1040px) {
+    .main_container {
+        width: 100%;
+    }
+
+    .cardd {
+        width: 100%;
+    }
+}
+
+@media (max-width: 500px) {
+    h1 {
+        font-size: -webkit-xxx-large;
+    }
+}
+
+@media (max-width: 500px) {
+    h1 {
+        font-size: xx-large;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 280px) {
+    h4 {
+        font-size: small;
+    }
+}

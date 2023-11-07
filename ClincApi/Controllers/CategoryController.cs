@@ -1,6 +1,7 @@
 ﻿using ClincApi.Models;
 using ClincApi.Repositeries;
 using ClinicModels;
+using ClinicModels.DTOs.DoctorServiceDTO;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -35,6 +36,62 @@ namespace ClincApi.Controllers
                     {
                         Id = category.Id,
                         Name = category.Name
+                    };
+                    categoryDTOs.Add(categoryDTO);
+                }
+                return Ok(categoryDTOs);
+            }
+        }
+        
+        [HttpGet("/api/GetCategoriespagination")]
+        public ActionResult GetCategoriespagination()
+        {
+            try{
+                List<Category> categories = _categoryRepo.GetCategoriespagination();
+                if (categories == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    List<CategoryDTO> categoryDTOs = new List<CategoryDTO>();
+                    foreach (Category category in categories)
+                    {
+                        CategoryDTO categoryDTO = new CategoryDTO()
+                        {
+                            Id = category.Id,
+                            Name = category.Name
+                        };
+                        categoryDTOs.Add(categoryDTO);
+                    }
+                    return Ok(categoryDTOs);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+        }
+        
+        [HttpGet("/api/getcategorieswithhisservice")]
+        public ActionResult GetAllCategoriesWithHisservice()
+        {
+            List<Category> categories = _categoryRepo.GetAllCategoriesWithHisServices();
+            if (categories == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                List<CategoryDTO> categoryDTOs = new List<CategoryDTO>();
+                foreach (Category category in categories)
+                {
+                    CategoryDTO categoryDTO = new CategoryDTO()
+                    {
+                        Id = category.Id,
+                        Name = category.Name,
+                        serviceDTOs = category.doctorServices.Select(s => new ServiceDTO() { Id = s.Id, Category_Id = s.Category_Id, Title = s.Title, Discription = s.Discription, Image = s.Image }).ToList()
                     };
                     categoryDTOs.Add(categoryDTO);
                 }

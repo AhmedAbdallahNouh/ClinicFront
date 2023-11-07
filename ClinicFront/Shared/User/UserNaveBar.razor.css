@@ -1,0 +1,121 @@
+﻿body {
+    background: linear-gradient( #bbd1df, #ffffff);
+}
+
+.nav {
+    padding: 0px 3rem;
+    box-shadow: 0px 3px 5px 5px #ffffff9c;
+    position: fixed;
+    width: 100%;
+    z-index: 10000;
+   /* display: flex !important;*/
+    background-color: #FF838A !important;
+   /* align-items: center !important;
+    justify-content: space-between !important;*/
+}
+
+
+
+.navbar {
+  /*  display: flex;
+    flex-wrap: inherit;
+    align-items: center;
+    justify-content: space-between;
+    height: 61px;*/
+}
+
+.hide_nav {
+    display: none !important;
+}
+
+.color_white {
+    color: white !important;
+}
+
+button {
+    border-color: white !important;
+}
+
+@font-face {
+    font-family: 'playball-regular';
+    src: url('../fonts/playball-regular(1).ttf') format('truetype');
+}
+
+.logo {
+    font-family: playball-regular;
+    font-size: 2rem;
+}
+
+.flex {
+    display: flex;
+    place-content: space-between;
+    align-content: center;
+    width: 100%
+}
+
+.lord_icon {
+    /* width: 4rem;*/
+    height: 2.2rem;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    left: 0rem;
+}
+
+.flex_center {
+    display: flex;
+    place-content: center;
+    align-content: center;
+}
+
+ul {
+   /* display: flex;*/
+    align-items: center;
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+li {
+    display: inline-block;
+    margin-right: 1rem;
+
+}
+/**/
+/*h8 {
+    display: flex;*/
+/* justify-content: flex-end;
+    align-items: center;
+    margin-left: 3rem;
+    margin-top: 0.2rem;
+    font-size: 1rem;*/
+/*width: 110px;*/
+/*}*/
+
+.navbar-brand {
+    padding-top: 0.3125rem;
+    padding-bottom: 0.3125rem;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    text-decoration: none;
+    white-space: nowrap;
+    width: 152px;
+}
+
+.image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-link:hover {
+    background-color: rgba(217, 217, 217, 0.17);
+    border-radius: 7px;
+}
+
+.nav-link:active {
+    background-color: rgba(217, 217, 217, 0.17);
+    border-radius: 7px;
+}

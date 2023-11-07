@@ -1,0 +1,5 @@
+﻿.flex_row {
+    padding: 16px 12px 0px;
+    display: flex;
+    justify-content: space-between;
+}

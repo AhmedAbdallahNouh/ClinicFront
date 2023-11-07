@@ -1,0 +1,160 @@
+﻿@page "/addNewUser"
+@inject IAdminService _adminService
+@layout MainLayoutAdmin
+
+<div class="main-container">
+    <h1 class="h3 mb-0 fw-bold text-center color-text form-title">
+        إضافة مستخدم جديد
+    </h1>
+    <div class="container-signup">
+        <EditForm Model="@userRegistritionDTO" class="add-doctor-form row" style="direction:rtl">
+            <DataAnnotationsValidator />
+            <div class="col-lg-6 col-sm-12 form-first-col ">
+                <div class="mb-2 input-container">
+                    <div class="d-flex">
+                        <label class="fw-bold"> الإسم الأول  </label>
+                        <InputText id="fname"
+                        @bind-Value="@userRegistritionDTO.FirstName"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل الإسم الأول" />
+                        <i class="fas fa-user icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => userRegistritionDTO.FirstName)" style=" text-align: center ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                </div>
+                <div class="mb-2 input-container">
+                    <div class="d-flex">
+                        <label class="fw-bold"> الإسم الأخير  </label>
+                        <InputText id="lname"
+                        @bind-Value="@userRegistritionDTO.LastName"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل الإسم الأخير" />
+                        <i class="fas fa-user icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => userRegistritionDTO.LastName)" style=" text-align: center ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                </div>
+                <div class="mb-2 input-container">
+                    <div class="d-flex">
+                        <label class="fw-bold"> إسم المستخدم</label>
+                        <InputText id="user-name"
+                        @bind-Value="@userRegistritionDTO.Username"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل إسم المستخدم" />
+                        <i class="fas fa-user icon"></i>
+
+                    </div>
+                    <ValidationMessage For="@(() => userRegistritionDTO.Username)" style=" text-align: center ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-sm-12 form-first-col">
+                <div class="mb-3 input-container">
+                    <div class="d-flex">
+                        <label for="inputPassword" class="fw-bold">كلمة المرور</label>
+                        <InputText type="password" id="inputPassword"
+                        @bind-Value="@userRegistritionDTO.Password"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل كلمة المرور" />
+                        <i class="fas fa-lock icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => userRegistritionDTO.Password)" style=" text-align: center ; padding-right: 7rem; padding-top: 0.8rem ;" />
+                </div>
+
+                <div class="mb-3 input-container">
+                    <div class="d-flex">
+                        <label for="ConPassword" class="fw-bold"> تأكيد كلمة المرور </label>
+                        <InputText type="password" id="ConPassword"
+                        @bind-Value="@userRegistritionDTO.ConfirmPassword"
+                                   style="padding-left:3rem;"
+                                   class="form-control input_i"
+                                   placeholder="أدخل تأكيد كلمة المرور" />
+                        <i class="fas fa-lock icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => userRegistritionDTO.ConfirmPassword)" style=" text-align: center ; padding-right: 7rem ; padding-top: 0.8rem;" />
+                </div>
+
+                <div class="mb-4 input-container">
+                    <div class="d-flex">
+                        <label for="inputPassword" class="fw-bold">العمر </label>
+                        <InputNumber type="password" id="ConPassword"
+                        @bind-Value="@userRegistritionDTO.Age"
+                                     style="padding-left:3rem;"
+                                     class="form-control input_i"
+                                     placeholder="أدخل عمرك" />
+                        <i class="fas fa-phone-alt icon"></i>
+                    </div>
+                    <ValidationMessage For="@(() => userRegistritionDTO.Age)" style=" text-align: center ; padding-right: 7rem ; padding-top: 0.8rem;" />
+                </div>
+
+                <div class="mb-4  profileimage">
+
+                    @if (!string.IsNullOrEmpty(userRegistritionDTO.Image))
+                    {
+                        <img src="@userRegistritionDTO.Image" class="img" style="border-radius: 50%;" />
+                    }
+                    else
+                    {
+                        <i class="bi bi-person-circle" style="color: #ff838a;"></i>
+                    }
+
+
+                    <div class="profilechange">
+                        <InputFile id="ProfileImage" type="file" OnChange="@HandleFileSelected" class="input_i" style="display:none;" />
+                        <label for="ProfileImage"><i class="fas fa-camera profileicon" style="font-size:1rem;color: #19B5BC"></i></label>
+                    </div>
+                </div>
+                <ValidationMessage For="@(() => userRegistritionDTO.Image)" style=" text-align: center ; padding-right: 7rem ; padding-top: 0.8rem;" />
+
+                <div class="submit-btn-container"><button type="submit" disabled="@(!context.IsModified() || !context.Validate())" @onclick="RegisterNewUser" class="mb-2 btn btn-lg btn-block fw-bold button  ">إضافه</button></div>
+            </div>
+        </EditForm>
+    </div>
+</div>
+
+<ConfirmModel Messagetext="@Messagetext" />
+
+@code {
+
+    public UserRegistritionDTO userRegistritionDTO { get; set; } = new UserRegistritionDTO();
+    [Inject]
+    public IJSRuntime jSRuntime { get; set; }
+    public string Messagetext { get; set; }
+
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            var format = "image/png";
+            var resizedImageFile = await file.RequestImageFileAsync(format, 400, 400);
+
+            using var ms = new MemoryStream();
+            await resizedImageFile.OpenReadStream().CopyToAsync(ms);
+            var buffer = ms.ToArray();
+
+            var imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+
+            userRegistritionDTO.Image = imageDataUrl;
+        }
+    }
+    public async void RegisterNewUser()
+    {
+        var response = await _adminService.AddUser(userRegistritionDTO);
+
+        if (response.StatusCode.ToString() == "OK")
+        {
+            
+            Messagetext = "تم التسجيل بنجاح";
+            userRegistritionDTO = new UserRegistritionDTO();
+        }
+        else
+        {
+            Messagetext = "حدث خطأ, من فضلك حاول مرة أخرى";
+        }
+        await jSRuntime.InvokeVoidAsync("OpenConfirmModel");
+        StateHasChanged();
+    }
+}

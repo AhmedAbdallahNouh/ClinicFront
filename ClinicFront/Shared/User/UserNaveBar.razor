@@ -1,0 +1,76 @@
+﻿<nav class="navbar navbar-expand-lg bg-body-tertiary nav" id="navbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">
+            <img class="navbar-brand logo color_white" id="shownavlogo" src="s copy.png" />
+        </a>
+@*         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+ *@        <button class="navbar-toggler" type="button" @onclick="OpenSide">
+            <i class="fas fa-bars" id="btn"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item ">
+                    <a class="nav-link active color_white image" style="width:100%" aria-current="page" href="/">
+                        <lord-icon src="https://cdn.lordicon.com/slduhdil.json"
+                                   class="lord_icon"
+                                   trigger="hover"
+                                   scale="40"
+                                   colors="primary:#ffffff"
+                                   state="hover-2">
+
+                        </lord-icon>
+                        <h8 class="color_white">الصفحة الرئيسية</h8>
+                    </a>
+                </li>
+               @*  <li class="nav-item dropdown ">
+                    <a class="nav-link dropdown-toggle color_white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        التخصصات
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                    </div>
+                </li> *@
+                <li class="nav-item ">
+                    <a class="nav-link active color_white" aria-current="page" href="/consultation">الأستشارة</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link active color_white" aria-current="page" href="/showallarticles">المقالات</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link active color_white" aria-current="page" href="/Contactus">تواصل معنا</a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link active color_white" aria-current="page" href="/login">تسجيل التدخول</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<UserSideBar/>
+
+@code {
+    [Inject]
+    public IJSRuntime Js { get; set; }
+
+    // public List<ArticleDto>? articleDtos { get; set; } = new List<ArticleDto>();
+    // [Inject]
+    // public IArticleService articleService { get; set; }
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     var allarticles = await articleService.getallArticles();
+    //     if (allarticles != null)
+    //     {
+    //         articleDtos = allarticles;
+    //     }
+    // }
+    public async void OpenSide()
+    {
+        await Js.InvokeVoidAsync("UserSideBar");
+    }
+}

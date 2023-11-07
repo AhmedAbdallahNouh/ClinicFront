@@ -1,7 +1,11 @@
 ﻿function closeModal() {
     $('#exampleModal').modal('hide'); // Assuming 'exampleModal' is the ID of your modal
 }
-
+function OpenConfirmModel() {
+    $(document).ready(function () {
+        $('#ConfirmModal').modal('show');
+    });
+}
 //window.deletePopover = function () {
 //    var deleteBtn = document.getElementById("delete-category-btn");
 //    var isDisabled = deleteBtn.getAttribute('disabled');

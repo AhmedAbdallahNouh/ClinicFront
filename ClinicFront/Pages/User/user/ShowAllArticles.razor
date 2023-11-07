@@ -1,44 +1,46 @@
 ﻿@page "/showallarticles"
-
+@layout MainLayoutUser
 <div class="backgroundimgOfPage"></div>
 
 
-<div class="container-lg row main_container">
-    @foreach (var article in articleDtos)
-    {
-        <div class="cardd rounded-3 col-lg-5 col-md-12 col-sm-12">
-            <div class="card-body">
-                <div class="row" style="justify-content:flex-end">
-                    <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8 flex_column" style="justify-content:flex-start;">
-                        <div>
-                            <div class="flex">
-                                <h4><b>@article.Title</b></h4>
-                            </div>
-                            <div class="flex">
-                                <h6>@article.SubTitle</h6>
-                            </div>
-                            <div class="flex">
-                                <p><b>@article.AppUserNmae</b></p><p><b>@article.ArticleDate.ToString("MMMM dd yyyy")</b></p>
+<div class="main_container">
+    <div class="row" style="justify-content:space-evenly;width:100%;margin-top: 5rem;">
+        @foreach (var article in articleDtos)
+        {
+            <a href="/showonearticle/@article.Id" class="cardd rounded-3 col-lg-5 col-md-12 col-sm-12">
+                <div class="card-body">
+                    <div class="row" style="justify-content:flex-end">
+                        <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8 flex_column" style="justify-content:flex-start;">
+                            <div>
+                                <div class="flex">
+                                    <h4><b>@article.Title</b></h4>
+                                </div>
+                                <div class="flex">
+                                    <h6>@article.SubTitle</h6>
+                                </div>
+                                <div class="flex">
+                                    <p><b>@article.AppUserNmae</b></p><p><b>@article.ArticleDate.ToString("MMMM dd yyyy")</b></p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="col-sm-12 col-md-4 col-lg-3 col-xl-3 mb-1 mb-lg-0 border-start">
-                        <div class="bg-image hover-zoom ripple rounded ripple-surface div_img">
-                            @if (!string.IsNullOrEmpty(article.ArticleImage))
-                            {
-                                <img src="@article.ArticleImage" class="w-100" />
-                            }
-                            else
-                            {
-                                <img src="assets/images/doc.jpeg" class="w-100" />
-                            }
+                        <div class="col-sm-12 col-md-4 col-lg-3 col-xl-3 mb-1 mb-lg-0 border-start">
+                            <div class="bg-image hover-zoom ripple rounded ripple-surface div_img">
+                                @if (!string.IsNullOrEmpty(article.ArticleImage))
+                                {
+                                    <img src="@article.ArticleImage" class="w-100" />
+                                }
+                                else
+                                {
+                                    <img src="assets/images/doc.jpeg" class="w-100" />
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    }
+            </a>
+        }
+    </div>
 </div>
 
 @code {
@@ -54,9 +56,5 @@
         {
             articleDtos = allarticles;
         }
-
-        StateHasChanged();
-        base.OnInitialized();
     }
-
 }

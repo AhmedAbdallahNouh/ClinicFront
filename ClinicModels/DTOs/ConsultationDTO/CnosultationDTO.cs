@@ -1,4 +1,5 @@
 ﻿using ClinicModels.DTOs.ConsultationImageDTO;
+using ClinicModels.DTOs.DoctorDTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -13,9 +14,7 @@ namespace ClinicModels.DTOs.ConsultationDTO
     {
         
         public string? Answer { get; set; }                        
-        public CategoryDTO? categoryDTO { get; set; } = new CategoryDTO();
+        public CategoryDTO? categoryDTO { get; set; }
         public  List<ConsulationImageDTO> consultationImageDTOs { get; set; } = new List<ConsulationImageDTO>(); //4
-
-
     }
 }

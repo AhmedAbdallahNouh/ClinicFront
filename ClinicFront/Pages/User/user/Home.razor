@@ -1,0 +1,106 @@
+﻿@page "/"
+@layout MainLayoutUser
+<br />
+<br />
+@if (categoryDTOs != null)
+{
+    <div class="background-img"></div>
+    @* \\\\\\\\\\\\\\\\\\\\\\\banar\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ *@
+    <div class="row" style="display:flex;align-items: center;justify-content: space-around;width: 80%;margin: auto;">
+
+        <div class="col-lg-5 col-sm-12 col-md-6 " style="display:flex;justify-content:center;flex-direction: column;align-items: center;margin: 5rem;">
+            <div class="text-3">
+                <p style=" position: relative" ;>
+                    <h2> من نحن؟ </h2>
+                    
+                    DRsJo.com تنتمي إلى شركة تجميلي ، الشبكة الرائدة عالمياً للبوابات الإلكترونية الخاصة بمحتوى الطب وجراحة التجميل. مساحة للمهتمين للالتقاء وتبادل الخبرات حول عمليات التجميل والتواصل مع أفضل الأطباء/الطبيبات.
+                    <br /><br>
+                    يزور ملايين الأشخاص من جميع أنحاء العالم بوابات تجميلي كل شهر للبحث عن تقييمات الأطباء والمعلومات التفصيلية والموضوعية المتباينة حول عمليات التجميل، والتدخلات الجراحية، وتقييم المرضى، وإجابات الخبراء؛ لأن هدفهم اكتشاف الإجراءات والأطباء المناسبين لاحتياجاتهم.
+                </p>
+            </div>
+            <div>
+                <a class="paner-btn" href="/Contactus">إنضم إلا شبكتنا </a>
+            </div>
+        </div>
+        <div class="col-lg-5 col-sm-12 col-md-6 ">
+            <img src="Layer 7.png" style="width:100%;">
+        </div>
+    </div>
+    @* \\\\\\\\\\\\\\\\\\\\\\\\\\\\\card\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ *@
+    <section class="home__families u-mt--7 d:u-mt--5 u-render__position--relative row" style=" margin-bottom: 6rem;">
+
+
+        <a href="/consultation" class="box box--white col-md-6 col-sm-12 col-lg-4 ">
+            <img src="اسال.png" class="img-cards" width="96" height="93" alt="اسأل الطبيب">
+            اسأل الطبيب
+        </a>
+
+
+        <a onclick="document.getElementById('Categories').scrollIntoView({behavior:'smooth'})" class="box box--white col-md-6 col-sm-12 col-lg-4 ">
+            <img src="التخصصات.png" class="img-cards" width="96" height="93" alt="التخصصات">
+            التخصصات
+        </a>
+
+        <a href="/showallarticles" class="box box--white col-md-6 col-sm-12 col-lg-4">
+            <img src="المقالات.png" class="img-cards" width="96" height="93" alt="المقالات">
+            المقالات
+        </a>
+
+    </section>
+    @* \\\\\\\\\\\\\\\\\\\\\\\Doctors\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ *@
+    <h2>افضل الاطباء لدينا</h2>
+    <DoctorCard/>
+
+
+    <h2 id="Categories">التخصصات</h2>
+    <div class="taa row g-4">
+
+        @foreach (var categorydto in categoryDTOs)
+        {
+            <div class=" card-taa col-lg-4 col-md-6 col-sm-12 ml-3 mr-3">
+                <h3><b>@categorydto.Name</b></h3>
+                @if (categorydto.serviceDTOs != null && categorydto.serviceDTOs.Count > 0)
+                {
+                    @foreach (var servicedto in categorydto.serviceDTOs)
+                    {
+                        <a href="/servicewithdoctors/@servicedto.Id"><b>@servicedto.Title</b></a>
+                    }
+                }
+            </div>
+        }
+    </div>
+
+    <br /><br />
+}
+else
+{
+    @for (int i = 0; i < 5; i++)
+    {
+        <!-- Skeleton Card -->
+        <div class="skeleton-card swiper-slide">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-details">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line"></div>
+            </div>
+        </div>
+    }
+}
+
+@code {
+    public List<CategoryDTO> categoryDTOs { get; set; } = new List<CategoryDTO>();
+    [Inject]
+    public ICategoryService categoryService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var categories = await categoryService.getallcategory();
+        if (categories != null)
+        {
+            categoryDTOs = categories;
+        }
+    }
+}
+
+

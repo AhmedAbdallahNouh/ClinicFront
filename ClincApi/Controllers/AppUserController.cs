@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using ClinicModels.DTOs.MainDTO;
 using ClinicModels.DTOs.DoctorDTO;
 using ClinicModels.DTOs.DoctorServiceDTO;
+using ClinicModels.DTOs.UserDTO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -18,10 +19,12 @@ namespace ClincApi.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signmanger;
-        public AppUserController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        private readonly ClinicDBContext _dbContext;
+        public AppUserController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ClinicDBContext dbContext)
         {
             this._userManager = userManager;
             this._signmanger = signInManager;
+            this._dbContext = dbContext;
         }
 
         [HttpGet]
@@ -30,21 +33,53 @@ namespace ClincApi.Controllers
             List<AppUser> users = await _userManager.Users.ToListAsync();
             if (users.Count != 0) return Ok(users);
             else return NotFound();
-        }
-        [HttpGet("/api/getalldoctors")]
-        public async Task<ActionResult> GetAllDoctors()
-            {
+        } 
+        
+        [HttpGet("/api/getdoctorspagination")]
+        public async Task<ActionResult> GetDoctorsPagination()
+        {
             List<AppUser> users = (List<AppUser>)await _userManager.GetUsersInRoleAsync("Doctor");
-            if (users.Count != 0)
+            List<AppUser> usersWithfirstname_lastname = users.Where(u => u.FirstName != null && u.LastName != null).ToList();
+            List<AppUser> usersorderbyVisitedDoctorPage = usersWithfirstname_lastname.OrderByDescending(d => d.VisitedDoctorPage).ToList();
+            var result = usersorderbyVisitedDoctorPage.Skip(0).Take(5).ToList();
+
+            if (result.Count != 0)
             {
                 List<DoctorDTO> doctorDTOs = new List<DoctorDTO>();
 
-                foreach (var doctor in users)
+                foreach (var doctor in result)
                 {
                     DoctorDTO doctorDTO = new DoctorDTO(doctor.Id, doctor.FirstName, doctor.LastName, doctor.Age, doctor.PhoneNumber, doctor.Address
                                              , doctor.LocationLat, doctor.LocationLong, doctor.FaceBook, doctor.Instgram, doctor.WhatsUpNumber,
                                              doctor.StartSubscriptionDate, doctor.EndSubscriptionDate, doctor.Delete_Doctor,
-                                             doctor.Image, doctor.CoverImage,doctor.AdvertisementFlag);
+                                             doctor.Image, doctor.CoverImage, doctor.AdvertisementFlag,doctor.VisitedDoctorPage, doctor.UserName, doctor.Discription, doctor.Email);
+                    doctorDTOs.Add(doctorDTO);
+                }
+                return Ok(doctorDTOs);
+            }
+            else return NotFound();
+        }
+
+        [HttpGet("/api/getalldoctors")]
+        public async Task<ActionResult> GetAllDoctors()
+        {
+            List<AppUser> users = (List<AppUser>)await _userManager.GetUsersInRoleAsync("Doctor");
+            List<string> userIds = users.Select(u => u.Id).ToList();
+            List<AppUser> doctorsWithCategories = await _dbContext.AppUsers.Where(u => userIds.Contains(u.Id)).Include(u => u.Category).ToListAsync();
+            if (doctorsWithCategories.Count != 0)
+            {
+                List<DoctorDTO> doctorDTOs = new List<DoctorDTO>();
+
+                foreach (var doctor in doctorsWithCategories)
+                {
+                    DoctorDTO doctorDTO = new DoctorDTO(doctor.Id, doctor.FirstName, doctor.LastName, doctor.Age, doctor.PhoneNumber, doctor.Address
+                                             , doctor.LocationLat, doctor.LocationLong, doctor.FaceBook, doctor.Instgram, doctor.WhatsUpNumber,
+                                             doctor.StartSubscriptionDate, doctor.EndSubscriptionDate, doctor.Delete_Doctor,
+                                             doctor.Image, doctor.CoverImage, doctor.AdvertisementFlag, doctor.VisitedDoctorPage,doctor.UserName,doctor.Discription, doctor.Email)
+                    {
+                        categoryDTO = new CategoryDTO { Name = doctor.Category.Name,Id = doctor.Category.Id},
+                        CategoryId = doctor.CategoryId,
+                    };
                     doctorDTOs.Add(doctorDTO);
                 }
                 return Ok(doctorDTOs);
@@ -55,9 +90,13 @@ namespace ClincApi.Controllers
         public async Task<ActionResult> GetDoctorsFlags()
         {
             List<AppUser> users = (List<AppUser>) await _userManager.GetUsersInRoleAsync("Doctor");
+            List<string> userIds = users.Select(u => u.Id).ToList();
+            List<AppUser> usersWithCategories = await _dbContext.AppUsers.Where(u => userIds.Contains(u.Id) && u.AdvertisementFlag != null && u.AdvertisementFlag > 0).Include(u => u.Category).ToListAsync();
+
             if (users.Count != 0)
             {
-                var doctorsAdvertisementFlag =   users.Where(u => u.AdvertisementFlag != 0).Select(u => u.AdvertisementFlag).ToList();
+                var doctorsAdvertisementFlag = usersWithCategories.Where(u => u.AdvertisementFlag != 0).Select(u => new DoctorDTO {Id = u.Id , FirstName = u.FirstName ,LastName = u.LastName,Image = u.Image ,AdvertisementFlag = u.AdvertisementFlag, categoryDTO = new CategoryDTO(){ Name = u.Category.Name }}).ToList();
+                    doctorsAdvertisementFlag.OrderBy(d => d.AdvertisementFlag).ToList();
                 if (doctorsAdvertisementFlag.Count != 0) return Ok(doctorsAdvertisementFlag);
               return NotFound();
             }
@@ -112,7 +151,7 @@ namespace ClincApi.Controllers
                 {
                     DoctorDTO doctorDTO = new DoctorDTO(id, doctor.FirstName, doctor.LastName, doctor.Age, doctor.PhoneNumber, doctor.Address
                       , doctor.LocationLat, doctor.LocationLong, doctor.FaceBook, doctor.Instgram, doctor.WhatsUpNumber, doctor.StartSubscriptionDate, doctor.EndSubscriptionDate,
-                      doctor.Delete_Doctor, doctor.Image, doctor.CoverImage,doctor.AdvertisementFlag);
+                      doctor.Delete_Doctor, doctor.Image, doctor.CoverImage,doctor.AdvertisementFlag,doctor.VisitedDoctorPage, doctor.UserName, doctor.Discription, doctor.Email);
                     if(doctor.Category != null)
                     {
                         CategoryDTO categoryDTO = new CategoryDTO()
@@ -187,36 +226,84 @@ namespace ClincApi.Controllers
                 else return BadRequest();
             }
             return BadRequest("model state invalid");
+        } 
+        [HttpPost("/api/userregistration")]
+        public async Task<ActionResult> userRegistration(UserRegistritionDTO userRegistritionDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    AppUser user = new()
+                    {
+                        FirstName = userRegistritionDTO.FirstName,
+                        LastName = userRegistritionDTO.LastName,
+                        Age = userRegistritionDTO.Age,
+                        UserName = userRegistritionDTO.Username,
+                        Image = userRegistritionDTO.Image,
+                    };
+                    IdentityResult addUserResult = await _userManager.CreateAsync(user, userRegistritionDTO.Password);
+
+                    if (addUserResult.Succeeded)
+                    {
+                        try
+                        {
+                            IdentityResult addRoleToUserResult = await _userManager.AddToRoleAsync(user, "User");
+                        }
+                        catch (Exception ex)
+                        {
+                            return BadRequest(ex.Message);
+                        }
+                        return Ok();
+                    }
+                    else return BadRequest(addUserResult.Errors);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+               
+            }
+            return BadRequest("model state invalid");
         }
 
         [HttpPost("/api/doctorregister")]
         public async Task<ActionResult> DoctorRegisterationByAmdin(DoctorRegisterationByAmdinDTO doctorRegisterationByAmdinDTO)
         {
-            if (ModelState.IsValid)
+            try
             {
-                AppUser user = new()
+                if (ModelState.IsValid)
                 {
-                    StartSubscriptionDate = doctorRegisterationByAmdinDTO.StartSubscriptionDate,
-                    EndSubscriptionDate = doctorRegisterationByAmdinDTO.EndSubscriptionDate,
-                    UserName = doctorRegisterationByAmdinDTO.UserName,
-                };
-                IdentityResult addUserResult = await _userManager.CreateAsync(user, doctorRegisterationByAmdinDTO.Password);
-                doctorRegisterationByAmdinDTO.Id = user.Id;
-                if (addUserResult.Succeeded)
-                {
-                    try
+                    AppUser user = new()
                     {
-                        IdentityResult addRoleToUserResult = await _userManager.AddToRoleAsync(user, "Doctor");
+                        StartSubscriptionDate = doctorRegisterationByAmdinDTO.StartSubscriptionDate,
+                        EndSubscriptionDate = doctorRegisterationByAmdinDTO.EndSubscriptionDate,
+                        UserName = doctorRegisterationByAmdinDTO.UserName,
+                        CategoryId = doctorRegisterationByAmdinDTO.CategoryId,
+                    };
+                    IdentityResult addUserResult = await _userManager.CreateAsync(user, doctorRegisterationByAmdinDTO.Password);
+                    doctorRegisterationByAmdinDTO.Id = user.Id;
+                    if (addUserResult.Succeeded)
+                    {
+                        try
+                        {
+                            IdentityResult addRoleToUserResult = await _userManager.AddToRoleAsync(user, "Doctor");
+                        }
+                        catch { }
+                        return Ok(doctorRegisterationByAmdinDTO);
                     }
-                    catch { }
-                    return Ok(doctorRegisterationByAmdinDTO);
+                    else return BadRequest();
                 }
-                else return BadRequest();
+                return BadRequest();
             }
-            return BadRequest("model state invalid");
+            catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+            
         }
         [HttpPut("/api/editdoctorprofile")]
-        public async Task<ActionResult> EditDoctorProflie(DoctorUpdatingProfileDTO doctorUpdatingProfileDTO)
+        public async Task<ActionResult> EditDoctorProflie(DoctorDTO doctorUpdatingProfileDTO)
         {
 
             try
@@ -229,13 +316,18 @@ namespace ClincApi.Controllers
 
                         doctorToUpdateProfile.FirstName = doctorUpdatingProfileDTO.FirstName;
                         doctorToUpdateProfile.LastName = doctorUpdatingProfileDTO.LastName;
-                        doctorToUpdateProfile.Email = doctorUpdatingProfileDTO.Email;
                         doctorToUpdateProfile.PhoneNumber = doctorUpdatingProfileDTO.PhoneNumber;
                         doctorToUpdateProfile.Address = doctorUpdatingProfileDTO.Address;
+                        doctorToUpdateProfile.Discription = doctorUpdatingProfileDTO.Discription;
                         doctorToUpdateProfile.Age = doctorUpdatingProfileDTO.Age;
                         doctorToUpdateProfile.LocationLat = doctorUpdatingProfileDTO.LocationLat;
                         doctorToUpdateProfile.LocationLong = doctorUpdatingProfileDTO.LocationLong;
+                        doctorToUpdateProfile.Email = doctorUpdatingProfileDTO.Email;
                         doctorToUpdateProfile.WhatsUpNumber = doctorUpdatingProfileDTO.WhatsUpNumber;
+                        doctorToUpdateProfile.FaceBook = doctorUpdatingProfileDTO.FaceBook;
+                        doctorToUpdateProfile.Instgram = doctorUpdatingProfileDTO.Instgram;
+                        doctorToUpdateProfile.Image = doctorUpdatingProfileDTO.Image;
+                        doctorToUpdateProfile.CoverImage = doctorUpdatingProfileDTO.CoverImage;
 
                         IdentityResult updateDoctorProfileResult = await _userManager.UpdateAsync(doctorToUpdateProfile);
                         return updateDoctorProfileResult.Succeeded ? Ok(doctorToUpdateProfile) : BadRequest("faild to save changes");
@@ -256,27 +348,26 @@ namespace ClincApi.Controllers
         }
 
         [HttpPut("/api/EndSubscriptionDate")]
-        public async Task<ActionResult> UpdateEndSubscriptionDate(DoctorDTO doctorDTO)
+        public async Task<ActionResult> UpdateEndSubscriptionDateAndViewPage(UpdateDoctorAds updateDoctorAds)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    AppUser? doctor = await GetUserbyIdAsync(doctorDTO.Id);
+                    AppUser? doctor = await GetUserbyIdAsync(updateDoctorAds.Id);
                     if (doctor != null)
                     {
-
-                        doctor.EndSubscriptionDate = doctorDTO.EndSubscriptionDate;
+                        doctor.VisitedDoctorPage = updateDoctorAds.VisitedDoctorPage;
+                        doctor.EndSubscriptionDate = updateDoctorAds.EndSubscriptionDate;
+                        doctor.AdvertisementFlag = updateDoctorAds.AdvertisementFlag;
 
                         IdentityResult updateDoctorProfileResult = await _userManager.UpdateAsync(doctor);
                         return updateDoctorProfileResult.Succeeded ? Ok(doctor) : BadRequest("faild to save changes");
 
                     }
                     else return NotFound("Doctor is null");
-
                 }
                 return BadRequest("model state invalid");
-
             }
             catch (Exception ex)
             {
@@ -324,19 +415,8 @@ namespace ClincApi.Controllers
 
 
         }
-        [HttpDelete]
-        public async Task<ActionResult> DeleteUser(string id)
-        {
-            AppUser? user = await GetUserbyIdAsync(id);
 
-            var result = await _userManager.DeleteAsync(user);
-            if (result.Succeeded)
-            {
-                return Ok();
-            }
-            return BadRequest();
-        }
-        [HttpDelete("/api/deletedoctor")]
+        [HttpPut("/api/deletedoctor/{id}")]
         public async Task<ActionResult> DeleteDoctor(string id)
         {
             try
@@ -348,7 +428,7 @@ namespace ClincApi.Controllers
                     {
                         doctor.Delete_Doctor = 1;
                         IdentityResult Result = await _userManager.UpdateAsync(doctor);
-                        return Result.Succeeded ? Ok(doctor) : BadRequest("faild to save changes");
+                        return Result.Succeeded ? Ok(doctor) : BadRequest("failed to save changes");
 
                     }
                     else return NotFound("user is null");
@@ -361,7 +441,19 @@ namespace ClincApi.Controllers
             }
         }
 
+        [HttpDelete]
+        public async Task<ActionResult> DeleteUser(string id)
+        {
+            AppUser? user = await GetUserbyIdAsync(id);
 
+            var result = await _userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+       
         //[HttpPost("/api/login")]
         //public async Task<IActionResult> Login(LoginDTO loginDTO)
         //{

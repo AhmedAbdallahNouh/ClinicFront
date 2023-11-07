@@ -1,28 +1,165 @@
-﻿
-body {
+﻿body {
     font-family: system-ui;
 }
+
 h1 {
     margin-top: 1rem;
     margin-top: 5%;
+    /* font-size: 100%;*/
 }
+
+root {
+    --swiper-theme-color: #19B5BC;
+}
+
 .main-container {
-    background-image: url(assets/images/b-g-doctor.jpeg);
+    /* background-image: url(assets/images/b-g-doctor.jpeg);*/
+    background-color: #f7f7f7;
     background-size: contain;
     width: 100%;
     height: 100%;
     position: fixed;
     top: 0rem;
     left: 0rem;
+    font-size: 100%;
 }
+
 .container-signup {
     padding-top: 40px;
     padding-bottom: 40px;
     width: 80%;
-    background-color: #0017515c;
+    background-color: white;
     margin-left: 3rem;
     border-radius: 2rem;
 }
+
+
+
+.profileimage {
+    position: relative;
+    top: 1%;
+    right: 29%;
+    width: 8rem;
+    height: 8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .5s ease;
+}
+
+    .profileimage i {
+        font-size: 8.4rem;
+        transition: all .5s ease;
+    }
+
+.profilechange {
+    background-color: transparent;
+    border: none;
+    color: white;
+    position: absolute;
+    bottom: .5rem;
+    right: .5rem;
+}
+
+    .profilechange i {
+        padding: 5px;
+        cursor: pointer;
+        color: var(--white);
+    }
+
+.profileicon {
+    font-size: 13px;
+}
+
+.input_i:focus + label + i {
+    color: #03206C;
+}
+
+.input_i:focus + label + svg {
+    color: #03206C !important;
+}
+
+.input_i:not(:empty) + label {
+    display: none;
+}
+
+
+
+
+.bi-person-circle::before {
+    background-color: white !important;
+    border-radius: 51% !important;
+}
+
+
+
+@media (min-width: 992px) and (max-width: 1237px) {
+    .profileimage {
+        right: 40% !important;
+    }
+
+        .profileimage i:nth-child(1) {
+            font-size: 7.4rem !important;
+        }
+}
+
+@media (min-width: 730px) and (max-width: 991px) {
+    .profileimage {
+        right: 30% !important;
+    }
+}
+
+@media (min-width: 511px) and (max-width: 591px) {
+    .profileimage {
+        right: 21% !important;
+    }
+
+        .profileimage i:nth-child(1) {
+            font-size: 7.4rem !important;
+        }
+}
+
+@media (min-width: 350px) and (max-width: 482px) {
+    .profileimage {
+        right: 9% !important;
+    }
+
+        .profileimage i {
+            font-size: 7.4rem !important;
+        }
+
+    .profilechange {
+        width: 2.8rem !important;
+        height: 21px !important;
+    }
+
+    .fa-camera:before {
+        right: 12px !important;
+        position: absolute !important;
+        top: -1px !important;
+        font-size: 16px !important;
+    }
+}
+
+
+.input_i:focus + label {
+    position: absolute;
+    font-size: 11px;
+    margin-left: 3rem;
+    top: -1rem;
+    right: 2rem;
+    background-color: #051642;
+    color: white;
+    border-radius: 10px;
+    padding: 4px 6px;
+    transition: all .5s ease;
+}
+
+.img {
+    width: 100%;
+    height: 100%;
+}
+
 
 
 
@@ -31,9 +168,9 @@ h1 {
 
 
     .container-signup {
-        width: 74%!important;
-        /*margin-left:auto;*/
-        margin-right:auto;
+        width: 74% !important;
+        /margin-left:auto;
+        / margin-right: auto;
     }
 
     .input-container {
@@ -48,20 +185,23 @@ h1 {
     .sub-input-container div {
         width: 103% !important;
     }
-    label{
-        width:49%;
+
+    label {
+        width: 49%;
     }
 }
 
-@media (max-width:1237px){
+@media (max-width:1237px) {
     .container-signup {
-        margin-left:auto;
+        margin-left: auto;
         margin-right: auto;
     }
-    h1{
-        width:103% !important;
+
+    h1 {
+        width: 103% !important;
     }
 }
+
 @media (max-width:991px) {
     .form-first-col {
         margin-right: 15%;
@@ -74,11 +214,11 @@ h1 {
     }
 
     label {
-        width: 53%!important;
+        width: 53% !important;
     }
 
     input {
-        width: 105%!important;
+        width: 105% !important;
     }
 
     .sub-label {
@@ -87,36 +227,38 @@ h1 {
     }
 
     .sub-input-container {
-        width: 92%!important;
+        width: 92% !important;
     }
 }
 
-@media(max-width:488px){
-    .icon{
-        top:36px!important;
+@media(max-width:488px) {
+    .input-container {
+        margin-top: 0 !important;
     }
-    .input-container div{
-        display: inline !important;
+
+        .input-container div {
+            display: inline !important;
+        }
+
+    .icon {
+        top: 36px !important;
     }
+
     label {
         width: 69% !important;
         padding-right: 3rem;
     }
-    .sub-label {
-        width: 70% !important;
-    }
+
     .form-second-col {
         margin-top: -3rem !important;
     }
-    h3 {
-        margin-top: 4rem !important;
-    }
 }
+
 form {
-    /*width: 100%;*/
-    /*max-width: 380px;*/
-    /*margin: auto;*/
-    padding: 10px !important;
+    /width: 100%;
+    / /max-width: 380px;
+    / /margin: auto;
+    / padding: 10px !important;
     width: 74% !important;
     margin-left: auto !important;
     margin-right: auto !important;
@@ -133,7 +275,7 @@ form {
 
 .profilechange {
     border: 1px solid white;
-    width: 25px;
+    width: 1.8rem !important;
     border-radius: 50%;
     overflow: hidden;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 0.2px 1px, rgba(0, 0, 0, 0.16) 0px 0.2px 1px;
@@ -212,8 +354,8 @@ select {
 
 .input-container {
     display: -ms-flexbox;
-    /*display: flex;*/
-    width: 60%;
+    /display: flex;
+    / width: 60%;
     margin: 2rem 0 2rem 0;
     position: relative;
 }
@@ -295,25 +437,25 @@ select {
 }
 
 .form-signup input[type="text"]:focus {
-    border: 1px solid #f7e3ac;
+    border: 1px solid #ff838a;
     box-shadow: 0px 0px 2px 2px rgba(31, 149, 161, 0.2);
 }
 
 .input_i:focus + i {
-    color: #522b5b;
+    color: #ff838a;
 }
 
 .color-button,
 .color-button:hover {
-    background-color: #f7e3ac;
+    background-color: #ff838a;
     color: white;
     font-weight: bold;
 }
 
 .button {
-    margin: auto 28%;
+    margin: auto 13%;
     width: 50%;
-    background-color: #2b124c;
+    background-color: #ff838a;
     color: white
 }
 
@@ -367,7 +509,6 @@ select {
 
 
 .form-second-col {
-    margin-top: 4rem;
 }
 
 .sub-input-container {
@@ -377,7 +518,8 @@ select {
 
 h3 {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-top: 5rem;
+    font-size: 100%;
 }
 
 .submit-btn-container {
@@ -386,5 +528,17 @@ h3 {
 
 .validation-div {
 }
-  
+/*row {
+    width: 74%;
+    margin-left: auto;
+    margin-right: auto;
+    border: black solid;
+}
+*/
 
+
+/*container {
+    border: red solid;
+    width: 80%;
+}
+*/

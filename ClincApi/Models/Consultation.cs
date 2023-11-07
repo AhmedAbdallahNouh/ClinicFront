@@ -9,6 +9,9 @@ namespace ClincApi.Models
         public string Question { get; set; }
         public string Description { get; set; }
         public string? Answer { get; set; }
+        [ForeignKey("Doctor")]
+        public string? DoctorId { get; set; }
+        public AppUser? Doctor { get; set; }
         [ForeignKey("Category")]
         public int CategoryId { get; set; }
         public Category? Category { get; set; }

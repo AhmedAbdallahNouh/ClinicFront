@@ -46,10 +46,10 @@ namespace ClincApi.Controllers
             }
         }
 
-        [HttpDelete]
-        public IActionResult DeleteService(string doctorId, int serviceId)
+        [HttpDelete("{DoctorServiceId}/{ServiceId}")]
+        public IActionResult DeleteService(string DoctorServiceId,int ServiceId)
         {
-            DoctorService doctorService = _doctorServiceDTORepo.GetDoctorServiceById(doctorId,serviceId);
+            DoctorService doctorService = _doctorServiceDTORepo.GetDoctorServiceById(DoctorServiceId,ServiceId);
             if (doctorService == null)
             {
                 return NotFound();

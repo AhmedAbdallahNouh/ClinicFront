@@ -1,47 +1,75 @@
-﻿@page "/showonearticle/{id}"
+﻿@page "/showonearticle/{id:int}"
 
 <div class="backgroundimgOfPage"></div>
 
 
-<div class="container-lg row main_container">
+<div class="main_container">
     <header>
         <h1><b>@articleDto.Title</b></h1>
         <img src="@articleDto.ArticleImage" class="img" />
         <div style="position:relative;">
             <div class="flex flexRowCenter">
-                <img src="@articleDto.AppUserImage"/>
-                <p><b>د/ @articleDto.AppUserNmae</b></p>
+                @if (!string.IsNullOrEmpty(articleDto.AppUserImage))
+                {
+                    <img src="@articleDto.AppUserImage" class="appuserimg" />
+                } 
+                @if (!string.IsNullOrEmpty(articleDto.AppUserImage))
+                {
+                    <p><b>د/ @articleDto.AppUserNmae</b></p>
+                }
             </div>
-            <p><b>@articleDto.ArticleDate.ToString("MMMM dd yyyy")</b></p>
+            <p class="articledate"><b>تاريخ الأنشاء @articleDto.ArticleDate.ToString("MMMM dd yyyy")</b></p>
         </div>
         <hr />
     </header>
 
     <article>
-        @foreach(var sections in articleDto.Sections)
-        {
-            <h4>@sections.Title</h4>
-            <p>@sections.Content</p>
-            <img src="@sections.SectionImage"/>
-        }
+        <SfRichTextEditor Readonly="true" @bind-Value="@htmlValue">
+            <RichTextEditorToolbarSettings Enable="false"></RichTextEditorToolbarSettings>
+        </SfRichTextEditor>
     </article>
 </div>
+
+
+<style>
+    .e-richtexteditor .e-rte-content{
+        overflow-wrap: break-word;
+        height:fit-content;
+    }
+</style>
 
 
 @code {
     [Parameter]
     public int Id { get; set; }
     public ArticleDto articleDto { get; set; } = new ArticleDto();
-    public IArticleService articleService { get; set; }
+    [Inject]
+    public IArticleService? articleService { get; set; }
+    private MarkdownPipeline pipeline { get; set; }
+    private string htmlValue { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        var article = await articleService.getArticlebyid(Id);
-        if (article != null)
+        if(Id != 0)
         {
-            articleDto = article;
+            var article = await articleService.getArticlebyid(Id);
+            if (article != null)
+            {
+                articleDto = article;
+                pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build(); 
+                this.htmlValue = Markdig.Markdown.ToHtml(articleDto.Content, pipeline);
+            }
         }
-
-        StateHasChanged();
-        base.OnInitialized();
     }
+
+    //private void onValueChange(Syncfusion.Blazor.RichTextEditor.ChangeEventArgs args)
+    //{
+    //    if (args.Value == null)
+    //    {
+    //        this.htmlValue = null;
+    //    }
+    //    else
+    //    {
+    //        this.htmlValue = Markdig.Markdown.ToHtml(args.Value, pipeline);
+    //    }
+    //}
 }

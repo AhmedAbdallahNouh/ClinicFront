@@ -1,0 +1,315 @@
+﻿#contact {
+    background-color: #19b5bc30;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 45px;
+}
+
+.contact-box {
+    width: clamp(123px, 120%, 1165px);
+    margin: 0px 9px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.contact-links,
+.contact-form-wrapper {
+    width: 50%;
+    padding: 8% 5% 10% 5%;
+}
+
+.contact-links {
+    background-image: url("1234.svg");
+    border-radius: 10px 0 0 10px;
+    background-repeat: no-repeat;
+    margin-top: 10rem;
+}
+
+.contact-form-wrapper {
+    border-radius: 0 10px 10px 0;
+}
+
+h2 {
+    font-family: 'Arimo', sans-serif;
+    color: black;
+    font-size: clamp(30px, 6vw, 60px);
+    letter-spacing: 2px;
+    text-align: center;
+    transform: scale(.95, 1);
+    display: flex;
+    align-items: stretch;
+    margin: 2rem;
+    justify-content: space-evenly;
+}
+
+.form-item {
+    position: relative;
+}
+
+label,
+input,
+textarea {
+    font-family: 'Poppins', sans-serif;
+}
+
+label {
+    position: absolute;
+    top: 10px;
+    left: 84%;
+    color: #00000087;
+    font-size: clamp(15px, 1.5vw, 18px);
+    pointer-events: none;
+    user-select: none;
+    direction: rtl;
+}
+
+input,
+textarea {
+    width: 100%;
+    outline: 0;
+    border: 1px solid #fff;
+    border-radius: 60px;
+    margin-bottom: 32px;
+    padding: 12px;
+    direction: rtl;
+    font-size: clamp(15px, 1.5vw, 18px);
+}
+
+    input:focus + label,
+    input:valid + label,
+    textarea:focus + label,
+    textarea:valid + label {
+        font-size: clamp(15px, 1.5vw, 18px);
+        color: black;
+        top: -30px;
+        transition: all .225s ease;
+        left: 90%;
+    }
+
+.paner-btn {
+    background-color: #ff838a;
+    position: absolute;
+    bottom: 15%;
+    left: 13%;
+    width: 25% !important;
+    filter: drop-shadow(2px 2px 3px #0003);
+    color: #fff;
+    font-family: "Poppins", sans-serif;
+    font-size: clamp(16px, 1.6vw, 18px);
+    display: block;
+    padding: 13px;
+    margin: 2px auto;
+    border: none;
+    border-radius: 117px;
+    cursor: pointer;
+    user-select: none;
+    transition: 0.2s;
+}
+
+    .paner-btn:hover {
+        transform: scale(1.1, 1.1);
+    }
+
+    .paner-btn:active {
+        transform: scale(1.1, 1.1);
+        filter: sepia(0.5);
+    }
+
+.submit-btn {
+    background-color: #19b5bc;
+    width: 100%;
+    filter: drop-shadow(2px 2px 3px #0003);
+    color: #fff;
+    font-family: "Poppins", sans-serif;
+    font-size: clamp(16px, 1.6vw, 18px);
+    display: block;
+    padding: 13px;
+    margin: 2px auto;
+    border: none;
+    border-radius: 117px;
+    cursor: pointer;
+    user-select: none;
+    transition: 0.2s;
+}
+
+    .submit-btn:hover {
+        transform: scale(1.1, 1.1);
+    }
+
+    .submit-btn:active {
+        transform: scale(1.1, 1.1);
+        filter: sepia(0.5);
+    }
+
+@media only screen and (max-width: 800px) {
+    h2 {
+        font-size: clamp(40px, 10vw, 60px);
+    }
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #000e45;
+    border-color: #000e45;
+}
+
+.img-cards {
+    width: 12rem;
+    height: 15rem
+}
+
+.home__families {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* تقسيم الصف إلى ثلاثة أجزاء متساوية */
+    grid-gap: 1.7142857143rem; /* المسافة بين العناصر */
+    display: grid;
+    font-size: .8571428571rem;
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+}
+
+    .home__families .box {
+        display: flex;
+        flex-direction: column;
+        direction: rtl;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        background-color: white;
+        box-shadow: 0 2px 4px rgb(255 131 138 / 11%);
+        border-radius: 25px;
+        color: inherit;
+        text-decoration: none;
+        width: 20rem;
+        height: 17rem;
+        font-size: x-large;
+        font-family: math;
+        max-width: 100%;
+    }
+
+        .home__families .box img {
+            margin-bottom: 0.5rem;
+        }
+/*.home__families:hover {
+        transform: translateY(-10px);
+    }*/
+/*@media (min-width: 500px) {
+    .home__families .box {
+
+    }
+
+}*/
+html[dir=rtl] * {
+    direction: rtl;
+    letter-spacing: normal !important;
+}
+
+@media (min-width: 1024px) {
+    .home__families {
+        grid-gap: 2.2857142857rem;
+        grid-template-columns: repeat(6, 1fr);
+    }
+}
+
+
+
+@media (min-width: 1024px) {
+    .d\:u-mt--5 {
+        margin-block-start: 2.8571428571rem !important;
+    }
+}
+
+.u-mt--7 {
+    margin-block-start: 4rem !important;
+}
+
+.u-render__position--relative {
+    position: relative;
+}
+
+html[dir=rtl] * {
+    /* direction: rtl; */
+    letter-spacing: normal !important;
+}
+
+.box:hover {
+    transform: translateY(-10px);
+}
+
+.box--shadow {
+    box-shadow: 0 0.5714285714rem 1.1428571429rem #00000014;
+}
+
+.box--radius {
+    border-radius: 0.7142857143rem;
+}
+
+.box--white {
+    background-color: #fff;
+}
+
+.u-text--center {
+    text-align: center !important;
+}
+
+.u-p--2 {
+    padding: 1.1428571429rem !important;
+}
+
+.u-flex-justify-center {
+    justify-content: center;
+}
+
+.u-flex-col {
+    flex-direction: column;
+}
+
+.u-flex {
+    display: flex;
+}
+
+.u-color--inherit {
+    color: inherit;
+}
+
+.internal-span-link, a {
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity .25s ease-in-out;
+}
+
+.card-taa {
+    background-color: white;
+    direction: rtl;
+    padding: 2rem;
+    max-height: 22rem;
+    overflow-y: auto;
+    /*  margin: 1rem;
+    width: 30%;*/
+    background-color: white;
+    box-shadow: 0 2px 4px rgb(255 131 138 / 11%);
+    border-radius: 11px;
+    font-family: math;
+    width: 450px;
+    margin-left: 1rem;
+}
+
+.taa {
+    width: 80%;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.card-taa::-webkit-scrollbar {
+    background-color: #ddd;
+    border-radius: 16px;
+    width: 11px;
+}
+
+.card-taa::-webkit-scrollbar-thumb {
+    background-color: #ff838a;
+    border-radius: 5px;
+}

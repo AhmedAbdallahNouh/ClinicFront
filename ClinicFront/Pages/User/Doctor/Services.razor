@@ -1,0 +1,91 @@
+﻿@page "/services"
+@using ClinicModels.DTOs.DoctorServiceDTO;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@layout MainLayoutDoctor
+
+<div class="container-lg main-container">
+    <div class="containerofcntent">
+        <h1><b>الخدمات اللتى نقدمها</b></h1>
+        <div class="row div_of_card">
+            @foreach (var categorydto in categoryDTOs)
+            {
+                <h3><b>@categorydto.Name</b></h3>
+
+                @foreach (var ServiceDTO in categorydto.serviceDTOs)
+                {
+                    <div class="card-container col-lg-4 col-md-6 col-sm-6">
+                        <div class="card">
+                            <div class="image" style="height: 100%;">
+                                @if (string.IsNullOrEmpty(ServiceDTO.Image))
+                                {
+                                    <i class="bi bi-image" style="color:#03206C;font-size: 1000%;"></i>
+                                }
+                                else
+                                {
+                                    <img src="@ServiceDTO.Image" style="width:100%;"/>
+                                }
+                            </div>
+                            <div class="content" style="width:100%;">
+                                <div class="header">@ServiceDTO.Title</div>
+                                <div class="description">
+                                    @ServiceDTO.Discription
+                                </div>
+                                <div style="display:flex">
+                                    <button type="submit" @onclick="() => ADDServiceToDoctor(ServiceDTO,categorydto.Id)" class="btn btn-lg fw-bold button" style="padding: .2rem 0rem;width:40%">
+                                        إضافة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+
+@code {
+
+    public List<CategoryDTO> categoryDTOs { get; set; } = new List<CategoryDTO>();
+    [Inject]
+    public ICategoryService categoryService { get; set; }
+    [Inject]
+    public IDoctorServicesService doctorServicesService { get; set; }
+
+    private AuthenticationState authenticationState;
+
+    public string Id { get; set; }
+
+    protected override async void OnInitialized()
+    {
+        // authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        // Id = (authenticationState.User.Claims.ToList())[0].Value;
+        categoryDTOs = await categoryService.GetAllCategoryWithHisService();
+        StateHasChanged();
+        base.OnInitialized();
+    }
+
+    private async void ADDServiceToDoctor(ServiceDTO serviceDTO,int categoryid)
+    {
+        DoctorServiceDto doctorServiceDto = new DoctorServiceDto()
+        {
+            DoctorServiceId = Id,
+            ServiceId = serviceDTO.Id
+        };
+
+        var response = await doctorServicesService.AddServiceToDoctor(doctorServiceDto);
+        if (response.StatusCode.ToString() == "OK")
+        {
+            foreach (var category in categoryDTOs)
+            {
+                if (category.Id == categoryid)
+                {
+                    category.serviceDTOs.Remove(serviceDTO);
+                }
+            }
+            StateHasChanged();
+        }
+    }
+}

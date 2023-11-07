@@ -1,0 +1,43 @@
+﻿@inject ICategoryService _categoryService
+@inject IConsultationService _consulationService
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#answerModal">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="answerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-light">
+            <div class="modal-header">
+                <img src="assets/images/doc.jpeg" class="w-100" />
+                <img src="@doctorDTO.Image" class="w-100" />
+                <h4 class="modal-title fs-5" id="exampleModalLabel">@doctorDTO.FirstName @doctorDTO.LastName</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                            
+            </div>
+            <div class="modal-footer">
+                <div class="submit-btn-container"><button type="submit" class="mb-2 btn btn-lg btn-block fw-bold button" >Finish</button></div>
+                <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+
+    [Parameter]
+    public DoctorDTO doctorDTO { get; set; } = new DoctorDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        StateHasChanged();
+        base.OnInitialized();
+    } 
+}

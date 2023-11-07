@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ClinicModels.DTOs.DoctorServiceDTO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,7 +12,8 @@ namespace ClinicModels
     {
         public int Id { get; set; }
 
-        [Required(ErrorMessage ="إختر فئة لتعديلها أو حذفها أو قم بإدحال إسم فئة جديدة")]
+        [Required(ErrorMessage = "إختر فئة لتعديلها أو حذفها أو قم بإدحال إسم فئة جديدة")]
         public string Name { get; set; }
+        public List<ServiceDTO>? serviceDTOs { get; set; }
     }
 }

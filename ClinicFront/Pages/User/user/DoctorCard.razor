@@ -1,0 +1,77 @@
+﻿@if (doctorDTOs.Count > 0)
+{
+    <div class="slide-container swiper">
+        <div class="slide-content swiper-container">
+            <div class="card-wrapper swiper-wrapper" style="height:400px;">
+                <!-- بطاقات الشرائح -->
+                @foreach (var doctors in doctorDTOs)
+                {
+                    <div class="card swiper-slide">
+                        <div class="image-content">
+                            <span class="overlay"></span>
+
+                            <div class="card-image">
+                                @if (!string.IsNullOrEmpty(doctors.Image))
+                                {
+                                    <img src="@doctors.Image" alt="" class="card-img">
+                                }
+                                else
+                                {
+                                    <img src="doctorflag.png" alt="" class="card-img">
+                                }
+                            </div>
+                        </div>
+
+                        <div class="card-content">
+                            <h2 class="name">@doctors.FirstName @doctors.LastName</h2>
+                            <p class="description">@doctors.categoryDTO.Name</p>
+
+                            <a class="button" href="/maindoctorpage/@doctors.Id">معرفة المزيد</a>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="swiper-button-next swiper-navBtn"></div>
+        <div class="swiper-button-prev swiper-navBtn"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+}
+
+
+@code {
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; }
+    public List<DoctorDTO> doctorDTOs { get; set; } = new List<DoctorDTO>();
+    [Inject]
+    public IAdminService adminService { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var doctorsdto = await adminService.getdoctorsflags();
+        if (doctorsdto != null)
+        {
+            doctorDTOs = doctorsdto;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("initializeSwiper");
+        }
+        if(doctorDTOs != null && doctorDTOs.Count != 0)
+        {
+            if (!firstRender)
+            {
+                await JSRuntime.InvokeVoidAsync("startAutoplay");
+            }
+        }
+        else
+        {
+           await JSRuntime.InvokeVoidAsync("console.log", "ahmed");
+        }
+    }
+}

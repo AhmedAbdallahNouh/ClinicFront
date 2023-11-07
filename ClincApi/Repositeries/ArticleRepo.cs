@@ -14,7 +14,18 @@ namespace ClincApi.Repositeries
 
         public List<Article> GetAllArticle()
         {
-            return _ArticleDBContext.Articles.Include(x => x.AppUser).ToList();
+            return _ArticleDBContext.Articles.Include(x => x.AppUser).Select(a => new Article { Id = a.Id, Title = a.Title, SubTitle = a.SubTitle, ArticleImage = a.ArticleImage, ArticleDate = a.ArticleDate }).ToList();
+        }
+
+        public List<Article> GetArticlespagination()
+        {
+            var allarticles = _ArticleDBContext.Articles.ToList();
+            var result = allarticles.Skip(0).Take(5).ToList();
+            var total = _ArticleDBContext.Categories.Count();
+            //var pages = (int)Math.Ceiling((decimal)total / 10);
+            //double orderCafeTotalPrice = 0;
+
+            return result;
         }
 
         public Article GetArticleByIdWithInclude(int id)

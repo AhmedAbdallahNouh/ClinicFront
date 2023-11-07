@@ -1,0 +1,100 @@
+﻿@page "/consultation"
+@layout MainLayoutUser
+@inject IConsultationService _consultationService
+
+
+<div class="main-container ">
+    <ConsultationModal />
+
+    @*<ConsultationAnswerModal   />*@
+
+    <div class="container" style="direction:rtl;">
+        <h2>اسأل الطبيب</h2>
+        <div class="row divofsearch">
+            <div class="mb-2 search-container col-5 col-sm-8">
+                <div class="d-flex position-relative" @onclick="Search">
+                    <input id="search"
+                    @bind="@SearchConsultationValue"
+                           style="padding-left:3rem;box-shadow: 0px 2px 8px 1px #ddd; border-radius: 10px; width:100%"
+                           class="form-control search input_i"
+                           placeholder="بحث"/>
+                    <i class="fas fa-user icon"></i>
+                </div>
+
+            </div>
+
+
+            <div class="d-flex align-items-center col-5 col-sm-4" style="width: 120px;height: 38px;padding: 0 10px;padding-left:3rem;box-shadow: 0px 2px 8px 1px #ddd;border-radius: 10px;background-color: white;" @onclick="Search">
+
+                <span style="margin-left: auto;">التصفية</span>
+                <i class="fa fa-user fa-lg" style="margin-right: 67%;"></i>
+            </div>
+           
+
+
+        </div>
+    </div>
+    <section class="container last-consultations-section mb-5">
+        @if(ConsultationDTOs.Count != 0)
+        {
+            <h3>أخر التساؤلات</h3>
+            <div class="row">
+                @foreach (var ConsultationDTO in ConsultationDTOs)
+                {
+                    <div class="card col-md-4 col-sm-12 mb-3">
+                        <div class="card-body">
+                            <h4 class="card-title mb-3  ">@ConsultationDTO.Question</h4>
+                            <h6 class="card-subtitle mb-3 text-muted text-center rounded-pill">@ConsultationDTO.categoryDTO.Name</h6>
+                            <p class="card-text fw-bold fs-6">@ConsultationDTO.Description</p>
+                            @if (@ConsultationDTO.DoctorDTO is not null)
+                            {
+                                @if (string.IsNullOrEmpty(@ConsultationDTO.DoctorDTO.Image))
+                                {
+                                    <span><img class="rounded-circle" src="@ConsultationDTO.DoctorDTO.Image" /></span>
+
+                                }
+                                else
+                                {
+                                    <span><img class="rounded-circle" src="/assets/Images/doc.jpeg" /></span>
+                                }
+                                <span><a href="#" class="card-link" data-bs-toggle="modal" data-bs-target="#answerModal">إعرض الإجابة</a></span>
+                            }
+                            else
+                            {
+                                <span>لا يوجد إجابة لعد لهذا السؤال</span>
+                            }
+                        </div>
+                    </div>
+                }               
+            </div>
+            <div class="d-flex justify-content-center mt-5 more-consultation-container">
+                <button>رؤية المزيد من الأسئلة</button>
+            </div>
+        }
+        else
+        {
+            <h4>لا يـوجـد أسئلـة بعـد</h4>
+        }
+
+       
+    </section>
+    <div class="d-flex ask-doctor-footer position-fixed ">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">اسأل الطبيب</button>
+    </div>
+</div>
+
+@code {
+    public List<CnosultationDTO> ConsultationDTOs { get; set; } = new List<CnosultationDTO>();
+    public DoctorDTO DoctorDTO { get; set; } = new DoctorDTO();
+    protected override async Task OnInitializedAsync()
+    {
+        ConsultationDTOs = await _consultationService.GetAllConsultations();
+        StateHasChanged();
+        base.OnInitialized();
+    }
+    public string SearchConsultationValue { get; set; } = string.Empty;
+    public void Search()
+    {
+        
+    }
+}

@@ -20,6 +20,18 @@ namespace ClinicFront.Services
                 (await http.GetStreamAsync("/api/Category"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
+        public async Task<List<CategoryDTO>> GetAllCategoryWithHisService()
+        {
+            return await JsonSerializer.DeserializeAsync<List<CategoryDTO>>
+                 (await http.GetStreamAsync("/api/getcategorieswithhisservice"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        } 
+        
+        public async Task<List<CategoryDTO>> GetCategoriespagination()
+        {
+            return await JsonSerializer.DeserializeAsync<List<CategoryDTO>>
+               (await http.GetStreamAsync("/api/GetCategoriespagination"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
+
         //public async Task<CategoryDTO> getbycategory(int id)
         //{
         //    return await JsonSerializer.DeserializeAsync<CategoryDTO>
@@ -42,7 +54,7 @@ namespace ClinicFront.Services
 
         public async Task<HttpResponseMessage> Deletecategory(int id)
         {
-            var response = await http.DeleteAsync($"/api/Category?id={id}" );
+            var response = await http.DeleteAsync($"/api/Category?id={id}");
             return response;
         }
     }

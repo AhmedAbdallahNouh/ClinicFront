@@ -1,0 +1,294 @@
+﻿@page "/addservice"
+@using ClinicModels.DTOs.DoctorServiceDTO;
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@layout MainLayoutAdmin
+<div class="container-lg main-container">
+    <div class="containerofcntent">
+        <h1><b>الخدمات اللتى نقدمها</b></h1>
+        <div class="row div_of_card">
+            @foreach (var categorydto in categoryDTOs)
+            {
+                if (categorydto.serviceDTOs != null && categorydto.serviceDTOs.Count != 0)
+                {
+                    <h3><b>@categorydto.Name</b></h3>
+
+                    @foreach (var ServiceDTO in categorydto.serviceDTOs)
+                    {
+                        <div class="card-container col-lg-4 col-md-6 col-sm-6">
+                            <div class="card">
+                                <div class="image">
+                                    @if (string.IsNullOrEmpty(ServiceDTO.Image))
+                                    {
+                                        <i class="bi bi-image" style="color:#ff838a;font-size: 1000%;"></i>
+                                    }
+                                    else
+                                    {
+                                        <img src="@ServiceDTO.Image" style="width: 100%;height:100%;" />
+                                    }
+                                </div>
+                                <div class="content" style="width: 100%;">
+                                    <div class="header">@ServiceDTO.Title</div>
+                                    <div class="description" style="word-break: break-all;">
+                                        <b>@ServiceDTO.Discription</b>
+                                    </div>
+                                    <div style="display:flex">
+                                        <button type="submit" @onclick="() => DeleteService(ServiceDTO)" class="btn btn-lg fw-bold button" style="padding: .2rem 0rem;width:40%">
+                                            حذف
+                                        </button>
+                                        <button type="submit" @onclick="() => UpdateService(ServiceDTO)" class="btn btn-lg fw-bold button" style="padding: .2rem 0rem;width:40%">
+                                            تعديل
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    }
+                }
+            }
+        </div>
+
+        <EditForm Model="@serviceDTO" class="add-doctor-form row" style="direction:rtl;width: 100%;margin-left: 0%;">
+        <DataAnnotationsValidator />
+        <div class="subcontainerofcntent">
+            <h3>إضافة خدمة جديدة</h3>
+            <div class="flexrow row">
+                <div class="col-lg-5 col-md-12">
+                            <div style="margin-bottom: 2rem;">
+                                <label for="adderss"><b>العنوان:</b></label>
+                                <InputText id="adderss" @bind-Value="@serviceDTO.Title"
+                                           class="form-control input_i ss input" placeholder="اكتب العنوان" />
+                                <ValidationMessage For="@(() => serviceDTO.Title)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                            </div> 
+                            <div>
+                                <label for="discription"><b>الوصف:</b></label>
+                                <InputText @bind-Value="@serviceDTO.Discription" id="discription"
+                                           class="form-control input_i ss input" placeholder="اكتب الوصف" />
+                                <ValidationMessage For="@(() => serviceDTO.Discription)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                            </div>
+                            <div class="mb-4 input-container" style="position:relative;max-height:150px;margin-top: 2rem;">
+                                <div>
+                                <label for="category"><b>التخصص:</b></label>
+                                    <InputSelect id="category" @bind-Value="serviceDTO.Category_Id" class="form-control" style="padding-left: 3rem" size="6">
+                                        <option value="-1">إختر تخصص</option>
+                                        @foreach (var categoryDTO in categoryDTOs)
+                                        {
+                                            <option value="@categoryDTO.Id">@categoryDTO.Name</option>
+                                        }
+                                    </InputSelect>
+                                </div>
+                                @if (serviceDTO.Category_Id == -1)
+                                {
+                                    <div style=" color:red; text-align: start !important; padding-right: 7rem ; padding-top: 0.8rem;">يجب إختيار تخصص</div>
+                                }
+                                <ValidationMessage For="@(() => serviceDTO.Category_Id)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
+                            </div>
+                </div>
+                <div class="col-lg-5 col-md-12 divOfUploadImage">
+                    <InputFile id="image" type="file" OnChange="@UploadImage" style="display:none;" />
+                    <div class="divOfUploadserviceImage">
+                        @if(string.IsNullOrEmpty(serviceDTO.Image)){
+                            <label for="image">
+                                    <i class="bi bi-image" style="color:#ff838a;font-size:500%"></i>
+                            </label>
+                        }else{
+                            <img src="@serviceDTO.Image" class="image"/>
+                        }
+                    </div>
+                    <label for="image">
+                        <button type="submit" class="btn btn-lg btn-block fw-bold button labelofupload" style="padding: .2rem 0rem;">
+                            إضغط لتحميل صورة
+                        </button>
+                    </label>
+                </div>
+            </div>
+            <div>
+                @if(Add_UpdateButton){
+                    <button type="submit" disabled="@(!context.IsModified() || !context.Validate())" @onclick="() => UpdateServiceInDataBase()" class="btn btn-lg btn-block fw-bold button AddButton" style="padding: .2rem 0rem;">
+                        تعديل
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" disabled="@(!context.IsModified() || !context.Validate())" @onclick="() => ADDService()" class="btn btn-lg btn-block fw-bold button AddButton" style="padding: .2rem 0rem;">
+                        إضافة
+                    </button>
+                }
+               
+            </div>
+        </div>
+    </EditForm>
+    </div>
+</div>
+<ConfirmModel Messagetext="@Messagetext"/>
+
+@code {
+
+    public List<CategoryDTO> categoryDTOs { get; set; } = new List<CategoryDTO>();
+    public ServiceDTO serviceDTO { get; set; } = new ServiceDTO();
+    [Inject]
+    public ICategoryService categoryService { get; set; }
+    [Inject]
+    public IServicesService servicesService { get; set; }
+    [Inject]
+    public IJSRuntime jSRuntime { get; set; }
+
+    private AuthenticationState authenticationState;
+
+    public string? Messagetext { get; set; }
+    public int id { get; set; }
+    public bool Add_UpdateButton { get; set; } = false;
+
+
+
+    protected override async void OnInitialized()
+    {
+        // authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        // var doctorId = (authenticationState.User.Claims.ToList())[0].Value;
+        categoryDTOs = await categoryService.GetAllCategoryWithHisService();
+        StateHasChanged();
+        base.OnInitialized();
+    }
+    private async void ADDService()
+    {
+        ServiceDTO ServiceDTO = new ServiceDTO()
+        {
+            Image = serviceDTO.Image,
+            Title = serviceDTO.Title,
+            Discription = serviceDTO.Discription,
+            Category_Id = serviceDTO.Category_Id
+        };
+        var response = await servicesService.AddService(ServiceDTO);
+        if (response.StatusCode.ToString() == "OK")
+        {
+            foreach (var category in categoryDTOs)
+            {
+                if (category.Id == ServiceDTO.Category_Id)
+                {
+                    category.serviceDTOs.Add(ServiceDTO);
+                }
+            }
+            Messagetext = "تم إضافة الخدمة بنجاح";
+        }
+        else
+        {
+            Messagetext = "حدث خطأ, من فضلك حاول مرة أخرى";
+        }
+        serviceDTO = new ServiceDTO();
+        await jSRuntime.InvokeVoidAsync("OpenConfirmModel");
+        StateHasChanged();
+    }
+    private async void DeleteService(ServiceDTO ServiceDTO)
+    {
+        var response = await servicesService.DeleteService(ServiceDTO.Id);
+        if (response.StatusCode.ToString() == "NoContent")
+        {
+            foreach (var category in categoryDTOs)
+            {
+                if (category.Id == ServiceDTO.Category_Id)
+                {
+                    category.serviceDTOs.Remove(ServiceDTO);
+                }
+            }
+            Messagetext = "تم إزالة الخدمة بنجاح";
+        }
+        else
+        {
+            Messagetext = "حدث خطأ, من فضلك حاول مرة أخرى";
+        }
+        serviceDTO = new ServiceDTO();
+        await jSRuntime.InvokeVoidAsync("OpenConfirmModel");
+        StateHasChanged();
+    }
+    private async void UpdateService(ServiceDTO doctorServiceDTO)
+    {
+        await jSRuntime.InvokeVoidAsync("scrollinto", "addnewservice");
+
+        id = doctorServiceDTO.Category_Id;
+        serviceDTO.Id = doctorServiceDTO.Id;
+        serviceDTO.Image = doctorServiceDTO.Image;
+        serviceDTO.Title = doctorServiceDTO.Title;
+        serviceDTO.Discription = doctorServiceDTO.Discription;
+        serviceDTO.Category_Id = doctorServiceDTO.Category_Id;
+        Add_UpdateButton = true;
+    }
+    private async void UpdateServiceInDataBase( )
+    {
+        ServiceDTO ServiceDTO = new ServiceDTO()
+        {
+            Id = serviceDTO.Id,
+            Image = serviceDTO.Image,
+            Title = serviceDTO.Title,
+            Discription = serviceDTO.Discription,
+            Category_Id = serviceDTO.Category_Id
+        };
+
+        var response = await servicesService.UpdateService(ServiceDTO);
+        if (response.StatusCode.ToString() == "OK")
+        {
+            if (ServiceDTO.Category_Id == id)
+            {
+                foreach (var category in categoryDTOs)
+                {
+                    if (category.Id == serviceDTO.Category_Id)
+                    {
+                        var updatedCategoryDTOindex = category.serviceDTOs.FindIndex(a => a.Id == serviceDTO.Id);
+                        if (updatedCategoryDTOindex != -1)
+                        {
+                            category.serviceDTOs[updatedCategoryDTOindex].Image = ServiceDTO.Image;
+                            category.serviceDTOs[updatedCategoryDTOindex].Title = ServiceDTO.Title;
+                            category.serviceDTOs[updatedCategoryDTOindex].Discription = ServiceDTO.Discription;
+                            category.serviceDTOs[updatedCategoryDTOindex].Category_Id = ServiceDTO.Category_Id;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var category in categoryDTOs)
+                {
+                    if (category.Id == serviceDTO.Category_Id)
+                    {
+                        category.serviceDTOs.Add(ServiceDTO);
+                    }
+                }
+                foreach (var category in categoryDTOs)
+                {
+                    if (category.Id == id)
+                    {
+                        var updatedCategoryDTOindex = category.serviceDTOs.FindIndex(a => a.Id == ServiceDTO.Id);
+                        category.serviceDTOs.RemoveAt(updatedCategoryDTOindex);
+                    }
+                }
+            }
+            Messagetext = "تم تعديل الخدمة بنجاح";
+            serviceDTO = new ServiceDTO();
+        }
+        else
+        {
+            Messagetext = "حدث خطأ, من فضلك حاول مرة أخرى";
+        }
+        await jSRuntime.InvokeVoidAsync("OpenConfirmModel");
+        StateHasChanged();
+        Add_UpdateButton = false;
+    }
+
+    private async void UploadImage(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            var format = "image/png";
+            var resizedImageFile = await file.RequestImageFileAsync(format, 800, 800);
+
+            using var ms = new MemoryStream();
+            await resizedImageFile.OpenReadStream().CopyToAsync(ms);
+            var buffer = ms.ToArray();
+
+            var imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+           
+            serviceDTO.Image = imageDataUrl;
+            StateHasChanged();
+        }
+    }
+}

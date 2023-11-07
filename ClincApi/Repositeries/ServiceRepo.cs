@@ -17,17 +17,22 @@ namespace ClincApi.Repositeries
 
         //GetALL
 
+        //public async Task<List<Service>> GetAllServices(string doctorId)
+        //{
+        //    List<Service> Service = await _clinicDBContext.Services.Include(ds => ds.doctorService).ToListAsync();
+        //    return Service;
+        //}
+
         public async Task<List<Service>> GetAllServicesToOneDoctor(string doctorId)
         {
             List<Service> Service = await _clinicDBContext.Services.Include(ds => ds.doctorService).Where(ds => ds.doctorService.Any(d => d.Doctor_Id == doctorId)).Include(ds => ds.category).ToListAsync();
             return Service;
         }
 
-        public async Task<List<AppUser>> GetServiceByIdWithInclude(int serviceId)
+        public async Task<Service> GetServiceByIdWithInclude(int serviceId)
         {
-            //Service Service = _clinicDBContext.Services.Where(s => s.Id == serviceId).Include(ds => ds.doctorService.Where(ds => ds.Doctor_Id == doctorId)).FirstOrDefault();
-            List<AppUser> appUsers = _clinicDBContext.Users.Where(u => u.doctorService.Any(ds => ds.Service_Id == serviceId)).Include(s => s.doctorService).ThenInclude(s => s.Service).ThenInclude(s => s.category).ToList();
-            return appUsers;
+            Service service = await _clinicDBContext.Services.Where(s => s.Id == serviceId).Include(s => s.doctorService).ThenInclude(ds => ds.AppUser).FirstOrDefaultAsync();
+            return service;
         }
 
         public Service GetServiceByIdWithOutclude(int serviceId)

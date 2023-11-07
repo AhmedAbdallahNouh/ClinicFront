@@ -4,31 +4,97 @@
 
 <div class="row maincontainer">
     <h1><b>الخدمات اللتى نقدمها</b></h1>
-    @foreach (var doctorServiceDTO in doctorServiceDTOs)
+    @foreach (var ServiceDTO in ServiceDTOs)
     {
         <div class="card-container col-lg-4 col-md-6 col-sm-6">
             <div class="card">
-                <div class="image">
-                    @if (!string.IsNullOrEmpty(doctorServiceDTO.Image))
+                <div class="image" style="height: 100%;">
+                    @if (string.IsNullOrEmpty(ServiceDTO.Image))
                     {
                         <i class="bi bi-image" style="color:#03206C;font-size: 1000%;"></i>
                     }
                     else
                     {
-                        <img src="@doctorServiceDTO.Image" />
+                        <img src="@ServiceDTO.Image" style="height:100%;width:100%;"/>
                     }
                 </div>
                 <div class="content">
-                    <div class="header">@doctorServiceDTO.Title</div>
+                    <div class="header">@ServiceDTO.Title</div>
                     <div class="description">
-                        @doctorServiceDTO.Discription
+                        @ServiceDTO.Discription
+                    </div>
+                    <div style="display:flex">
+                        <button type="submit" @onclick="() => RemoveServiceToDoctor(ServiceDTO)" class="btn btn-lg fw-bold button" style="padding: .2rem 0rem;width:40%">
+                            إزالة
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     }
 </div>
+<ConfirmModel Messagetext="@Messagetext" />
+
 @code {
+    public List<ServiceDTO> ServiceDTOs { get; set; } = new List<ServiceDTO>();
+    private AuthenticationState authenticationState;
     [Parameter]
-    public List<ServiceDTO> doctorServiceDTOs { get; set; } = new List<ServiceDTO>();
+    public string Id { get; set; }
+    public string Messagetext { get; set; }
+    [Inject]
+    public IServicesService servicesService { get; set; } 
+    [Inject]
+    public IDoctorServicesService doctorServicesService { get; set; } 
+    [Inject]
+    public IJSRuntime jSRuntime { get; set; }
+
+    protected override async void OnInitialized()
+    {
+        // authenticationState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        // Id = (authenticationState.User.Claims.ToList())[0].Value;
+        if (!string.IsNullOrEmpty(Id))
+        {
+            ServiceDTOs = await servicesService.GetAllServicesForOneDoctor(Id);
+        }
+        StateHasChanged();
+        base.OnInitialized();
+    }
+
+    private async void RemoveServiceToDoctor(ServiceDTO serviceDTO)
+    {
+        DoctorServiceDto doctorServiceDto = new DoctorServiceDto()
+        {
+            DoctorServiceId = Id,
+            ServiceId = serviceDTO.Id
+        };
+
+        var response = await doctorServicesService.DeleteServiceFromDoctor(doctorServiceDto);
+        if (response.StatusCode.ToString() == "NoContent")
+        {
+            List<ServiceDTO> servicesToRemove = new List<ServiceDTO>();
+
+            foreach (var servicedto in ServiceDTOs)
+            {
+                if (servicedto.Id == doctorServiceDto.ServiceId)
+                {
+                    servicesToRemove.Add(servicedto);
+                }
+            }
+
+            foreach (var servicedto in servicesToRemove)
+            {
+                ServiceDTOs.Remove(servicedto);
+            }
+
+            Messagetext = "تم إزالة الخدمة بنجاح";
+        }
+        else
+        {
+            Messagetext = "حدث خطأ، من فضلك حاول مرة أخرى";
+        }
+
+        serviceDTO = new ServiceDTO();
+        await jSRuntime.InvokeVoidAsync("OpenConfirmModel");
+        StateHasChanged();
+    }
 }

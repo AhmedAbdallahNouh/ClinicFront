@@ -1,0 +1,92 @@
+﻿@page "/servicewithdoctors/{id}"
+
+<div class="main_container">
+    <div class="row" style="justify-content:space-evenly;width:100%;">
+       
+        <div class="cardd rounded-3 col-lg-5 col-md-12 col-sm-12">
+            <div class="card-body">
+                <div class="row" style="justify-content:flex-end">
+                    <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8 flex_column" style="justify-content:flex-start;">
+                        <div>
+                            <div class="flex direction_rtl">
+                                <h4><b>:العنوان</b></h4>
+                                <h5><b>@serviceDTO.Title</b></h5>
+                            </div>
+                            <div class="flex direction_rtl">
+                                <h4><b>:الشرح</b></h4>
+                                <h5><b>@serviceDTO.Discription</b></h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-12 col-md-4 col-lg-3 col-xl-3 mb-1 mb-lg-0 border-start">
+                        <div class="bg-image hover-zoom ripple rounded ripple-surface div_img">
+                            @if (!string.IsNullOrEmpty(serviceDTO.Image))
+                            {
+                                <img src="@serviceDTO.Image" class="w-100" />
+                            }
+                            else
+                            {
+                                <img src="assets/images/doc.jpeg" class="w-100" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="justify-content:space-evenly;width:100%;">
+            @foreach (var doctor in serviceDTO.doctorDTOs)
+            {
+                <a class="cardd rounded-3 col-lg-5 col-md-12 col-sm-12" href="/@doctor.Id">
+                    <div class="card-body">
+                        <div class="row" style="justify-content:flex-end">
+                            <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8 flex_column" style="justify-content:flex-start;">
+                                <div>
+                                    <div class="flex">
+                                        <h4><b>:الأسم</b></h4>
+                                        <h5><b>@doctor.FirstName @doctor.LastName</b></h5>
+                                    </div>
+                                    <div class="flex">
+                                        <h4><b>:نبذة</b></h4>
+                                        <h5><b>@doctor.Discription</b></h5>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-4 col-lg-3 col-xl-3 mb-1 mb-lg-0 border-start">
+                                <div class="bg-image hover-zoom ripple rounded ripple-surface div_img">
+                                    @if (!string.IsNullOrEmpty(doctor.Image))
+                                    {
+                                        <img src="@doctor.Image" class="w-100" />
+                                    }
+                                    else
+                                    {
+                                        <img src="assets/images/doc.jpeg" class="w-100" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    public ServiceDTO serviceDTO { get; set; } = new ServiceDTO();
+    [Inject]
+    public IServicesService servicesService { get; set; }
+    [Parameter]
+    public int Id { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var servicewithhisdoctors = await servicesService.GetServiceWithHisDoctors(Id);
+        if (servicewithhisdoctors != null)
+        {
+            serviceDTO = servicewithhisdoctors;
+        }
+    }
+}

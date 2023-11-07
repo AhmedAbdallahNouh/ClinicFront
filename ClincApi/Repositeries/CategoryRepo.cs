@@ -12,7 +12,23 @@ namespace ClincApi.Repositeries
         }
         public List<Category> GetAllCategories()
         {
-            return _CategoryDbContext.Categories.Include(x => x.AppUser).ToList();
+            return _CategoryDbContext.Categories.ToList();
+        }
+
+        public List<Category> GetAllCategoriesWithHisServices()
+        {
+            return _CategoryDbContext.Categories.Include(x => x.doctorServices).ToList();
+        } 
+        
+        public List<Category> GetCategoriespagination()
+        {
+            var allcategories = _CategoryDbContext.Categories.ToList();
+            var result = allcategories.Skip(0).Take(5).ToList();
+            var total = _CategoryDbContext.Categories.Count();
+            //var pages = (int)Math.Ceiling((decimal)total / 10);
+            //double orderCafeTotalPrice = 0;
+
+            return result;
         }
 
         public Category GetCategoryById(int id)

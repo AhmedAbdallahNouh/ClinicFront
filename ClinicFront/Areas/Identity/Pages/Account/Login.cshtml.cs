@@ -4,9 +4,11 @@ using ClinicModels.DTOs.MainDTO;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Components;
 
 namespace ClinicFront.Areas.Identity.Pages.Account
 {
@@ -25,7 +27,8 @@ namespace ClinicFront.Areas.Identity.Pages.Account
         public int MyProperty { get; set; }
         [BindProperty]
         public InputModal Input { get; set; }
-  
+        [Inject]
+        public NavigationManager navigationManager { get; set; }
         public string ReturnUrl { get; set; }
 
         public void OnGet()
@@ -35,7 +38,7 @@ namespace ClinicFront.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
-            ReturnUrl = Url.Content("~/mainpageadmin");
+            ReturnUrl = Url.Content("/");
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(Input.UserName, Input.Password, false, lockoutOnFailure: false);
@@ -43,7 +46,14 @@ namespace ClinicFront.Areas.Identity.Pages.Account
                 {
                     // Get the user by their username (you may need to customize this depending on your user store)
                     var user = await _userManager.FindByNameAsync(Input.UserName);
+                    if(user != null)
+                    {
+                        var userrole = await _userManager.GetRolesAsync(user);
+                        //if (userrole[0] == "Doctor")
+                        //{
+                        //}
 
+                    }
                     // Check if the user exists and has roles
                     if (user != null )
                     {
@@ -78,8 +88,7 @@ namespace ClinicFront.Areas.Identity.Pages.Account
                         await HttpContext.SignInAsync(
                             IdentityConstants.ApplicationScheme,
                             new ClaimsPrincipal(claimsIdentity),
-                            new AuthenticationProperties { IsPersistent = false }
-                        );
+                            new AuthenticationProperties { IsPersistent = true, ExpiresUtc = DateTime.UtcNow.AddDays(15)});
                     }
 
                     return LocalRedirect(ReturnUrl);

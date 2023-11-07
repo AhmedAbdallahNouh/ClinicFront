@@ -60,7 +60,7 @@ namespace ClincApi.Repositeries
         }
         public Post GetPostById(int id)
         {
-            return _clinicDBContext.Posts.Include(x => x.AppUser).Where(x => x.Id == id).SingleOrDefault();
+            return _clinicDBContext.Posts.Include(x => x.AppUser).Include(x => x.PostImages).SingleOrDefault(x => x.Id == id);
         }
 
         public Post addPost(Post post)

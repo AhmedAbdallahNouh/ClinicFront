@@ -19,6 +19,7 @@ namespace ClinicFront.Services
         {
             //var doctorId = new StringContent(JsonSerializer.Serialize(id), Encoding.UTF8, "application/json");
             var response = await _http.GetAsync("/api/Consultation");
+            if(!response.IsSuccessStatusCode) return new List<CnosultationDTO>();
             var stream = await response.Content.ReadAsStreamAsync();
             var CnosultationDTOs = await JsonSerializer.DeserializeAsync<List<CnosultationDTO>>(stream, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
             return CnosultationDTOs;

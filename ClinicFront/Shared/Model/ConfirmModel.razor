@@ -1,0 +1,18 @@
+﻿<div class="modal fade" id="ConfirmModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="min-height:15rem">
+            <div class="flex_row" style="padding: 16px 12px 0px;justify-content:space-between;">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="display: flex;justify-content: center;align-items: center;">
+                <h3><b>@Messagetext</b></h3>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
+[Parameter]
+    public string Messagetext { get; set; }
+}

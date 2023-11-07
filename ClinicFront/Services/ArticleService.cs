@@ -17,13 +17,19 @@ namespace ClinicFront.Services
         public async Task<List<ArticleDto>> getallArticles()
         {
             return await JsonSerializer.DeserializeAsync<List<ArticleDto>>
-                (await http.GetStreamAsync("/api/Article/"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                (await http.GetStreamAsync("/api/Article"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+        }
+
+        public async Task<List<ArticleDto>> GetArticlespagination()
+        {
+            return await JsonSerializer.DeserializeAsync<List<ArticleDto>>
+                (await http.GetStreamAsync("/api/Getarticlespagination"), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
         public async Task<ArticleDto> getArticlebyid(int id)
         {
             return await JsonSerializer.DeserializeAsync<ArticleDto>
-                (await http.GetStreamAsync("/api/Article" + id), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                (await http.GetStreamAsync("/api/Article/" + id), new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
         }
 
         public async Task<HttpResponseMessage> AddArticle(ArticleDto articleDto)

@@ -1,0 +1,312 @@
+﻿@page "/addarticle"
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <EditForm Model="@articleDto" class="form-signup">
+                <DataAnnotationsValidator />
+                <div class="flex_row" style="padding: 16px 12px 0px;justify-content:space-between;">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5>إضافة مقال</h5>
+                </div>
+
+                <div class="modal-body direction_rtl">
+
+                        <label class="p" for="title"><b>العنوان</b></label>
+                        <InputText id="title" @bind-Value="articleDto.Title" style="padding-right:1rem;margin: 1rem 0rem 2rem;box-shadow: 0px 2px 8px 1px #ddd;" class="form-control input_i" />
+                        <ValidationMessage For="@(() => articleDto.Title)" style="text-align:center" />
+
+                        <label class="p" for="suptitle"><b>نبذة عن المقال</b></label>
+                        <InputTextArea id="suptitle" @bind-Value="articleDto.SubTitle" class="form-control custom-input-textarea input_i" />
+                        <ValidationMessage For="@(() => articleDto.SubTitle)" style="text-align:center" />
+
+                        @if (!string.IsNullOrEmpty(articleDto.ArticleImage))
+                        {
+                            <div class="img">
+                                <div class="row divofuplaodphoto_Photo" style="width:100%;">
+                                    <img src="@articleDto.ArticleImage" style="height: 100%;" />
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <label for="inputimage" class="labelOfArticleImage">
+                                <i class="bi bi-card-image colorgreen" style="font-size:10rem;"></i>
+                            </label>
+                            <ValidationMessage For="@(() => articleDto.ArticleImage)" style="text-align:center" />
+                        }
+                </div>
+
+                <div class="modal-footer" style="justify-content:space-between;">
+                    <div class="divofuplaodphoto">
+                        <div class="modalButton" style="text-align: center;">
+                                <InputFile type="file" id="inputimage" style="display:none;" OnChange="@UplaodImage" multiple />
+
+                                <label for="inputimage">
+                                    <i class="bi bi-image colorgreen"></i>
+                                </label>
+                        </div>
+                    </div>
+                    <div class="divofpuplish">
+                        <button class="modalButton puplish" @onclick="ShowWriteArticle" style="text-align: center;" data-bs-dismiss="modal" aria-label="Close">
+                            <b>كتابة المقال</b>
+                        </button>
+                    </div>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+
+<ConfirmModel MessageText="@Messagetext"/>
+
+<div class="main_container">
+
+    <div class="addarticle p-3 mb-5 bg-body-tertiary" data-bs-toggle="modal" data-bs-target="#exampleModal" type="button">
+        <h3><b>إضافة مقال</b></h3>
+    </div>
+
+
+    @if (ShowRichtextEditor)
+    {
+        <EditForm Model="@articleDto" class="form-signup">
+            <DataAnnotationsValidator />
+            <button @onclick="AddArticles" disabled="@(!context.IsModified() || !context.Validate())" class="addarticletodatabase">Add Article</button>
+            <SfRichTextEditor SaveInterval="1" FloatingToolbarOffset="50" Height="20rem" Placeholder="أكتب مقال...." @bind-Value="@articleDto.Content">
+                <RichTextEditorQuickToolbarSettings Image="@Image" Link="@Link"/>
+                <RichTextEditorToolbarSettings Items="@Tools" Type="ToolbarType.Scrollable"></RichTextEditorToolbarSettings>
+            </SfRichTextEditor>
+            <ValidationSummary style="text-align: center;list-style: none;" />
+        </EditForm>
+
+    }
+    else
+    {
+        <div style="display:none"></div>
+    }
+
+</div>
+
+
+
+<style>
+    .e-richtexteditor .e-rte-content {
+       position:relative;
+    }
+    .e-richtexteditor .e-rte-content .e-content,
+    .e-richtexteditor .e-rte-srctextarea {
+        font-family: 'Segoe UI';
+        font-size: 20px;
+        direction:rtl;
+    }
+    /*To change font color for toolbar button in active state*/
+    .e-richtexteditor .e-rte-toolbar .e-toolbar-item .e-tbar-btn.e-icon-btn:hover,
+    .e-richtexteditor .e-rte-toolbar .e-toolbar-item .e-dropdown-btn .e-rte-dropdown-btn-text:hover,
+    .e-richtexteditor .e-rte-toolbar .e-toolbar-item.e-active .e-tbar-btn.e-icon-btn {
+        background: blue;
+    }
+
+    .e-richtexteditor .e-rte-placeholder {
+        font-family: monospace;
+        font-size: 2rem !important;
+        color: silver;
+        direction:rtl;
+        position: fixed;
+        left: 67%;
+        top: 31%;
+    }
+@@media (max-width: 1725px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 64%;
+    }
+}
+@@media (max-width: 1420px) {
+    .main_container {
+        width: 71%;
+        padding-left: 1rem;
+    }
+    .e-richtexteditor .e-rte-placeholder {
+        left: 53%;
+    }
+}
+@@media (max-width: 1237px) {
+    .main_container {
+        width: 80%;
+        margin: auto;
+    }
+    .e-richtexteditor .e-rte-placeholder {
+        left: 68%;
+    }
+}
+@@media (max-width: 1040px) {
+    .main_container {
+        width: 100%;
+    }
+    .e-richtexteditor .e-rte-placeholder {
+        left: 74%;
+    }
+}
+@@media (max-width: 910px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 70%;
+    }
+}
+@@media (max-width: 780px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 65%;
+    }
+}
+@@media (max-width: 680px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 60%;
+    }
+}
+@@media (max-width: 585px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 53%;
+    }
+}
+@@media (max-width: 500px) {
+    .addarticle {
+        width: 80%;
+    }
+    .e-richtexteditor .e-rte-placeholder {
+        left: 52%;
+        font-size: xx-large !important;
+    }
+}@@media (max-width: 482px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 52%;
+    }
+}@@media (max-width: 410px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 43%;
+    }
+}@@media (max-width: 360px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 36%;
+    }
+}@@media (max-width: 310px) {
+    .e-richtexteditor .e-rte-placeholder {
+            left: 35%;
+    }
+}@@media (max-width: 310px) {
+    .e-richtexteditor .e-rte-placeholder {
+            left: 31%;
+    }
+}
+</style>
+
+
+@code {
+    public ArticleDto articleDto { get; set; } = new ArticleDto();
+    public string Messagetext { get; set; }
+    public bool ShowRichtextEditor { get; set; } = false;
+    public bool ConfirmModel { get; set; } = false;
+    [Inject]
+    public IArticleService articleService { get; set; }
+    [Inject]
+    public IJSRuntime jSRuntime { get; set; }
+
+    private async void AddArticles()
+    {
+        articleDto.ArticleDate = DateTime.Now;
+        var response = await articleService.AddArticle(articleDto);
+        if (response.StatusCode.ToString() == "NoContent")
+        {
+            Messagetext = "تم إضافة المقال بنجاح";
+            articleDto = new ArticleDto();
+        }
+        else
+        {
+            Messagetext = "حدث خطأ, من فضلك حاول مرة أخرى";
+        }
+        await jSRuntime.InvokeVoidAsync("OpenConfirmModel");
+        StateHasChanged();
+    }
+
+    private void ShowWriteArticle()
+    {
+        this.ShowRichtextEditor = true;
+    }
+
+    private async Task UplaodImage(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            var format = "image/png";
+            var resizedImageFile = await file.RequestImageFileAsync(format, 400, 400);
+
+            using var ms = new MemoryStream();
+            await resizedImageFile.OpenReadStream().CopyToAsync(ms);
+            var buffer = ms.ToArray();
+
+            var imageDataUrl = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+
+            articleDto.ArticleImage = imageDataUrl;
+        }
+    }
+
+    private List<ToolbarItemModel> Tools = new List<ToolbarItemModel>()
+    {
+        new ToolbarItemModel() { Command = ToolbarCommand.Bold },
+        new ToolbarItemModel() { Command = ToolbarCommand.Italic },
+        new ToolbarItemModel() { Command = ToolbarCommand.Underline },
+        new ToolbarItemModel() { Command = ToolbarCommand.StrikeThrough },
+        new ToolbarItemModel() { Command = ToolbarCommand.FontName },
+        new ToolbarItemModel() { Command = ToolbarCommand.FontSize },
+        new ToolbarItemModel() { Command = ToolbarCommand.Separator },
+        new ToolbarItemModel() { Command = ToolbarCommand.FontColor },
+        new ToolbarItemModel() { Command = ToolbarCommand.BackgroundColor },
+        new ToolbarItemModel() { Command = ToolbarCommand.Separator },
+        new ToolbarItemModel() { Command = ToolbarCommand.Formats },
+        new ToolbarItemModel() { Command = ToolbarCommand.Alignments },
+        new ToolbarItemModel() { Command = ToolbarCommand.Separator },
+        new ToolbarItemModel() { Command = ToolbarCommand.LowerCase },
+        new ToolbarItemModel() { Command = ToolbarCommand.UpperCase },
+        new ToolbarItemModel() { Command = ToolbarCommand.SuperScript },
+        new ToolbarItemModel() { Command = ToolbarCommand.SubScript },
+        new ToolbarItemModel() { Command = ToolbarCommand.Separator },
+        new ToolbarItemModel() { Command = ToolbarCommand.OrderedList },
+        new ToolbarItemModel() { Command = ToolbarCommand.UnorderedList },
+        new ToolbarItemModel() { Command = ToolbarCommand.Outdent },
+        new ToolbarItemModel() { Command = ToolbarCommand.Indent },
+        new ToolbarItemModel() { Command = ToolbarCommand.Separator },
+        new ToolbarItemModel() { Command = ToolbarCommand.CreateLink },
+        new ToolbarItemModel() { Command = ToolbarCommand.Image },
+        new ToolbarItemModel() { Command = ToolbarCommand.CreateTable },
+        new ToolbarItemModel() { Command = ToolbarCommand.Separator },
+        new ToolbarItemModel() { Command = ToolbarCommand.ClearFormat },
+        new ToolbarItemModel() { Command = ToolbarCommand.Print },
+        new ToolbarItemModel() { Command = ToolbarCommand.SourceCode },
+        new ToolbarItemModel() { Command = ToolbarCommand.FullScreen },
+        new ToolbarItemModel() { Command = ToolbarCommand.Separator },
+        new ToolbarItemModel() { Command = ToolbarCommand.Undo },
+        new ToolbarItemModel() { Command = ToolbarCommand.Redo }
+    };
+
+    private List<ImageToolbarItemModel> Image = new List<ImageToolbarItemModel>()
+    {
+        new ImageToolbarItemModel() { Command = ImageToolbarCommand.Replace },
+        new ImageToolbarItemModel() { Command = ImageToolbarCommand.Align },
+        new ImageToolbarItemModel() { Command = ImageToolbarCommand.Caption },
+        new ImageToolbarItemModel() { Command = ImageToolbarCommand.Remove },
+        new ImageToolbarItemModel() { Command = ImageToolbarCommand.OpenImageLink },
+        new ImageToolbarItemModel() { Command = ImageToolbarCommand.HorizontalSeparator },
+        new ImageToolbarItemModel() { Command = ImageToolbarCommand.EditImageLink },
+        new ImageToolbarItemModel() { Command = ImageToolbarCommand.RemoveImageLink },
+        new ImageToolbarItemModel() { Command = ImageToolbarCommand.Display },
+        new ImageToolbarItemModel() { Command = ImageToolbarCommand.AltText },
+        new ImageToolbarItemModel() { Command = ImageToolbarCommand.Dimension }
+    };
+    private List<LinkToolbarItemModel> Link = new List<LinkToolbarItemModel>()
+    {
+        new LinkToolbarItemModel() { Command = LinkToolbarCommand.Open },
+        new LinkToolbarItemModel() { Command = LinkToolbarCommand.Edit },
+        new LinkToolbarItemModel() { Command = LinkToolbarCommand.UnLink }
+    };
+}

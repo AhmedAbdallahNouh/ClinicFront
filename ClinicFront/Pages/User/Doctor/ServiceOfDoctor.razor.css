@@ -11,15 +11,12 @@
     margin-top: 20px;
     margin-block-end: 20px;
 }
-
-.header {
-    text-align: left;
+.button {
+    width: 146%;
+    margin: 2rem auto;
+    background-color: #03206C;
+    color: white;
 }
-
-.description {
-    text-align: left;
-}
-
 .card-container {
     display: flex;
     flex-wrap: wrap;
@@ -60,17 +57,18 @@
     justify-content: center;
     align-items: center;
 }
-    .card .content {
-        position: absolute;
-        z-index: 10;
-        padding: .5rem;
-        width: 100%;
-        height: 100%;
-        background: white;
-        transform: translateY(314px);
-        transition: transform 200ms ease;
-        margin-block-end: 2rem;
-    }
+.card .content {
+    position: absolute;
+    z-index: 10;
+    direction: rtl;
+    padding: .5rem;
+    width: 100%;
+    height: 100%;
+    background: white;
+    transform: translateY(314px);
+    transition: transform 200ms ease;
+    margin-block-end: 2rem;
+}
 .card .content .header {
     font-size: 1.5rem;
     font-weight: 700;
@@ -115,6 +113,11 @@
 @media (max-width: 650px) {
     .divOfUploadserviceImage {
         width: 11rem;
+    }
+}
+@media (max-width: 576px) {
+    h1 {
+        font-size: xx-large;
     }
 }
 @media (max-width: 1310px) {

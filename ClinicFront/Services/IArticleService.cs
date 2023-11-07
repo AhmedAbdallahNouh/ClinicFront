@@ -7,6 +7,7 @@ namespace ClinicFront.Services
         Task<HttpResponseMessage> AddArticle(ArticleDto articleDto);
         Task<HttpResponseMessage> DeleteArticle(int id);
         Task<List<ArticleDto>> getallArticles();
+        Task<List<ArticleDto>> GetArticlespagination();
         Task<ArticleDto> getArticlebyid(int id);
         Task<HttpResponseMessage> UpdateArticle(ArticleDto articleDto);
     }

@@ -1,0 +1,198 @@
+﻿.main_container {
+    width: 80%;
+    height: 100%;
+}
+h3 {
+    text-align: center;
+}
+.colorgreen {
+    color: #19B5BC
+}
+.addarticle {
+    width: 50%;
+    margin: 3rem auto;
+    background-color: white;
+    color: #a39d9d;
+    padding-right: 40px !important;
+    cursor: pointer;
+    border-radius: 18px;
+    box-shadow: 0px 0px 8px 4px #ddd !important;
+}
+.addarticletodatabase {
+    height: 2.3rem;
+    display: block;
+    width: 7rem;
+    margin: 2rem auto;
+    color: white;
+    background-color: #FF838A;
+    border: none;
+    border-radius: 8px;
+}
+/*modal*/
+.direction_rtl{
+    direction:rtl;
+}
+.flex_row {
+    padding: 16px 12px 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.divOfModal_Title {
+    display: flex;
+    align-items: center;
+}
+
+.doctorimIngmodal {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 0.5rem;
+}
+
+.divofuplaodphoto_Photo {
+    width: 100%;
+    position: relative;
+    height: 18rem;
+    max-height: 18rem;
+    margin: auto;
+    justify-content: space-evenly;
+}
+
+.imagess {
+    height: inherit;
+    margin-bottom: 1rem;
+}
+.labelOfArticleImage{
+    height:15rem;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+.divofuplaodphoto {
+    width: 40%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.modalButton {
+    width: 50%;
+    margin-left: 1rem;
+    border-radius: 15px;
+    background-color: white;
+    border: none;
+    box-shadow: 0px 2px 8px 1px #ddd;
+}
+
+.divofpuplish {
+    width: 40%;
+    margin-left: 1rem;
+}
+
+.puplish {
+    width: 100%;
+    height: 2rem;
+    margin-left: 0;
+}
+
+::deep textarea {
+    padding: 1rem;
+    margin: 1rem 0rem 2rem;
+    width: 100%;
+    height: 8rem;
+    max-height: 12rem;
+    overflow-y: auto;
+    border-radius: 15px;
+    background-color: white;
+    border: none;
+    outline: none;
+    box-shadow: 0px 2px 8px 1px #ddd;
+}
+
+::deep textarea::-webkit-scrollbar {
+    background-color: #ddd;
+    border-radius: 16px;
+    width: 11px;
+}
+
+::deep textarea::-webkit-scrollbar-thumb {
+    background-color: #03206D;
+    border-radius: 5px;
+}
+
+.img {
+    margin: 2rem auto;
+    max-height: 18rem;
+    overflow-y: auto;
+}
+
+.img::-webkit-scrollbar, .post::-webkit-scrollbar {
+    background-color: #ddd;
+    border-radius: 16px;
+    width: 11px;
+}
+
+.img::-webkit-scrollbar-thumb, .post::-webkit-scrollbar-thumb {
+    background-color: #03206D;
+    border-radius: 5px;
+}
+
+@media (max-width: 1725px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 64%;
+    }
+}
+@media (max-width: 1420px) {
+    .main_container {
+        width: 71%;
+        padding-left: 1rem;
+    }
+    .e-richtexteditor .e-rte-placeholder {
+        left: 53%;
+    }
+}
+@media (max-width: 1237px) {
+    .main_container {
+        width: 80%;
+        margin: auto;
+    }
+    .e-richtexteditor .e-rte-placeholder {
+        left: 68%;
+    }
+}
+@media (max-width: 1040px) {
+    .main_container {
+        width: 100%;
+    }
+    .e-richtexteditor .e-rte-placeholder {
+        left: 74%;
+    }
+}
+@media (max-width: 910px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 70%;
+    }
+}
+@media (max-width: 780px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 65%;
+    }
+}
+@media (max-width: 680px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 60%;
+    }
+}
+@media (max-width: 585px) {
+    .e-richtexteditor .e-rte-placeholder {
+        left: 53%;
+    }
+}
+@media (max-width: 500px) {
+    .addarticle {
+        width: 80%;
+    }
+}

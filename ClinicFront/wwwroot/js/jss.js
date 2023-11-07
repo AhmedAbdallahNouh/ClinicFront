@@ -1,13 +1,12 @@
 ﻿function sidebar() {
     document.getElementById('side')?.classList.toggle('show-side');
 }
-function hidenave() {
-    document.getElementById('navbar')?.classList.add('hide_nav');
+function UserSideBar() {
+    document.getElementById('UserSideBar')?.classList.toggle('show-side');
 }
-function shownave() {
-    document.getElementById('navbar')?.classList.remove('hide_nav');
+function scrollinto(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
 }
-
 function checkEndOfContainer() {
     //const container = document.getElementById("main_container");
     const container = document.getElementById("main_container");

@@ -1,68 +1,95 @@
 ﻿@using System.Text.Json;
+@using System.Collections.Specialized;
+@using System.Web;
 @inject IJSRuntime jsruntime
 <PageTitle>Index</PageTitle>
-<input type="text" @bind="enteredUrl" placeholder="Enter URL">
-<button @onclick="GetLocationFromUrl">Get Location</button>
 
-<div class="MapParent">
-    <div id="map" style="height: 400px;margin-top: 3rem;width: 100%;position: relative;outline: none;"></div>
+<div class="MapParent" @onclick="AddLocationOnClick">
+    <div id="map" style="width: 100%; height: 400px;"></div>
     <button @onclick="GetUserLocation"><i class="fas fa-street-view"></i></button>
 </div>
+<div class="buttons">
+    <button onclick="moveMapLeft()"><i class="fas fa-arrow-left"></i></button>
+    <button onclick="moveMapRight()"><i class="fas fa-arrow-right"></i></button>
+    <button onclick="moveMapUp()"><i class="fas fa-arrow-up"></i></button>
+    <button onclick="moveMapDown()"><i class="fas fa-arrow-down"></i></button>
+</div>
+
+
+
 
 @code {
     private bool GetUserLocationSuccess = false;
-    private double UserLatitude = 0.0;
-    private double UserLongitude = 0.0;
+    private double UserLatitude = 29.19517841315592;
+    private double UserLongitude = 30.014648437500004;
+    private double AddLatitude = 0.0;
+    private double AddLongitude = 0.0;
     private string GetUserLocationError = null;
     public string? name;
     public string? description;
     public List<MapModel>? mapData;
-
-
-
-
-    private string enteredUrl;
-
-    private async Task GetLocationFromUrl()
+    private string? path;
+    [Inject]
+    public IAdminService adminService { get; set; }
+    protected override async Task OnInitializedAsync()
     {
-        GetUserLocationSuccess = false;
-        GetUserLocationError = null;
-
-        try
-        {
-            // You need to implement a method to extract location data from the entered URL.
-            var location = await jsruntime.InvokeAsync<object>("getCurrentLocationByUrl", enteredUrl);
-
-
-            if (location != null)
-            {
-                var lat = ((JsonElement)location).GetProperty("lat").GetDouble();
-                var lon = ((JsonElement)location).GetProperty("lon").GetDouble();
-
-                UserLatitude = lat;
-                UserLongitude = lon;
-
-                GetUserLocationSuccess = true;
-                // FilterMarkers(); // You may want to filter markers based on the new location.
-            }
-            else
-            {
-                GetUserLocationError = "Invalid URL or no location data found.";
-            }
-        }
-        catch (Exception ex)
-        {
-            GetUserLocationError = ex.Message;
-        }
+        await adminService.getDoctorbyid("0c4684b5-df22-4a43-8e2f-2d18dd8a941a");
     }
 
     protected override void OnAfterRender(bool firstRender)
     {
         InitializeMap();
     }
+    public static (double, double) setLocation(string url)
+    {
+        Uri uri = new Uri(url);
+        NameValueCollection queryParams = HttpUtility.ParseQueryString(uri.Query);
+
+        string latString = queryParams["lat"];
+        string lonString = queryParams["lon"];
+
+        if (!string.IsNullOrEmpty(latString) && !string.IsNullOrEmpty(lonString))
+        {
+            if (double.TryParse(latString, out double lat) && double.TryParse(lonString, out double lon))
+            {
+                return (lat, lon);
+            }
+        }
+
+        throw new ArgumentException("Latitude or longitude not found in the URL");
+    }
+    private async Task AddLocationOnClick()
+    {
+        try
+        {
+            var location = await jsruntime.InvokeAsync<JsonElement>("addLocationOnClick");
+
+            if (location.TryGetProperty("lat", out var latProperty) && latProperty.ValueKind == JsonValueKind.Number &&
+                location.TryGetProperty("lon", out var lonProperty) && lonProperty.ValueKind == JsonValueKind.Number)
+            {
+                var lat = latProperty.GetDouble();
+                var lon = lonProperty.GetDouble();
+
+                AddLatitude = lat;
+                AddLongitude = lon;
+            }
+            else
+            {
+                Console.WriteLine("Invalid location data: missing or incorrect property types");
+            }
+        }
+        catch (TaskCanceledException ex)
+        {
+            Console.WriteLine("Task was canceled: " + ex.Message);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error retrieving location data: {ex.Message}");
+        }
+    }
     private async Task GetUserLocation()
     {
-        GetUserLocationSuccess = false;
+        // GetUserLocationSuccess = false;
         GetUserLocationError = null;
 
         try
@@ -74,7 +101,7 @@
             UserLatitude = lat;
             UserLongitude = lon;
 
-            GetUserLocationSuccess = true;
+            // GetUserLocationSuccess = true;
             //FilterMarkers();
         }
         catch (Exception ex)
@@ -95,9 +122,19 @@
             }
 
         );
+        mapData.Add(new MapModel
+            {
+                Name = "Alibaug",
+                Latitude = AddLatitude,
+                Longitude = AddLongitude,
+                Description = "Alibaug is a coastal town and a municipal council in Raigad District in the Konkan region of Maharashtra, India."
+            }
+
+        );
 
         return mapData;
     }
+    private string enteredUrl;
 
     protected void NameChanged(string name)
     {

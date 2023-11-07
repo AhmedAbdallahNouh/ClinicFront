@@ -15,7 +15,7 @@ namespace ClincApi.Repositeries
         }
         public async Task<List<Consultation>> GetAll()
         {
-            return await _clinicDBContext.Consultations.Include(c => c.ConsultationImages).AsNoTracking().ToListAsync();
+            return await _clinicDBContext.Consultations.Include(c => c.ConsultationImages).Include(c=> c.Category).AsNoTracking().ToListAsync();
         } 
         public async Task<List<Consultation>> GetAllForDoctorByCategoryId(int categoryId)
         {

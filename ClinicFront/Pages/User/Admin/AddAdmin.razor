@@ -15,7 +15,7 @@
         @* <div class="row"> *@
         <EditForm Model="@adminRegiterationDTO" class="add-doctor-form row" style="direction:rtl" OnValidSubmit="RegisterNewAdmin" OnInvalidSubmit="ShowInvalidModal">
             <DataAnnotationsValidator />
-            <div class="col-lg-6 col-sm-12 form-first-col">
+            <div class="col-lg-6 col-sm-12 form-first-col ">
                 <div class="mb-2 input-container">
                     <div class="d-flex">
                         <label class="fw-bold"> الإسم الأول  </label>
@@ -25,10 +25,9 @@
                                    class="form-control input_i"
                                    placeholder="أدخل الإسم الأول" />
                         <i class="fas fa-user icon"></i>
-
                     </div>
                     <ValidationMessage For="@(() => adminRegiterationDTO.FirstName)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
-                </div> 
+                </div>
                 <div class="mb-2 input-container">
                     <div class="d-flex">
                         <label class="fw-bold"> الإسم الأخير  </label>
@@ -61,7 +60,7 @@
                         @bind-Value="@adminRegiterationDTO.Email"
                                    style="padding-left:3rem;"
                                    class="form-control input_i"
-                                   placeholder="أدخل الإسم الأخير" />
+                                   placeholder="أدخل الايميل الخاص بك" />
                         <i class="fas fa-envelope icon"></i>
                     </div>
                     <ValidationMessage For="@(() => adminRegiterationDTO.Email)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem ;" />
@@ -78,9 +77,9 @@
                     </div>
                     <ValidationMessage For="@(() => adminRegiterationDTO.PhoneNumber)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
                 </div>
-            </div> 
+            </div>
 
-            <div class="col-lg-6 col-sm-12 form-first-col">                                                       
+            <div class="col-lg-6 col-sm-12 form-first-col">
                 <div class="mb-3 input-container">
                     <div class="d-flex">
                         <label for="inputPassword" class="fw-bold">كلمة المرور</label>
@@ -94,9 +93,9 @@
                     <ValidationMessage For="@(() => adminRegiterationDTO.Password)" style=" text-align: start ; padding-right: 7rem; padding-top: 0.8rem ;" />
                 </div>
 
-                <div class="mb-4 input-container">
+                <div class="mb-3 input-container">
                     <div class="d-flex">
-                        <label for="inputPassword" class="fw-bold"> تأكيد كلمة المرور </label>
+                        <label for="ConPassword" class="fw-bold"> تأكيد كلمة المرور </label>
                         <InputText type="password" id="ConPassword"
                         @bind-Value="@adminRegiterationDTO.ConfirmPassword"
                                    style="padding-left:3rem;"
@@ -106,20 +105,20 @@
                     </div>
                     <ValidationMessage For="@(() => adminRegiterationDTO.ConfirmPassword)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
                 </div>
-                
+
                 <div class="mb-4 input-container">
                     <div class="d-flex">
                         <label for="inputPassword" class="fw-bold">العمر </label>
                         <InputNumber type="password" id="ConPassword"
                         @bind-Value="@adminRegiterationDTO.Age"
-                                   style="padding-left:3rem;"
-                                   class="form-control input_i"
-                                   placeholder="أدخل عمرك" />
+                                     style="padding-left:3rem;"
+                                     class="form-control input_i"
+                                     placeholder="أدخل عمرك" />
                         <i class="fas fa-phone-alt icon"></i>
                     </div>
                     <ValidationMessage For="@(() => adminRegiterationDTO.Age)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
                 </div>
-              
+
                 <div class="mb-4 input-container">
                     <div class="d-flex">
                         <label for="inputPassword" class="fw-bold"> العنوان </label>
@@ -133,23 +132,23 @@
                     <ValidationMessage For="@(() => adminRegiterationDTO.Address)" style=" text-align: start ; padding-right: 7rem ; padding-top: 0.8rem;" />
                 </div>
                 <div class="mb-4  profileimage">
-                  
+
                     @if (!string.IsNullOrEmpty(adminRegiterationDTO.Image))
                     {
                         <img src="@adminRegiterationDTO.Image" class="img" style="border-radius: 50%;" />
                     }
                     else
                     {
-                        <i class="bi bi-person-circle" style="color: #03206C;"></i>
+                        <i class="bi bi-person-circle" style="color: #ff838a;"></i>
                     }
-                    
-                  
-                    <label class="profilechange">
-                        <InputFile id="ProfileName" type="file" OnChange="@HandleFileSelected" class="input_i" style="display:none;"/>
-                        <i class="fas fa-camera profileicon" style="font-size:1rem;"></i>
-                    </label>
+
+
+                    <div class="profilechange">
+                        <InputFile id="ProfileName" type="file" OnChange="@HandleFileSelected" class="input_i" style="display:none;" />
+                        <i class="fas fa-camera profileicon" style="font-size:1rem;color: #19B5BC"></i>
+                    </div>
                 </div>
-                <div class="submit-btn-container"><button type="submit" class="mb-2 btn btn-lg btn-block fw-bold button  ">Finish</button></div>
+                <div class="submit-btn-container"><button type="submit" disabled="@(!context.IsModified() || !context.Validate())" class="mb-2 btn btn-lg btn-block fw-bold button  ">إضافه</button></div>
             </div>
 
 

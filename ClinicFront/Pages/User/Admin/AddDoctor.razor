@@ -124,7 +124,7 @@
                         <ValidationMessage For="@(() => doctorRegisterationByAmdinDTO.EndSubscriptionDate)" style=" text-align: start; padding-right: 10.2rem; padding-top: 0.8rem;" />
                     </div>
                 </div>
-                <div class="submit-btn-container"><button type="submit" class="mb-2 btn btn-lg btn-block fw-bold button  ">Finish</button></div>
+                <div class="submit-btn-container"><button type="submit" disabled="@(!context.IsModified() || !context.Validate())" class="mb-2 btn btn-lg btn-block fw-bold button  ">اضافة</button></div>
             </div>
 
 

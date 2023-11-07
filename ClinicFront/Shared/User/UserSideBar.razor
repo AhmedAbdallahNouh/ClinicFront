@@ -1,0 +1,58 @@
+﻿@using Microsoft.JSInterop;
+
+<div class="hide-side" id="UserSideBar">
+    <div style="height:50%;display:flex;flex-direction:column;">
+        <div class="flex" style="width:100%;">
+            <div style="width:100%;margin:auto">
+                <a class="nav-link active color_white image" style="width: 100%;display: flex;align-items: center;justify-content: center;" aria-current="page" href="/mainpageadmin">
+                    <lord-icon src="https://cdn.lordicon.com/slduhdil.json"
+                               class="lord_icon"
+                               trigger="hover"
+                               scale="40"
+                               colors="primary:#ffffff"
+                               state="hover-2">
+
+                    </lord-icon>
+                    <h8 class="color_white">الصفحة الرئيسية</h8>
+                </a>
+            </div>
+        </div>
+
+        <div class="nav-item link">
+            <a class="nav-link dropdown-toggle color_white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                التخصصات
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="#">Action</a>
+                <a class="dropdown-item" href="#">Another action</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+        </div>
+        <div class="nav-item link">
+            <a class="nav-link active color_white" aria-current="page" href="/استشاره">الأستشارة</a>
+        </div>
+
+        <hr />
+
+        <div class="nav-item link">
+            <a class="nav-link active color_white" aria-current="page" href="/المقالات">المقالات</a>
+        </div>
+        <div class="nav-item link">
+            <a class="nav-link active color_white" aria-current="page" href="/Contactus">تواصل معنا</a>
+        </div>
+        <div class="nav-item link">
+            <a class="nav-link active color_white" aria-current="page" href="/login">تسجيل التدخول</a>
+        </div>
+       
+
+    </div>
+
+</div>
+
+
+@code {
+    
+
+
+}

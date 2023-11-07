@@ -1,0 +1,117 @@
+﻿<footer class="footer">
+    <div class="waves">
+        <div class="wave" id="wave1"></div>
+        <div class="wave" id="wave2"></div>
+        <div class="wave" id="wave3"></div>
+        <div class="wave" id="wave4"></div>
+    </div>
+
+    <ul class="social-icon">
+        <li class="social-icon__item">
+            <a class="social-icon__link" href="#">
+                <ion-icon name="logo-facebook"></ion-icon>
+            </a>
+        </li>
+        <li class="social-icon__item">
+            <a class="social-icon__link" href="#">
+                <ion-icon name="logo-twitter"></ion-icon>
+            </a>
+        </li>
+        <li class="social-icon__item">
+            <a class="social-icon__link" href="#">
+                <ion-icon name="logo-linkedin"></ion-icon>
+            </a>
+        </li>
+        <li class="social-icon__item">
+            <a class="social-icon__link" href="#">
+                <ion-icon name="logo-instagram"></ion-icon>
+            </a>
+        </li>
+    </ul>
+
+    <aside class="font row">
+
+        @if (doctorDTOs != null)
+        {
+            <div class="col-md-4 col-sm-12 col-lg-4">
+                <ul class='category'>
+                    <li>
+                        <h3>اخر اطباء تمت زيارتهم</h3>
+                    </li>
+                    @foreach (var doctorDTO in doctorDTOs)
+                    {
+                        <li class="move"><a href="/maindoctorpage/@doctorDTO.Id">@doctorDTO.FirstName @doctorDTO.LastName</a></li>
+                    }
+                </ul>
+            </div>
+        }
+
+        @if (articleDtos != null)
+        {
+            <div class="col-md-4 col-sm-12 col-lg-4">
+                <ul class='category'>
+                    <li>
+                        <h3>المقالات</h3>
+                    </li>
+                    @foreach (var articleDto in articleDtos)
+                    {
+                        <li class="move"><a href="/showonearticle/@articleDto.Id">@articleDto.Title</a></li>
+                    }
+                </ul>
+            </div>
+        }
+        @if (categoryDTOs != null)
+        {
+            <div class="col-md-4 col-sm-12 col-lg-4">
+                <ul class='category'>
+                    <li>
+                        <h3>التخصصات</h3>
+                    </li>
+                    @foreach (var category in categoryDTOs)
+                    {
+                        <li>@category.Name</li>
+                    }
+
+                </ul>
+            </div>
+        }
+    </aside>
+    @* <img src="s copy.png" style=" width: 15rem; margin: 2rem;" /> *@
+    <hr style="color:white;">
+    <p class="font">
+        المعلومات على DRSJO لا يمكنها بأي حال من الأحوال ان تستبدل العلاقة بين المريض والطبيب. DRSJO لا تصادق على أي منتجات تجارية أو خدمات.
+
+    </p>
+</footer>
+
+
+@code{
+    [Inject]
+    public ICategoryService categoryService { get; set; }
+    public List<CategoryDTO> categoryDTOs { get; set; } = new List<CategoryDTO>();
+    [Inject]
+    public IArticleService articleService { get; set; }
+    public List<ArticleDto> articleDtos { get; set; } = new List<ArticleDto>();
+    [Inject]
+    public IAdminService adminService { get; set; }
+    public List<DoctorDTO> doctorDTOs { get; set; } = new List<DoctorDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var categories = await categoryService.GetCategoriespagination();
+        var articles = await articleService.GetArticlespagination();
+        var doctors = await adminService.GetDoctorspagination();
+        if (categories != null)
+        {
+            categoryDTOs = categories;
+        }
+        if (articles != null)
+        {
+            articleDtos = articles;
+        }
+        if (doctors != null)
+        {
+            doctorDTOs = doctors;
+        }
+    }
+}

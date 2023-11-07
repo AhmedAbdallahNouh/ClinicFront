@@ -17,7 +17,7 @@ namespace ClinicModels.DTOs.MainDTO
 
         [Required(ErrorMessage = "يجب إدخال تاريخ نهاية الإشتراك")]
         public DateTime? EndSubscriptionDate { get; set; }
-
+        public DateTime? view { get; set; }
 
     }
 }
